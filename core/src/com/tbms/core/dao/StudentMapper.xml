@@ -1,0 +1,1399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.StudentMapper">
+
+	<!-- 学生字段与DTO映射 -->
+	<resultMap id="studentDTO" type="com.tbms.core.dto.StudentDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="username" property="username" javaType="java.lang.String" /><!--用户名-->
+		<result column="password" property="password" javaType="java.lang.String" /><!--密码-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--姓名-->
+		<result column="bind_account" property="bindAccount" javaType="java.lang.String" /><!--绑定微信-->
+		<result column="last_login_time" property="lastLoginTime" javaType="java.lang.Integer" /><!--最近登录时间-->
+		<result column="last_login_ip" property="lastLoginIp" javaType="java.lang.String" /><!--最近登录IP-->
+		<result column="login_count" property="loginCount" javaType="java.lang.Integer" /><!--登录次数-->
+		<result column="create_time" property="createTime" javaType="java.lang.Integer" /><!--添加时间-->
+		<result column="update_time" property="updateTime" javaType="java.lang.Integer" /><!--修改时间-->
+		<result column="birthday" property="birthday" javaType="java.lang.String" /><!--出生日期-->
+		<result column="card" property="card" javaType="java.lang.String" /><!--身份证号-->
+		<result column="phone" property="phone" javaType="java.lang.String" /><!--手机电话-->
+		<result column="email" property="email" javaType="java.lang.String" /><!--邮箱-->
+		<result column="home_phone" property="homePhone" javaType="java.lang.String" /><!--家庭电话-->
+		<result column="wechat" property="wechat" javaType="java.lang.String" /><!--微信号-->
+		<result column="gender" property="gender" javaType="java.lang.String" /><!--性别-->
+		<result column="gender_code" property="genderCode" javaType="java.lang.Integer" /><!--性别代码-->
+		<result column="ethnicity" property="ethnicity" javaType="java.lang.String" /><!--民族-->
+		<result column="ethnicity_code" property="ethnicityCode" javaType="java.lang.Integer" /><!--民族代码-->
+		<result column="candidate_number" property="candidateNumber" javaType="java.lang.String" /><!--考生号-->
+		<result column="graduate_date" property="graduateDate" javaType="java.lang.String" /><!--毕业日期-->
+		<result column="graduate_year" property="graduateYear" javaType="java.lang.Integer" /><!--毕业年份-->
+		<result column="enrollment_addr" property="enrollmentAddr" javaType="java.lang.String" /><!--生源所在地-->
+		<result column="enrollment_code" property="enrollmentCode" javaType="java.lang.String" /><!--生源省市代码-->
+		<result column="political" property="political" javaType="java.lang.String" /><!--政治面貌-->
+		<result column="political_code" property="politicalCode" javaType="java.lang.Integer" /><!--政治面貌代码-->
+		<result column="school" property="school" javaType="java.lang.String" /><!--院校名称-->
+		<result column="school_code" property="schoolCode" javaType="java.lang.String" /><!--院校代码-->
+		<result column="depart" property="depart" javaType="java.lang.String" /><!--二级学院名称-->
+		<result column="depart_code" property="departCode" javaType="java.lang.String" /><!--二级学院代码-->
+		<result column="major" property="major" javaType="java.lang.String" /><!--专业-->
+		<result column="major_code" property="majorCode" javaType="java.lang.String" /><!--专业代码-->
+		<result column="classes" property="classes" javaType="java.lang.String" /><!--班级名称-->
+		<result column="classes_code" property="classesCode" javaType="java.lang.String" /><!--班级代码-->
+		<result column="type" property="type" javaType="java.lang.String" /><!--学制-->
+		<result column="type_code" property="typeCode" javaType="java.lang.Integer" /><!--学制代码-->
+		<result column="degree" property="degree" javaType="java.lang.String" /><!--学位层次-->
+		<result column="degree_code" property="degreeCode" javaType="java.lang.Integer" /><!--学位层次代码-->
+		<result column="education" property="education" javaType="java.lang.String" /><!--学历-->
+		<result column="education_code" property="educationCode" javaType="java.lang.Integer" /><!--学历代码-->
+		<result column="graduation" property="graduation" javaType="java.lang.String" /><!--毕结业结论-->
+		<result column="enrollment" property="enrollment" javaType="java.lang.String" /><!--入学时间-->
+		<result column="normal" property="normal" javaType="java.lang.String" /><!--师范生类别-->
+		<result column="normal_code" property="normalCode" javaType="java.lang.Integer" /><!--师范生类别代码-->
+		<result column="unemployed" property="unemployed" javaType="java.lang.String" /><!--有意向未就业原因-->
+		<result column="unemployed_code" property="unemployedCode" javaType="java.lang.Integer" /><!--有意向未就业原因代码-->
+		<result column="training" property="training" javaType="java.lang.String" /><!--培养方式-->
+		<result column="training_code" property="trainingCode" javaType="java.lang.Integer" /><!--培养方式代码-->
+		<result column="training_unit" property="trainingUnit" javaType="java.lang.String" /><!--培养单位-->
+		<result column="grade" property="grade" javaType="java.lang.Integer" /><!--当前所在级(在校生)-->
+		<result column="graduate" property="graduate" javaType="java.lang.Integer" /><!--是否毕业-->
+		<result column="spring_graduate" property="springGraduate" javaType="java.lang.String" /><!--是否春季毕业生-->
+		<result column="syn_evaluation" property="synEvaluation" javaType="java.lang.String" /><!--综合测评-->
+		<result column="rank" property="rank" javaType="java.lang.String" /><!--班级排名-->
+		<result column="difficulty" property="difficulty" javaType="java.lang.String" /><!--困难生类别-->
+		<result column="assistant" property="assistant" javaType="java.lang.String" /><!--是否担任过助管-->
+		<result column="employ" property="employ" javaType="java.lang.String" /><!--就业状态-->
+		<result column="employ_code" property="employCode" javaType="java.lang.Integer" /><!--就业状态代码-->
+		<result column="employ_time" property="employTime" javaType="java.lang.Integer" /><!--就业状态修改时间-->
+		<result column="employ_program" property="employProgram" javaType="java.lang.String" /><!--就业项目-->
+		<result column="contract" property="contract" javaType="java.lang.String" /><!--签约时间-->
+		<result column="instructor" property="instructor" javaType="java.lang.String" /><!--是否担任过学业辅导员-->
+		<result column="forest" property="forest" javaType="java.lang.String" /><!--涉林行业-->
+		<result column="cadre" property="cadre" javaType="java.lang.String" /><!--是否担任过学生干部-->
+		<result column="mentor" property="mentor" javaType="java.lang.String" /><!--导师姓名-->
+		<result column="mentor_title" property="mentorTitle" javaType="java.lang.String" /><!--导师职称-->
+		<result column="undergraduate_cat" property="undergraduateCat" javaType="java.lang.String" /><!--本科院校类别-->
+		<result column="undergraduate" property="undergraduate" javaType="java.lang.String" /><!--本科院校-->
+		<result column="changes" property="changes" javaType="java.lang.String" /><!--学籍变动-->
+		<result column="changes_code" property="changesCode" javaType="java.lang.Integer" /><!--学籍变动代码-->
+		<result column="remark" property="remark" javaType="java.lang.String" /><!--备注-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--状态-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`username`,
+		`password`,
+		`name`,
+		`bind_account`,
+		`last_login_time`,
+		`last_login_ip`,
+		`login_count`,
+		`create_time`,
+		`update_time`,
+		`birthday`,
+		`card`,
+		`phone`,
+		`email`,
+		`home_phone`,
+		`wechat`,
+		`gender`,
+		`gender_code`,
+		`ethnicity`,
+		`ethnicity_code`,
+		`candidate_number`,
+		`graduate_date`,
+		`graduate_year`,
+		`enrollment_addr`,
+		`enrollment_code`,
+		`political`,
+		`political_code`,
+		`school`,
+		`school_code`,
+		`depart`,
+		`depart_code`,
+		`major`,
+		`major_code`,
+		`classes`,
+		`classes_code`,
+		`type`,
+		`type_code`,
+		`degree`,
+		`degree_code`,
+		`education`,
+		`education_code`,
+		`graduation`,
+		`enrollment`,
+		`normal`,
+		`normal_code`,
+		`unemployed`,
+		`unemployed_code`,
+		`training`,
+		`training_code`,
+		`training_unit`,
+		`grade`,
+		`graduate`,
+		`spring_graduate`,
+		`syn_evaluation`,
+		`rank`,
+		`difficulty`,
+		`assistant`,
+		`employ`,
+		`employ_code`,
+		`employ_time`,
+		`employ_program`,
+		`contract`,
+		`instructor`,
+		`forest`,
+		`cadre`,
+		`mentor`,
+		`mentor_title`,
+		`undergraduate_cat`,
+		`undergraduate`,
+		`changes`,
+		`changes_code`,
+		`remark`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" username != null ">
+			AND `username` LIKE "%${username}%"
+		</if>
+		<if test=" password != null ">
+			AND `password` = #{password}
+		</if>
+		<if test=" name != null ">
+			AND `name` LIKE "%${name}%"
+		</if>
+		<if test=" bindAccount != null ">
+			AND `bind_account` = #{bindAccount}
+		</if>
+		<if test=" lastLoginTime != null ">
+			AND `last_login_time` = #{lastLoginTime}
+		</if>
+		<if test=" lastLoginIp != null ">
+			AND `last_login_ip` LIKE "%${lastLoginIp}%"
+		</if>
+		<if test=" loginCount != null ">
+			AND `login_count` = #{loginCount}
+		</if>
+		<if test=" createTime != null ">
+			AND `create_time` = #{createTime}
+		</if>
+		<if test=" updateTime_Start != null ">
+			AND `update_time` &gt;= #{updateTime_Start}
+		</if>
+		<if test=" updateTime_End != null ">
+			AND `update_time` &lt;= #{updateTime_End}
+		</if>
+		<if test=" updateTime != null ">
+			AND `update_time` = #{updateTime}
+		</if>
+		<if test=" birthday != null ">
+			AND `birthday` LIKE "%${birthday}%"
+		</if>
+		<if test=" card != null ">
+			AND `card` LIKE "%${card}%"
+		</if>
+		<if test=" phone != null ">
+			AND `phone` LIKE "%${phone}%"
+		</if>
+		<if test=" email != null ">
+			AND `email` LIKE "%${email}%"
+		</if>
+		<if test=" homePhone != null ">
+			AND `home_phone` LIKE "%${homePhone}%"
+		</if>
+		<if test=" wechat != null ">
+			AND `wechat` LIKE "%${wechat}%"
+		</if>
+		<if test=" gender != null ">
+			AND `gender` LIKE "%${gender}%"
+		</if>
+		<if test=" genderCode != null ">
+			AND `gender_code` = #{genderCode}
+		</if>
+		<if test=" ethnicity != null ">
+			AND `ethnicity` LIKE "%${ethnicity}%"
+		</if>
+		<if test=" ethnicityCode != null ">
+			AND `ethnicity_code` = #{ethnicityCode}
+		</if>
+		<if test=" candidateNumber != null ">
+			AND `candidate_number` LIKE "%${candidateNumber}%"
+		</if>
+		<if test=" graduateDate != null ">
+			AND `graduate_date` LIKE "%${graduateDate}%"
+		</if>
+		<if test=" graduateYear != null ">
+			AND `graduate_year` = #{graduateYear}
+		</if>
+		<if test=" enrollmentAddr != null ">
+			AND `enrollment_addr` LIKE "%${enrollmentAddr}%"
+		</if>
+		<if test=" enrollmentCode != null ">
+			AND `enrollment_code` LIKE "%${enrollmentCode}%"
+		</if>
+		<if test=" political != null ">
+			AND `political` LIKE "%${political}%"
+		</if>
+		<if test=" politicalCode != null ">
+			AND `political_code` = #{politicalCode}
+		</if>
+		<if test=" school != null ">
+			AND `school` LIKE "%${school}%"
+		</if>
+		<if test=" schoolCode != null ">
+			AND `school_code` = #{schoolCode}
+		</if>
+		<if test=" depart != null ">
+			AND `depart` LIKE "%${depart}%"
+		</if>
+		<if test=" departCode != null ">
+			AND `depart_code` = #{departCode}
+		</if>
+		<if test=" major != null ">
+			AND `major` LIKE "%${major}%"
+		</if>
+		<if test=" majorCode != null ">
+			AND `major_code` = #{majorCode}
+		</if>
+		<if test=" classes != null ">
+			AND `classes` LIKE "%${classes}%"
+		</if>
+		<if test=" classesCode != null ">
+			AND `classes_code` = #{classesCode}
+		</if>
+		<if test=" type != null ">
+			AND `type` LIKE "%${type}%"
+		</if>
+		<if test=" typeCode != null ">
+			AND `type_code` = #{typeCode}
+		</if>
+		<if test=" degree != null ">
+			AND `degree` LIKE "%${degree}%"
+		</if>
+		<if test=" degreeCode != null ">
+			AND `degree_code` = #{degreeCode}
+		</if>
+		<if test=" education != null ">
+			AND `education` LIKE "%${education}%"
+		</if>
+		<if test=" educationCode != null ">
+			AND `education_code` = #{educationCode}
+		</if>
+		<if test=" graduation != null ">
+			AND `graduation` LIKE "%${graduation}%"
+		</if>
+		<if test=" enrollment != null ">
+			AND `enrollment` LIKE "%${enrollment}%"
+		</if>
+		<if test=" normal != null ">
+			AND `normal` LIKE "%${normal}%"
+		</if>
+		<if test=" normalCode != null ">
+			AND `normal_code` = #{normalCode}
+		</if>
+		<if test=" unemployed != null ">
+			AND `unemployed` LIKE "%${unemployed}%"
+		</if>
+		<if test=" unemployedCode != null ">
+			AND `unemployed_code` = #{unemployedCode}
+		</if>
+		<if test=" training != null ">
+			AND `training` LIKE "%${training}%"
+		</if>
+		<if test=" trainingCode != null ">
+			AND `training_code` = #{trainingCode}
+		</if>
+		<if test=" trainingUnit != null ">
+			AND `training_unit` LIKE "%${trainingUnit}%"
+		</if>
+		<if test=" grade != null ">
+			AND `grade` = #{grade}
+		</if>
+		<if test=" graduate != null ">
+			AND `graduate` = #{graduate}
+		</if>
+		<if test=" springGraduate != null ">
+			AND `spring_graduate` = #{springGraduate}
+		</if>
+		<if test=" synEvaluation != null ">
+			AND `syn_evaluation` = #{synEvaluation}
+		</if>
+		<if test=" rank != null ">
+			AND `rank` = #{rank}
+		</if>
+		<if test=" difficulty != null ">
+			AND `difficulty` LIKE "%${difficulty}%"
+		</if>
+		<if test=" assistant != null ">
+			AND `assistant` = #{assistant}
+		</if>
+		<if test=" employ != null ">
+			AND `employ` LIKE "%${employ}%"
+		</if>
+		<if test=" employCode != null ">
+			AND `employ_code` = #{employCode}
+		</if>
+		<if test=" employProgram != null ">
+			AND `employ_program` = #{employProgram}
+		</if>
+		<if test=" contract != null ">
+			AND `contract` = #{contract}
+		</if>
+		<if test=" instructor != null ">
+			AND `instructor` = #{instructor}
+		</if>
+		<if test=" forest != null ">
+			AND `forest` = #{forest}
+		</if>
+		<if test=" cadre != null ">
+			AND `cadre` = #{cadre}
+		</if>
+		<if test=" mentor != null ">
+			AND `mentor` LIKE "%${mentor}%"
+		</if>
+		<if test=" mentorTitle != null ">
+			AND `mentor_title` LIKE "%${mentorTitle}%"
+		</if>
+		<if test=" undergraduateCat != null ">
+			AND `undergraduate_cat` LIKE "%${undergraduateCat}%"
+		</if>
+		<if test=" undergraduate != null ">
+			AND `undergraduate` LIKE "%${undergraduate}%"
+		</if>
+		<if test=" changes != null ">
+			AND `changes` LIKE "%${changes}%"
+		</if>
+		<if test=" changesCode != null ">
+			AND `changes_code` = #{changesCode}
+		</if>
+		<if test=" remark != null ">
+			AND `remark` LIKE "%${remark}%"
+		</if>
+		<if test=" status != null ">
+			AND `status` = #{status}
+		</if>
+	</sql>
+
+	<!--根据条件获取Student列表-->
+	<select id="getStudentList" resultMap="studentDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM student
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Student总数-->
+	<select id="getStudentListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM student
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Student-->
+	<insert id="addStudent" parameterType="com.tbms.core.dto.StudentDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO student(
+		<trim suffixOverrides=",">
+			<if test="username!=null">
+				`username`,
+			</if>
+			<if test="password!=null">
+				`password`,
+			</if>
+			<if test="name!=null">
+				`name`,
+			</if>
+			<if test="bindAccount!=null">
+				`bind_account`,
+			</if>
+			<if test="lastLoginTime!=null">
+				`last_login_time`,
+			</if>
+			<if test="lastLoginIp!=null">
+				`last_login_ip`,
+			</if>
+			<if test="loginCount!=null">
+				`login_count`,
+			</if>
+			<if test="createTime!=null">
+				`create_time`,
+			</if>
+			<if test="updateTime!=null">
+				`update_time`,
+			</if>
+			<if test="birthday!=null">
+				`birthday`,
+			</if>
+			<if test="card!=null">
+				`card`,
+			</if>
+			<if test="phone!=null">
+				`phone`,
+			</if>
+			<if test="email!=null">
+				`email`,
+			</if>
+			<if test="homePhone!=null">
+				`home_phone`,
+			</if>
+			<if test="wechat!=null">
+				`wechat`,
+			</if>
+			<if test="gender!=null">
+				`gender`,
+			</if>
+			<if test="genderCode!=null">
+				`gender_code`,
+			</if>
+			<if test="ethnicity!=null">
+				`ethnicity`,
+			</if>
+			<if test="ethnicityCode!=null">
+				`ethnicity_code`,
+			</if>
+			<if test="candidateNumber!=null">
+				`candidate_number`,
+			</if>
+			<if test="graduateDate!=null">
+				`graduate_date`,
+			</if>
+			<if test="graduateYear!=null">
+				`graduate_year`,
+			</if>
+			<if test="enrollmentAddr!=null">
+				`enrollment_addr`,
+			</if>
+			<if test="enrollmentCode!=null">
+				`enrollment_code`,
+			</if>
+			<if test="political!=null">
+				`political`,
+			</if>
+			<if test="politicalCode!=null">
+				`political_code`,
+			</if>
+			<if test="school!=null">
+				`school`,
+			</if>
+			<if test="schoolCode!=null">
+				`school_code`,
+			</if>
+			<if test="depart!=null">
+				`depart`,
+			</if>
+			<if test="departCode!=null">
+				`depart_code`,
+			</if>
+			<if test="major!=null">
+				`major`,
+			</if>
+			<if test="majorCode!=null">
+				`major_code`,
+			</if>
+			<if test="classes!=null">
+				`classes`,
+			</if>
+			<if test="classesCode!=null">
+				`classes_code`,
+			</if>
+			<if test="type!=null">
+				`type`,
+			</if>
+			<if test="typeCode!=null">
+				`type_code`,
+			</if>
+			<if test="degree!=null">
+				`degree`,
+			</if>
+			<if test="degreeCode!=null">
+				`degree_code`,
+			</if>
+			<if test="education!=null">
+				`education`,
+			</if>
+			<if test="educationCode!=null">
+				`education_code`,
+			</if>
+			<if test="graduation!=null">
+				`graduation`,
+			</if>
+			<if test="enrollment!=null">
+				`enrollment`,
+			</if>
+			<if test="normal!=null">
+				`normal`,
+			</if>
+			<if test="normalCode!=null">
+				`normal_code`,
+			</if>
+			<if test="unemployed!=null">
+				`unemployed`,
+			</if>
+			<if test="unemployedCode!=null">
+				`unemployed_code`,
+			</if>
+			<if test="training!=null">
+				`training`,
+			</if>
+			<if test="trainingCode!=null">
+				`training_code`,
+			</if>
+			<if test="trainingUnit!=null">
+				`training_unit`,
+			</if>
+			<if test="grade!=null">
+				`grade`,
+			</if>
+			<if test="graduate!=null">
+				`graduate`,
+			</if>
+			<if test="springGraduate!=null">
+				`spring_graduate`,
+			</if>
+			<if test="synEvaluation!=null">
+				`syn_evaluation`,
+			</if>
+			<if test="rank!=null">
+				`rank`,
+			</if>
+			<if test="difficulty!=null">
+				`difficulty`,
+			</if>
+			<if test="assistant!=null">
+				`assistant`,
+			</if>
+			<if test="employProgram!=null">
+				`employ_program`,
+			</if>
+			<if test="contract!=null">
+				`contract`,
+			</if>
+			<if test="instructor!=null">
+				`instructor`,
+			</if>
+			<if test="forest!=null">
+				`forest`,
+			</if>
+			<if test="cadre!=null">
+				`cadre`,
+			</if>
+			<if test="mentor!=null">
+				`mentor`,
+			</if>
+			<if test="mentorTitle!=null">
+				`mentor_title`,
+			</if>
+			<if test="undergraduateCat!=null">
+				`undergraduate_cat`,
+			</if>
+			<if test="undergraduate!=null">
+				`undergraduate`,
+			</if>
+			<if test="changes!=null">
+				`changes`,
+			</if>
+			<if test="changesCode!=null">
+				`changes_code`,
+			</if>
+			<if test="remark!=null">
+				`remark`,
+			</if>
+			<if test="status!=null">
+				`status`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="username!=null">
+				#{username},
+			</if>
+			<if test="password!=null">
+				#{password},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+			<if test="bindAccount!=null">
+				#{bindAccount},
+			</if>
+			<if test="lastLoginTime!=null">
+				#{lastLoginTime},
+			</if>
+			<if test="lastLoginIp!=null">
+				#{lastLoginIp},
+			</if>
+			<if test="loginCount!=null">
+				#{loginCount},
+			</if>
+			<if test="createTime!=null">
+				#{createTime},
+			</if>
+			<if test="updateTime!=null">
+				#{updateTime},
+			</if>
+			<if test="birthday!=null">
+				#{birthday},
+			</if>
+			<if test="card!=null">
+				#{card},
+			</if>
+			<if test="phone!=null">
+				#{phone},
+			</if>
+			<if test="email!=null">
+				#{email},
+			</if>
+			<if test="homePhone!=null">
+				#{homePhone},
+			</if>
+			<if test="wechat!=null">
+				#{wechat},
+			</if>
+			<if test="gender!=null">
+				#{gender},
+			</if>
+			<if test="genderCode!=null">
+				#{genderCode},
+			</if>
+			<if test="ethnicity!=null">
+				#{ethnicity},
+			</if>
+			<if test="ethnicityCode!=null">
+				#{ethnicityCode},
+			</if>
+			<if test="candidateNumber!=null">
+				#{candidateNumber},
+			</if>
+			<if test="graduateDate!=null">
+				#{graduateDate},
+			</if>
+			<if test="graduateYear!=null">
+				#{graduateYear},
+			</if>
+			<if test="enrollmentAddr!=null">
+				#{enrollmentAddr},
+			</if>
+			<if test="enrollmentCode!=null">
+				#{enrollmentCode},
+			</if>
+			<if test="political!=null">
+				#{political},
+			</if>
+			<if test="politicalCode!=null">
+				#{politicalCode},
+			</if>
+			<if test="school!=null">
+				#{school},
+			</if>
+			<if test="schoolCode!=null">
+				#{schoolCode},
+			</if>
+			<if test="depart!=null">
+				#{depart},
+			</if>
+			<if test="departCode!=null">
+				#{departCode},
+			</if>
+			<if test="major!=null">
+				#{major},
+			</if>
+			<if test="majorCode!=null">
+				#{majorCode},
+			</if>
+			<if test="classes!=null">
+				#{classes},
+			</if>
+			<if test="classesCode!=null">
+				#{classesCode},
+			</if>
+			<if test="type!=null">
+				#{type},
+			</if>
+			<if test="typeCode!=null">
+				#{typeCode},
+			</if>
+			<if test="degree!=null">
+				#{degree},
+			</if>
+			<if test="degreeCode!=null">
+				#{degreeCode},
+			</if>
+			<if test="education!=null">
+				#{education},
+			</if>
+			<if test="educationCode!=null">
+				#{educationCode},
+			</if>
+			<if test="graduation!=null">
+				#{graduation},
+			</if>
+			<if test="enrollment!=null">
+				#{enrollment},
+			</if>
+			<if test="normal!=null">
+				#{normal},
+			</if>
+			<if test="normalCode!=null">
+				#{normalCode},
+			</if>
+			<if test="unemployed!=null">
+				#{unemployed},
+			</if>
+			<if test="unemployedCode!=null">
+				#{unemployedCode},
+			</if>
+			<if test="training!=null">
+				#{training},
+			</if>
+			<if test="trainingCode!=null">
+				#{trainingCode},
+			</if>
+			<if test="trainingUnit!=null">
+				#{trainingUnit},
+			</if>
+			<if test="grade!=null">
+				#{grade},
+			</if>
+			<if test="graduate!=null">
+				#{graduate},
+			</if>
+			<if test="springGraduate!=null">
+				#{springGraduate},
+			</if>
+			<if test="synEvaluation!=null">
+				#{synEvaluation},
+			</if>
+			<if test="rank!=null">
+				#{rank},
+			</if>
+			<if test="difficulty!=null">
+				#{difficulty},
+			</if>
+			<if test="assistant!=null">
+				#{assistant},
+			</if>
+			<if test="employProgram!=null">
+				#{employProgram},
+			</if>
+			<if test="contract!=null">
+				#{contract},
+			</if>
+			<if test="instructor!=null">
+				#{instructor},
+			</if>
+			<if test="forest!=null">
+				#{forest},
+			</if>
+			<if test="cadre!=null">
+				#{cadre},
+			</if>
+			<if test="mentor!=null">
+				#{mentor},
+			</if>
+			<if test="mentorTitle!=null">
+				#{mentorTitle},
+			</if>
+			<if test="undergraduateCat!=null">
+				#{undergraduateCat},
+			</if>
+			<if test="undergraduate!=null">
+				#{undergraduate},
+			</if>
+			<if test="changes!=null">
+				#{changes},
+			</if>
+			<if test="changesCode!=null">
+				#{changesCode},
+			</if>
+			<if test="remark!=null">
+				#{remark},
+			</if>
+			<if test="status!=null">
+				#{status},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加-->
+	<insert id="addStudentBatch" parameterType="java.util.List">
+		INSERT INTO student(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+				null,
+				#{s.username},
+				#{s.password},
+				#{s.name},
+				#{s.bindAccount},
+				#{s.lastLoginTime},
+				#{s.lastLoginIp},
+				#{s.loginCount},
+				#{s.createTime},
+				#{s.updateTime},
+				#{s.birthday},
+				#{s.card},
+				#{s.phone},
+				#{s.email},
+				#{s.homePhone},
+				#{s.wechat},
+				#{s.gender},
+				#{s.genderCode},
+				#{s.ethnicity},
+				#{s.ethnicityCode},
+				#{s.candidateNumber},
+				#{s.graduateDate},
+				#{s.graduateYear},
+				#{s.enrollmentAddr},
+				#{s.enrollmentCode},
+				#{s.political},
+				#{s.politicalCode},
+				#{s.school},
+				#{s.schoolCode},
+				#{s.depart},
+				#{s.departCode},
+				#{s.major},
+				#{s.majorCode},
+				#{s.classes},
+				#{s.classesCode},
+				#{s.type},
+				#{s.typeCode},
+				#{s.degree},
+				#{s.degreeCode},
+				#{s.education},
+				#{s.educationCode},
+				#{s.graduation},
+				#{s.enrollment},
+				#{s.normal},
+				#{s.normalCode},
+				#{s.unemployed},
+				#{s.unemployedCode},
+				#{s.training},
+				#{s.trainingCode},
+				#{s.trainingUnit},
+				#{s.grade},
+				#{s.graduate},
+				#{s.springGraduate},
+				#{s.synEvaluation},
+				#{s.rank},
+				#{s.difficulty},
+				#{s.assistant},
+				#{s.employProgram},
+				#{s.contract},
+				#{s.instructor},
+				#{s.forest},
+				#{s.cadre},
+				#{s.mentor},
+				#{s.mentorTitle},
+				#{s.undergraduateCat},
+				#{s.undergraduate},
+				#{s.changes},
+				#{s.changesCode},
+				#{s.remark},
+				#{s.status}
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Student-->
+	<delete id="deleteStudentById" parameterType="java.lang.Integer">
+		DELETE FROM student
+		WHERE ID=#{id}
+	</delete>
+
+	<!--根据id批量删除Student-->
+	<delete id="deleteStudentBatch" parameterType="Integer[]">
+		DELETE FROM student
+		WHERE ID IN
+		<foreach collection="array" item="arr" index="no" open="(" separator="," close=")">
+			#{arr}
+		</foreach>
+	</delete>
+
+	<!--根据ID更新Student-->
+	<update id="updateStudent" parameterType="com.tbms.core.dto.StudentDTO">
+		UPDATE student
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" username != null">
+				`username`=#{username},
+			</if>
+			<if test=" password != null">
+				`password`=#{password},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+			<if test=" bindAccount != null">
+				`bind_account`=#{bindAccount},
+			</if>
+			<if test=" lastLoginTime != null">
+				`last_login_time`=unix_timestamp(),
+			</if>
+			<if test=" lastLoginIp != null">
+				`last_login_ip`=#{lastLoginIp},
+			</if>
+			<if test=" loginCount != 0">
+				`login_count`=#{loginCount},
+			</if>
+			<if test=" updateTime != null">
+				`update_time`=unix_timestamp(),
+			</if>
+			<if test=" birthday != null">
+				`birthday`=#{birthday},
+			</if>
+			<if test=" card != null">
+				`card`=#{card},
+			</if>
+			<if test=" phone != null">
+				`phone`=#{phone},
+			</if>
+			<if test=" email != null">
+				`email`=#{email},
+			</if>
+			<if test=" homePhone != null">
+				`home_phone`=#{homePhone},
+			</if>
+			<if test=" wechat != null">
+				`wechat`=#{wechat},
+			</if>
+			<if test=" gender != null">
+				`gender`=#{gender},
+			</if>
+			<if test=" genderCode != 0">
+				`gender_code`=#{genderCode},
+			</if>
+			<if test=" ethnicity != null">
+				`ethnicity`=#{ethnicity},
+			</if>
+			<if test=" ethnicityCode != 0">
+				`ethnicity_code`=#{ethnicityCode},
+			</if>
+			<if test=" candidateNumber != null">
+				`candidate_number`=#{candidateNumber},
+			</if>
+			<if test=" graduateDate != null">
+				`graduate_date`=#{graduateDate},
+			</if>
+			<if test=" graduateYear != 0">
+				`graduate_year`=#{graduateYear},
+			</if>
+			<if test=" enrollmentAddr != null">
+				`enrollment_addr`=#{enrollmentAddr},
+			</if>
+			<if test=" enrollmentCode != 0 and enrollmentCode != null">
+				`enrollment_code`=#{enrollmentCode},
+			</if>
+			<if test=" political != null">
+				`political`=#{political},
+			</if>
+			<if test=" politicalCode != 0">
+				`political_code`=#{politicalCode},
+			</if>
+			<if test=" school != null">
+				`school`=#{school},
+			</if>
+			<if test=" schoolCode != null">
+				`school_code`=#{schoolCode},
+			</if>
+			<if test=" depart != null">
+				`depart`=#{depart},
+			</if>
+			<if test=" departCode != null">
+				`depart_code`=#{departCode},
+			</if>
+			<if test=" major != null">
+				`major`=#{major},
+			</if>
+			<if test=" majorCode != null">
+				`major_code`=#{majorCode},
+			</if>
+			<if test=" classes != null">
+				`classes`=#{classes},
+			</if>
+			<if test=" classesCode != null">
+				`classes_code`=#{classesCode},
+			</if>
+			<if test=" type != null">
+				`type`=#{type},
+			</if>
+			<if test=" typeCode != 0">
+				`type_code`=#{typeCode},
+			</if>
+			<if test=" degree != null">
+				`degree`=#{degree},
+			</if>
+			<if test=" degreeCode != 0">
+				`degree_code`=#{degreeCode},
+			</if>
+			<if test=" education != null">
+				`education`=#{education},
+			</if>
+			<if test=" educationCode != 0">
+				`education_code`=#{educationCode},
+			</if>
+			<if test=" graduation != null">
+				`graduation`=#{graduation},
+			</if>
+			<if test=" enrollment != null">
+				`enrollment`=#{enrollment},
+			</if>
+			<if test=" normal != null">
+				`normal`=#{normal},
+			</if>
+			<if test=" normalCode != 0">
+				`normal_code`=#{normalCode},
+			</if>
+			<if test=" unemployed != null">
+				`unemployed`=#{unemployed},
+			</if>
+			<if test=" unemployedCode != 0">
+				`unemployed_code`=#{unemployedCode},
+			</if>
+			<if test=" training != null">
+				`training`=#{training},
+			</if>
+			<if test=" trainingCode != 0">
+				`training_code`=#{trainingCode},
+			</if>
+			<if test=" trainingUnit != null">
+				`training_unit`=#{trainingUnit},
+			</if>
+			<if test=" grade != 0">
+				`grade`=#{grade},
+			</if>
+			<if test=" graduate != 0">
+				`graduate`=#{graduate},
+			</if>
+			<if test=" springGraduate != null">
+				`spring_graduate`=#{springGraduate},
+			</if>
+			<if test=" synEvaluation != null">
+				`syn_evaluation`=#{synEvaluation},
+			</if>
+			<if test=" rank != null">
+				`rank`=#{rank},
+			</if>
+			<if test=" difficulty != null">
+				`difficulty`=#{difficulty},
+			</if>
+			<if test=" assistant != null">
+				`assistant`=#{assistant},
+			</if>
+			<if test=" employProgram != null">
+				`employ_program`=#{employProgram},
+			</if>
+			<if test=" contract != null">
+				`contract`=#{contract},
+			</if>
+			<if test=" instructor != null">
+				`instructor`=#{instructor},
+			</if>
+			<if test=" forest != null">
+				`forest`=#{forest},
+			</if>
+			<if test=" cadre != null">
+				`cadre`=#{cadre},
+			</if>
+			<if test=" mentor != null">
+				`mentor`=#{mentor},
+			</if>
+			<if test=" mentorTitle != null">
+				`mentor_title`=#{mentorTitle},
+			</if>
+			<if test=" undergraduateCat != null">
+				`undergraduate_cat`=#{undergraduateCat},
+			</if>
+			<if test=" undergraduate != null">
+				`undergraduate`=#{undergraduate},
+			</if>
+			<if test=" changes != null">
+				`changes`=#{changes},
+			</if>
+			<if test=" changesCode != 0">
+				`changes_code`=#{changesCode},
+			</if>
+			<if test=" remark != null">
+				`remark`=#{remark},
+			</if>
+			<if test=" status != null">
+				`status`=#{status},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--批量更新Student-->
+	<update id="updateStudentBatch">
+		UPDATE student
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="student.username != null">
+				`username` = #{student.username},
+			</if>
+			<if test="student.password != null">
+				`password` = #{student.password},
+			</if>
+			<if test="student.name != null">
+				`name` = #{student.name},
+			</if>
+			<if test="student.updateTime != null">
+				`update_time` = unix_timestamp(),
+			</if>
+			<if test="student.birthday != null">
+				`birthday` = #{student.birthday},
+			</if>
+			<if test="student.card != null">
+				`card` = #{student.card},
+			</if>
+			<if test="student.phone != null">
+				`phone` = #{student.phone},
+			</if>
+			<if test="student.email != null">
+				`email` = #{student.email},
+			</if>
+			<if test="student.homePhone != null">
+				`home_phone` = #{student.homePhone},
+			</if>
+			<if test="student.wechat != null">
+				`wechat` = #{student.wechat},
+			</if>
+			<if test="student.gender != null">
+				`gender` = #{student.gender},
+			</if>
+			<if test="student.genderCode != 0">
+				`gender_code` = #{student.genderCode},
+			</if>
+			<if test="student.ethnicity != null">
+				`ethnicity` = #{student.ethnicity},
+			</if>
+			<if test="student.ethnicityCode != 0">
+				`ethnicity_code` = #{student.ethnicityCode},
+			</if>
+			<if test="student.candidateNumber != null">
+				`candidate_number` = #{student.candidateNumber},
+			</if>
+			<if test="student.graduateDate != null">
+				`graduate_date` = #{student.graduateDate},
+			</if>
+			<if test="student.graduateYear != 0">
+				`graduate_year` = #{student.graduateYear},
+			</if>
+			<if test="student.enrollmentAddr != null">
+				`enrollment_addr` = #{student.enrollmentAddr},
+			</if>
+			<if test="student.enrollmentCode != null">
+				`enrollment_code` = #{student.enrollmentCode},
+			</if>
+			<if test="student.political != null">
+				`political` = #{student.political},
+			</if>
+			<if test="student.politicalCode != 0">
+				`political_code` = #{student.politicalCode},
+			</if>
+			<if test="student.school != null">
+				`school` = #{student.school},
+			</if>
+			<if test="student.schoolCode != null">
+				`school_code` = #{student.schoolCode},
+			</if>
+			<if test="student.depart != null">
+				`depart` = #{student.depart},
+			</if>
+			<if test="student.departCode != null">
+				`depart_code` = #{student.departCode},
+			</if>
+			<if test="student.major != null">
+				`major` = #{student.major},
+			</if>
+			<if test="student.majorCode != null">
+				`major_code` = #{student.majorCode},
+			</if>
+			<if test="student.classes != null">
+				`classes` = #{student.classes},
+			</if>
+			<if test="student.classesCode != null">
+				`classes_code` = #{student.classesCode},
+			</if>
+			<if test="student.type != null">
+				`type` = #{student.type},
+			</if>
+			<if test="student.typeCode != 0">
+				`type_code` = #{student.typeCode},
+			</if>
+			<if test="student.degree != null">
+				`degree` = #{student.degree},
+			</if>
+			<if test="student.degreeCode != 0">
+				`degree_code` = #{student.degreeCode},
+			</if>
+			<if test="student.education != null">
+				`education` = #{student.education},
+			</if>
+			<if test="student.educationCode != 0">
+				`education_code` = #{student.educationCode},
+			</if>
+			<if test="student.graduation != null">
+				`graduation` = #{student.graduation},
+			</if>
+			<if test="student.enrollment != null">
+				`enrollment` = #{student.enrollment},
+			</if>
+			<if test="student.normal != null">
+				`normal` = #{student.normal},
+			</if>
+			<if test="student.normalCode != 0">
+				`normal_code` = #{student.normalCode},
+			</if>
+			<if test="student.unemployed != null">
+				`unemployed` = #{student.unemployed},
+			</if>
+			<if test="student.unemployedCode != 0">
+				`unemployed_code` = #{student.unemployedCode},
+			</if>
+			<if test="student.training != null">
+				`training` = #{student.training},
+			</if>
+			<if test="student.trainingCode != 0">
+				`training_code` = #{student.trainingCode},
+			</if>
+			<if test="student.trainingUnit != null">
+				`training_unit` = #{student.trainingUnit},
+			</if>
+			<if test="student.grade != 0">
+				`grade` = #{student.grade},
+			</if>
+			<if test="student.graduate != 0">
+				`graduate` = #{student.graduate},
+			</if>
+			<if test="student.springGraduate != null">
+				`spring_graduate` = #{student.springGraduate},
+			</if>
+			<if test="student.synEvaluation != null">
+				`syn_evaluation` = #{student.synEvaluation},
+			</if>
+			<if test="student.rank != null">
+				`rank` = #{student.rank},
+			</if>
+			<if test="student.difficulty != null">
+				`difficulty` = #{student.difficulty},
+			</if>
+			<if test="student.assistant != null">
+				`assistant` = #{student.assistant},
+			</if>
+			<if test="student.employ != null">
+				`employ` = #{student.employ},
+			</if>
+			<if test="student.employCode != 0">
+				`employ_code` = #{student.employCode},
+			</if>
+			<if test="student.employTime != null">
+				`employ_time` = unix_timestamp(),
+			</if>
+			<if test="student.employProgram != null">
+				`employ_program` = #{student.employProgram},
+			</if>
+			<if test="student.contract != null">
+				`contract` = #{student.contract},
+			</if>
+			<if test="student.instructor != null">
+				`instructor` = #{student.instructor},
+			</if>
+			<if test="student.forest != null">
+				`forest` = #{student.forest},
+			</if>
+			<if test="student.cadre != null">
+				`cadre` = #{student.cadre},
+			</if>
+			<if test="student.mentor != null">
+				`mentor` = #{student.mentor},
+			</if>
+			<if test="student.mentorTitle != null">
+				`mentor_title` = #{student.mentorTitle},
+			</if>
+			<if test="student.undergraduateCat != null">
+				`undergraduate_cat` = #{student.undergraduateCat},
+			</if>
+			<if test="student.undergraduate != null">
+				`undergraduate` = #{student.undergraduate},
+			</if>
+			<if test="student.changes != null">
+				`changes` = #{student.changes},
+			</if>
+			<if test="student.changesCode != 0">
+				`changes_code` = #{student.changesCode},
+			</if>
+			<if test="student.remark != null">
+				`remark` = #{student.remark},
+			</if>
+			<if test="student.status != 0">
+				`status` = #{student.status},
+			</if>
+		</trim>
+		WHERE
+			status != 2 AND	id IN
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!--取消锁定Student-->
+	<update id="unlock">
+	  	UPDATE student
+	  	SET status = 0
+	  	WHERE id IN
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!--根据id查询Student-->
+	<select id="getStudentById" resultMap="studentDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM student
+		WHERE ID=#{id}
+	</select>
+
+	<!--根据Name查询Student-->
+	<select id="getStudentByName" resultMap="studentDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM student
+		WHERE username=#{username}
+	</select>
+
+	<!--根据bind_account查询Student-->
+	<select id="getStudentByBindAccount" resultMap="studentDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM student
+		WHERE bind_account=#{bind_account}
+	</select>
+
+</mapper>

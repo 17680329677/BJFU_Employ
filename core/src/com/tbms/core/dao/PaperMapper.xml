@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.PaperMapper">
+
+	<!-- 问卷表字段与DTO映射 -->
+	<resultMap id="paperDTO" type="com.tbms.core.dto.PaperDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="user_id" property="userId" javaType="java.lang.Integer" /><!--用户ID-->
+		<result column="title" property="title" javaType="java.lang.String" /><!--问卷标题-->
+		<result column="create_time" property="createTime" javaType="java.lang.String" /><!--创建时间-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--问卷状态-->
+		<result column="start_time" property="startTime" javaType="java.lang.String" /><!--开始时间-->
+		<result column="end_time" property="endTime" javaType="java.lang.String" /><!--结束时间-->
+		<result column="paper_type" property="paperType" javaType="java.lang.String" /><!--问卷类型-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`user_id`,
+		`title`,
+		`create_time`,
+		`status`,
+		`start_time`,
+		`end_time`,
+		`paper_type`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" userId != null ">
+			AND `user_id` = #{userId}
+		</if>
+		<if test=" title != null ">
+			AND `title` LIKE "%${title}%"
+		</if>
+		<if test=" createTime_Start != null ">
+			AND `create_time` &gt;= #{createTime_Start}
+		</if>
+		<if test=" createTime_End != null ">
+			AND `create_time` &lt;= #{createTime_End}
+		</if>
+		<if test=" createTime != null ">
+			AND `create_time` = #{createTime}
+		</if>
+		<if test=" status != null ">
+			AND `status` = #{status}
+		</if>
+		<if test=" startTime_Start != null ">
+			AND `start_time` &gt;= #{startTime_Start}
+		</if>
+		<if test=" startTime_End != null ">
+			AND `start_time` &lt;= #{startTime_End}
+		</if>
+		<if test=" startTime != null ">
+			AND `start_time` = #{startTime}
+		</if>
+		<if test=" endTime_Start != null ">
+			AND `end_time` &gt;= #{endTime_Start}
+		</if>
+		<if test=" endTime_End != null ">
+			AND `end_time` &lt;= #{endTime_End}
+		</if>
+		<if test=" endTime != null ">
+			AND `end_time` = #{endTime}
+		</if>
+		<if test=" paperType != null ">
+			AND `paper_type` = #{paperType}
+		</if>
+	</sql>
+
+	<!--根据条件获取Paper列表-->
+	<select id="getPaperList" resultMap="paperDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM paper
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Paper总数-->
+	<select id="getPaperListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM paper
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Paper-->
+	<insert id="addPaper" parameterType="com.tbms.core.dto.PaperDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO paper(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="userId!=null">
+				`user_id`,
+			</if>
+			<if test="title!=null">
+				`title`,
+			</if>
+			<if test="createTime!=null">
+				`create_time`,
+			</if>
+			<if test="status!=null">
+				`status`,
+			</if>
+			<if test="startTime!=null">
+				`start_time`,
+			</if>
+			<if test="endTime!=null">
+				`end_time`,
+			</if>
+			<if test="paperType!=null">
+				`paper_type`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="userId!=null">
+				#{userId},
+			</if>
+			<if test="title!=null">
+				#{title},
+			</if>
+			<if test="createTime!=null">
+				#{createTime},
+			</if>
+			<if test="status!=null">
+				#{status},
+			</if>
+			<if test="startTime!=null">
+				#{startTime},
+			</if>
+			<if test="endTime!=null">
+				#{endTime},
+			</if>
+			<if test="paperType!=null">
+				#{paperType},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加-->
+	<insert id="addPaperBatch" parameterType="java.util.List">
+		INSERT INTO paper(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					#{s.id},
+					#{s.userId},
+					#{s.title},
+					#{s.createTime},
+					#{s.status},
+					#{s.startTime},
+					#{s.endTime},
+					#{s.paperType},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Paper-->
+	<delete id="deletePaperById" parameterType="java.lang.Integer">
+		DELETE FROM paper
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Paper-->
+	<update id="updatePaper" parameterType="com.tbms.core.dto.PaperDTO">
+		UPDATE paper
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" userId != null">
+				`user_id`=#{userId},
+			</if>
+			<if test=" title != null">
+				`title`=#{title},
+			</if>
+			<if test=" createTime != null">
+				`create_time`=#{createTime},
+			</if>
+			<if test=" status != null">
+				`status`=#{status},
+			</if>
+			<if test=" startTime != null">
+				`start_time`=#{startTime},
+			</if>
+			<if test=" endTime != null">
+				`end_time`=#{endTime},
+			</if>
+			<if test=" paperType != null">
+				`paper_type`=#{paperType},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Paper-->
+	<select id="getPaperById" resultMap="paperDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM paper
+		WHERE ID=#{id}
+	</select>
+
+	<!--根据status查询Paper-->
+	<select id="getPaperByStatus" resultMap="paperDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM paper
+		WHERE status=#{status}
+		limit 1
+	</select>
+
+	<select id="getPaperByType" resultMap="paperDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM paper
+		WHERE paper_type=#{paper_type}
+	</select>
+
+</mapper>

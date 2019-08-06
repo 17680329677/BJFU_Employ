@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.AreaMapper">
+
+	<!-- 字段与DTO映射 -->
+	<resultMap id="areaDTO" type="com.tbms.core.dto.AreaDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="code" property="code" javaType="java.lang.String" /><!---->
+		<result column="name" property="name" javaType="java.lang.String" /><!---->
+		<result column="citycode" property="citycode" javaType="java.lang.String" /><!---->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`code`,
+		`name`,
+		`citycode`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" code != null ">
+			AND `code` = #{code}
+		</if>
+		<if test=" name != null ">
+			AND `name` = #{name}
+		</if>
+		<if test=" citycode != null ">
+			AND `citycode` = #{citycode}
+		</if>
+	</sql>
+
+	<!--根据条件获取Area列表-->
+	<select id="getAreaList" resultMap="areaDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM area
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Area总数-->
+	<select id="getAreaListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM area
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Area-->
+	<insert id="addArea" parameterType="com.tbms.core.dto.AreaDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO area(
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				`id`,
+			</if>
+			<if test="code != null">
+				`code`,
+			</if>
+			<if test="name != null">
+				`name`,
+			</if>
+			<if test="citycode != null">
+				`citycode`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="code != null">
+				#{code},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="citycode != null">
+				#{citycode},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加Area-->
+	<insert id="addAreaBatch" parameterType="java.util.List">
+		INSERT INTO area(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					#{s.id},
+					#{s.code},
+					#{s.name},
+					#{s.citycode},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Area-->
+	<delete id="deleteAreaById" parameterType="java.lang.Integer">
+		DELETE FROM area
+		WHERE ID=#{id}
+	</delete>
+
+	<!--根据id批量删除Area-->
+	<delete id="deleteAreaBatch" parameterType="Integer[]">
+		DELETE FROM area
+		WHERE ID IN
+		<foreach collection="array" item="arr" index="no" open="(" separator="," close=")">
+			#{arr}
+		</foreach>
+	</delete>
+
+
+	<!--根据ID更新Area-->
+	<update id="updateArea" parameterType="com.tbms.core.dto.AreaDTO">
+		UPDATE area
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" code != null">
+				`code`=#{code},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+			<if test=" citycode != null">
+				`citycode`=#{citycode},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Area-->
+	<select id="getAreaById" resultMap="areaDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM area
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

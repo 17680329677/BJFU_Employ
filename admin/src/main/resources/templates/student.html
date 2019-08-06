@@ -1,0 +1,302 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        学生
+        <small>学生页面</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">学生管理</a></li>
+        <li class="active">学生页面</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm" id="toolbar">
+                        <button type="button" id="uploadBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#uploadModal"><i class="glyphicon glyphicon-open"></i> 批量导入
+                        </button>
+                        <button type="button" id="editPwdBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#PasswordModal"
+                                data-action="{type:'editable',form:'#passwordForm',table:'#table',after:'editAfter'}"
+                                disabled><i class="glyphicon glyphicon-edit"></i> 修改密码
+                        </button>
+                        <!-- Indicates a dangerous or potentially negative action -->
+                        <button type="button" id="deleteBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#deleteModal"
+                                data-action="{type:'delete',form:'#deleteForm',idField:'id',table:'#table'}" disabled><i
+                                class="glyphicon glyphicon-remove"></i> 删除
+                        </button>
+                        <!-- Indicates a dangerous or potentially negative action -->
+                        <button type="button" id="deleteBatchBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#deleteBatchModal"> <i class="glyphicon glyphicon-remove"></i> 批量删除
+                        </button>
+                        <button type="button" id="checkStudent" class="btn btn-default" data-toggle="modal"
+                                data-target="#checkModal"
+                                data-action="{type:'check',form:'#checkForm',idField:'id',table:'#table'}"
+                                disabled>
+                            <i class="glyphicon glyphicon-saved"></i> 数据校验
+                        </button>
+                    </div>
+                    <table id="table"></table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteSmallModalLabel">删除学生</h4>
+            </div>
+            <div class="modal-body">
+                <form id="deleteForm"></form>
+                确定要删除选中的 <span class="records"></span> 条记录?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="deleteForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#deleteForm',url:'student/delete',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- deleteBatch modal -->
+<div class="modal fade" id="deleteBatchModal" tabindex="-1" role="dialog" aria-labelledby="deleteSmallModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteBatchSmallModalLabel">批量删除学生</h4>
+            </div>
+            <div class="modal-body">
+                <form id="deleteBatchForm">
+                    <div class="form-group">
+                        <label class="control-label"><span class="asterisk">*</span>学号:</label>
+                        <textarea class="form-control" name="username" rows="5" placeholder="每行一个学号"></textarea>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="deleteForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#deleteBatchForm',url:'student/deleteBatch',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- uploadModal-->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="uploadModalLabel">Excel批量导入</h4>
+            </div>
+            <div class="about-import">
+                <p style="padding: 20px 20px 0 20px;color: red;">Excel文件格式对应模板</p>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label class="control-label" for="filename"><span class="asterisk">*</span>excel文件:</label>
+                        <input id="filename" style="height: 38px;line-height: 25px;" type="file" class="form-control" name="file" placeholder="请选择excel文件" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="upload" form="uploadForm" name="student" class="btn btn-primary">
+                    开始导入
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--password Model-->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="PasswordModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editPassword">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form id="passwordForm">
+                    <input type="hidden" name="id"/>
+                    <div class="form-group">
+                        <label class="control-label" for="pusername"><span class="asterisk">*</span>用户名:</label>
+                        <input id="pusername" type="text" class="form-control" name="username" placeholder="输入用户名" readonly>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="pName"><span class="asterisk">*</span>姓名:</label>
+                        <input id="pName" type="text" class="form-control" name="name" placeholder="输入姓名"
+                               disabled>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="pwd"><span class="asterisk">*</span>密码:</label>
+                        <input type="password" class="form-control" id="pwd" minlength="6"
+                               name="password" placeholder="输入密码" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="passwordForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#passwordForm',url:'student/update',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var $table = $('#table');
+    var currentYear = [[${currentYear}]];
+    $(function () {
+        // bootstrap table初始化
+        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+        $table.bootstrapTable({
+            url: 'student/list',
+            idField: 'id',
+            queryParams:function (params) {
+                //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                var temp = {
+                    limit: params.limit,                         //页面大小
+                    offset: params.offset,   //页码
+                    sort: params.sort,      //排序列名
+                    order: params.order, //排位命令（desc，asc）
+                    scolumn:params.scolumn?params.scolumn.toString():'graduateYear',//默认当前年度
+                    search:params.search?params.search:currentYear>0?currentYear:(new Date()).getFullYear()
+                };
+                return temp;
+            },
+            columns: [
+                {checkbox: true,searchable:false},
+                {field: 'username', title: '用户名', sortable: true, halign: 'left'},
+                {field: 'name', title: '姓名', sortable: true, halign: 'left'},
+                {field: 'gender', title: '性别', sortable: true, halign: 'left'},
+                {field: 'birthday', title: '生日', sortable: true, halign: 'left'},
+                {field: 'ethnicity', title: '民族', sortable: true, halign: 'left'},
+                {field: 'political', title: '政治面貌', sortable: true, halign: 'left'},
+                {field: 'depart', title: '学院', sortable: true, halign: 'left'},
+                {field: 'major', title: '专业', sortable: true, halign: 'left'},
+                {field: 'degree', title: '层次', sortable: true, halign: 'left'},
+                {field: 'graduateYear', title: '毕业年份', sortable: false, halign: 'left'},
+                {field: 'phone', title: '电话', sortable: true, halign: 'left'},
+                {field: 'lastLoginIp', title: '登录IP', sortable: false, halign: 'left'},
+                {field: 'loginCount', title: '登录次数',searchable:false,sortable: false, halign: 'left'},
+                {field: 'lastLoginTime', title: '登录时间',searchable:false ,sortable: false, halign: 'left',formatter:function (value, row, index) {
+                        return new Date(value*1000).toLocaleString();
+                    }},
+                {
+                    field: 'action',
+                    title: '操作',
+                    halign: 'center',
+                    align: 'center',
+                    formatter: 'actionFormatter',
+                    events: 'actionEvents',
+                    searchable:false
+                }
+            ]
+        });
+    });
+
+    // 数据表格展开内容
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+
+    function forbid(value, row, index) {
+        var info;
+        switch (value){
+            case 2:
+                info = '<button type="button" class="btn btn-primary btn-xs">已锁定</button>';
+                break;
+            case 1:
+                info = '<button type="button" class="btn btn-success btn-xs">已审核</button>';
+                break;
+            case 0:
+                info = '未提交';
+                break;
+            case -1:
+                info = '<button type="button"  class="btn btn-warning btn-xs">已修改</button>';
+                break;
+            case -2:
+                info = '<button type="button" class="btn btn-danger btn-xs">未通过</button>';
+                break;
+            default:
+                info = "无";
+        }
+        return info;
+    }
+
+    function editAfter(obj,row) {
+        $("#pwd").val("");
+        $.myAdmin.refreshComponent();
+    }
+
+    function actionFormatter(value, row, index) {
+        return '\
+        <a class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　\
+        ';
+    }
+
+    window.actionEvents = {
+        'click .remove': function (e, value, row, index) {
+            $('#deleteModal').modal('show');
+            $('.records').html('1');
+            var html = '';
+            for (var key in row) {
+                html += '<input type="hidden" name="' + key + '" value="' + row[key] + '">';
+            }
+            $('#deleteForm').html(html);
+        }
+    };
+
+    //设置基础信息列表
+    $("#type").on("blur", function (ev) {
+        var str = $("#type").val();
+        var type = str.replace(/(^\s*)|(\s*$)/g, '');
+        var url = "basic/code/"+type;
+        $.generateApi.loadInfo(url,fillType);
+    });
+
+    function fillType(codes) {
+        $("#code").empty();
+        $.each(codes,function (key,data) {
+            var option = '<option value = "'+data.id+'">'+data.name+'</option>';
+            $("#code").append(option);
+        });
+    }
+
+    //上传文件
+    $("#upload").upload();
+
+</script>

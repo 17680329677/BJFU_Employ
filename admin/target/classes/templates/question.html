@@ -1,0 +1,546 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        问题信息
+        <small id="paper_title"></small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">问题信息管理</a></li>
+        <li class="active">问题信息页面</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm" id="toolbar">
+                        <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                        <button type="button" id="addBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#addModal"><i class="glyphicon glyphicon-plus"></i> 添加
+                        </button>
+                        <!-- Indicates caution should be taken with this action -->
+                        <button type="button" id="editBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#editModal"
+                                data-action="{type:'editable',form:'#questioneditForm',table:'#table',after:'editAfter'}"
+                                disabled><i class="glyphicon glyphicon-edit"></i> 修改
+                        </button>
+                        <!-- Indicates a dangerous or potentially negative action -->
+                        <button type="button" id="deleteBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#deleteModal"
+                                data-action="{type:'delete',form:'#deleteForm',idField:'id',table:'#table'}" disabled><i
+                                class="glyphicon glyphicon-remove"></i> 删除
+                        </button>
+                    </div>
+                    <table id="table"></table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<!-- add Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="addModalLabel">添加问题信息</h4>
+            </div>
+            <div class="modal-body">
+                <form id="questionAddForm">
+                        <div class="form-group">
+                            <label class="control-label" for="paperId"><span class="asterisk">*</span>问卷ID:</label>
+                            <input id="paperId" type="text" class="form-control" name="paperId" placeholder="输入问卷ID" th:value="${paper.id}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="questionType"><span class="asterisk">*</span>问题类型:</label>
+                            <select class="form-control" id="questionType" name="questionType">
+                                <option value="">----请选择问题类型----</option>
+                                <option value="1">单选题</option>
+                                <option value="2">多选题</option>
+                                <option value="3">评分题</option>
+                                <option value="4">简答题</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="questionTitle"><span class="asterisk">*</span>问题标题:</label>
+                            <input id="questionTitle" type="text" class="form-control" name="questionTitle" placeholder="输入问题标题">
+                        </div>
+                        <hr>
+                        <input id="questionOption" name="questionOption" type="hidden">
+                        <div class="input-group-add"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <!--<button type="submit" form="addForm" class="btn btn-primary"-->
+                        <!--data-action="{type:'submit',form:'#addForm',url:'question/create',after:'$.myAction.refreshTable'}">-->
+                    <!--确定-->
+                <!--</button>-->
+                <button  id="contentMerge" class="btn btn-primary" data-target="#subModal" data-toggle="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editModalLabel">修改问题信息</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form id="questionEditForm">
+                        <input type="hidden" name="id">
+                            <div class="form-group">
+                                <label class="control-label" for="eid"><span class="asterisk">*</span>ID:</label>
+                                <input id="eid" type="text" class="form-control" name="id" placeholder="输入ID" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="epaperId"><span class="asterisk">*</span>问卷ID:</label>
+                                <input id="epaperId" type="text" class="form-control" name="paperId" placeholder="输入问卷ID" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="ecreateTime"><span class="asterisk">*</span>创建时间:</label>
+                                <input id="ecreateTime" type="text" class="form-control" name="createTime" placeholder="输入创建时间" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="equestionType"><span class="asterisk">*</span>问题类型:</label>
+                                <select class="form-control" id="equestionType" name="questionType">
+                                    <option value="">----请选择----</option>
+                                    <option value="1">单选题</option>
+                                    <option value="2">多选题</option>
+                                    <option value="3">评分题</option>
+                                    <option value="4">简答题</option>
+                                </select>
+                                <!--<input id="equestionType" type="text" class="form-control" name="questionType" placeholder="输入问题类型">-->
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="equestionTitle"><span class="asterisk">*</span>问题标题:</label>
+                                <input id="equestionTitle" type="text" class="form-control" name="questionTitle" placeholder="输入问题标题">
+                            </div>
+                            <hr>
+                            <h4 class="modal-title">问题选项</h4>
+                            <input id="equestionOption" name="questionOption" type="hidden">
+                            <div class="input-group-edit"></div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button id="eMerge" class="btn btn-primary" data-target="#eModal" data-toggle="modal">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteSmallModalLabel">删除问题信息</h4>
+            </div>
+            <div class="modal-body">
+                <form id="deleteForm"></form>
+                确定要删除选中的 <span class="records"></span> 条记录?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="deleteForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#deleteForm',url:'question/delete',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="subModal" aria-labelledby="subModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">提交</h4>
+            </div>
+            <div class="modal-body">
+                <p>确认新增此问题吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" form="questionAddForm" class="btn btn-primary" id="submit"
+                        data-action="{type:'submit',form:'#questionAddForm',url:'question/create',after:'$.myAction.refreshTable'}">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="eModal" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">修改</h4>
+            </div>
+            <div class="modal-body">
+                <p>确认修改此问题吗？</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" form="questionEditForm" class="btn btn-primary" id="esubmit"
+                        data-action="{type:'submit',form:'#questionEditForm',url:'question/update',after:'$.myAction.refreshTable'}">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+    <div class="modal-dialog modal-lg" style="width: 80%;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="staticModalLabel">问题答案统计视图</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div id="view" style="width:100%;height:600px;"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+    // 读取当前问卷的信息，展示问卷标题
+    let paperTitle = [[${paper}]].title;
+    $('#paper_title').text(paperTitle);
+    let paperId = [[${paper}]].id;
+    $('#paperId').val(paperId);
+    // 读取URL中的paperId
+    let id = GetUrlParam("id");
+    var $table = $('#table');
+
+    $(function () {
+        // bootstrap table初始化
+        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+        $table.bootstrapTable({
+            url: 'question/list/' + id,
+            idField: 'id',
+            queryParams:function (params) {
+                //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                var temp = {
+                    limit: params.limit,                         //页面大小
+                    offset: params.offset,   //页码
+                    sort: params.sort,      //排序列名
+                    order: params.order, //排位命令（desc，asc）
+                    scolumn:params.scolumn?params.scolumn.toString():'year',//默认当前年度
+                    search:params.search?params.search:(new Date()).getFullYear()
+                };
+                return temp;
+            },
+            columns: [
+                {checkbox: true,searchable:false},
+                {field: 'id', title: '题目ID', sortable: true, halign: 'left',searchable:false},
+                {field: 'paperId', title: '问卷ID', sortable: true, halign: 'left',searchable:false},
+                {field: 'createTime', title: '创建时间', sortable: true, halign: 'left',searchable:false,
+                            formatter:function (value, row, index) {return date('Y-m-d H:i:s', value);}},
+                {field: 'questionType', title: '问题类型', sortable: true, halign: 'left',searchable:false, formatter: "showType"},
+                {field: 'questionTitle', title: '问题标题', sortable: true, halign: 'left',searchable:false},
+                {field: 'questionOption', title: '问题选项', sortable: true, halign: 'left',searchable:false},
+                {
+                    field: 'action',
+                    title: '操作',
+                    halign: 'center',
+                    align: 'center',
+                    formatter: 'actionFormatter',
+                    events: 'actionEvents',
+                    searchable:false
+                }
+            ]
+        });
+    });
+
+    function showType(value, row, index) {
+        var info;
+        switch (value){
+            case 1:
+                info = '<span class="label label-success">单选题</span>';
+                break;
+            case 2:
+                info = '<span class="label label-info">多选题</span>';
+                break;
+            case 3:
+                info = '<span class="label label-primary">评分题</span>';
+                break;
+            case 4:
+                info = '<span class="label label-default">简答题</span>';
+                break;
+            default:
+                info = "无";
+        }
+        return info;
+    }
+
+    // 数据表格展开内容
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+
+    function editAfter(obj,row) {
+        $.myAdmin.refreshComponent();
+    }
+
+    function actionFormatter(value, row, index) {
+        return '\
+        <a class="edit ml10" href="javascript:void(0)" data-toggle="tooltip" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>　\
+        \
+        <a class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　\
+        \
+        <a class="static m110" href="#" data-toggle="modal" data-target="#staticModal" title="统计"><i class="glyphicon glyphicon-eye-open"></i></a> \
+        ';
+    }
+
+    function fun(row) {
+        console.log(row);
+    }
+
+    window.actionEvents = {
+        'click .edit': function (e, value, row, index) {
+            $('#editModal').modal('show');
+            $('#questionEditForm').fillForm(row);
+            // 选择对应的问题类型
+            let questionType = row.questionType;
+            $('#equestionType').find('option[value=' + questionType + ']').prop("selected", true);
+            // 格式化时间
+            $('#ecreateTime').val(date('Y-m-d H:i:s', row.createTime));
+            // 获取选项
+            $('.input-group-edit').text('');
+            if (row.questionType != 3 && row.questionType != 4) {
+                let options = row.questionOption;
+                let arr = options.split(';');
+                $('.input-group-edit').resumeGroup({
+                    'widget' : 'input', //输入框组中间的空间类型
+                    /*'add' : '添加',
+                    'del' : '删除'*/
+                }, arr);
+            } else if (row.questionType == 3) {
+                let scores = row.questionOption.split(';');
+                var parent = $('.input-group-edit');
+                parent.text('');
+                var minScore = $("<input type='text' id='minScore' value=" + scores[0] +">");
+                var maxScore = $("<input type='text' id='maxScore' value=" + scores[scores.length-2] +">");
+                parent.append("最低分：").append(minScore).append("    最高分：").append(maxScore);
+            }
+            editAfter('',row);
+        },
+        'click .remove': function (e, value, row, index) {
+            $('#deleteModal').modal('show');
+            $('.records').html('1');
+            var html = '';
+            for (var key in row) {
+                html += '<input type="hidden" name="' + key + '" value="' + row[key] + '">';
+            }
+            $('#deleteForm').html(html);
+        },
+        'click .static': function (e, value, row, index) {
+            $.ajax({
+                type: 'get',
+                url: '/question/static?question_id=' + row['id'],
+                cache:false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status === 0) {
+                        if (row['questionType'] === 1) {
+                            showPie(data);
+                        } else if (row['questionType'] === 2 || row['questionType'] === 3) {
+                            showBar(data);
+                        } else {
+                            showAnswerList();
+                        }
+                    } else {
+                        $.myNotify.warning("统计出错！");
+                    }
+                }
+            });
+        }
+    };
+
+    // 根据问题类型的变化，控制新增选项按钮
+    $('#questionType').change(function () {
+        let quesType = $('#questionType option:selected').val();
+        if (quesType === '1' || quesType === '2') {
+            $('.input-group-add').text('');
+            $('.input-group-add').initInputGroup({
+                'widget' : 'input', //输入框组中间的空间类型
+                /*'add' : '添加',
+                'del' : '删除'*/
+            });
+        } else if (quesType === '3') {
+            var parent = $('.input-group-add');
+            parent.text('');
+            var minScore = $("<input type='text' id='minScore' value='1'>");
+            var maxScore = $("<input type='text' id='maxScore' value='10'>");
+            parent.append("最低分：").append(minScore).append("    最高分：").append(maxScore);
+        } else {
+            $('.input-group-add').text('');
+        }
+    });
+
+    $('#equestionType').change(function () {
+        let quesType = $('#equestionType option:selected').val();
+        if (quesType === '4') {
+            $('.input-group-edit').text('');
+        } else if (quesType === '3') {
+            var parent = $('.input-group-edit');
+            parent.text('');
+            var minScore = $("<input type='text' id='minScore' value='1'>");
+            var maxScore = $("<input type='text' id='maxScore' value='10'>");
+            parent.append("最低分：").append(minScore).append("    最高分：").append(maxScore);
+        } else {
+            $('.input-group-edit').text('');
+            $('.input-group-edit').initInputGroup({
+                'widget' : 'input', //输入框组中间的空间类型
+                /*'add' : '添加',
+                'del' : '删除'*/
+            });
+        }
+    })
+
+    $('#contentMerge').on('click', function (e) {
+        let bootstrapValidator = $('#questionAddForm').data('bootstrapValidator');
+        bootstrapValidator.validate();
+        if (bootstrapValidator.isValid()) {
+            let type = $('#questionType').val();
+            if (type != 3 && type != 4) {
+                let count = $('.input-group-add').children().length;
+                if (count < 2) {
+                    $.myNotify.warning('至少需要两个选项');
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                let content = '';
+                for (let i = 1; i <= count; i++) {
+                    let cont = $('#content' + i).val();
+                    if (cont == '' || content == null) {
+                        $.myNotify.warning('请填写完整的问题选项！');
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    content = content + cont + ';';
+                }
+                $('#questionOption').val(content);
+            } else if (type == '3') {
+                let re = /^[0-9]+.?[0-9]*$/;
+                let minScore = $('#minScore').val();
+                let maxScore = $('#maxScore').val();
+                if (re.test(minScore) && re.test(maxScore)) {
+                    if (parseInt(maxScore) > 10 || parseInt(minScore) < 0 || parseInt(minScore) >= parseInt(maxScore)) {
+                        $.myNotify.warning('评分范围只能是0-10分的子集哟！');
+                        e.preventDefault();
+                        e.stopPropagation();
+                    } else {
+                        let option = '';
+                        for (let i = minScore; i <= maxScore; i++) {
+                            option = option + i + ';';
+                        }
+                        $('#questionOption').val(option);
+                    }
+                } else {
+                    $.myNotify.warning('请输入数字');
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }
+        } else {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $('#eMerge').on('click', function (e) {
+        let bootstrapValidator = $('#questionEditForm').data('bootstrapValidator');
+        bootstrapValidator.validate();
+        if (bootstrapValidator.isValid()) {
+            let type = $('#equestionType').val();
+            if (type != 3 && type != 4) {
+                let count = $('.input-group-edit').children().length;
+                if (count < 2) {
+                    $.myNotify.warning('至少需要两个选项');
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                let content = '';
+                for (let i = 1; i <= count; i++) {
+                    let cont = $('#content' + i).val();
+                    if (cont == '' || content == null) {
+                        $.myNotify.warning('请填写完整的问题选项！');
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    content = content + cont + ';';
+                }
+                $('#equestionOption').val(content);
+            } else if (type === '3') {
+                let re = /^[0-9]+.?[0-9]*$/;
+                let minScore = $('#minScore').val();
+                let maxScore = $('#maxScore').val();
+                alert(minScore);
+                alert(maxScore);
+                if (re.test(minScore) && re.test(maxScore)) {
+                    if (parseInt(maxScore) > 10 || parseInt(minScore) < 0 || parseInt(minScore) >= parseInt(maxScore)) {
+                        $.myNotify.warning('评分范围只能是0-10分的子集哟！');
+                        e.preventDefault();
+                        e.stopPropagation();
+                    } else {
+                        let option = '';
+                        for (let i = parseInt(minScore); i <= parseInt(maxScore); i++) {
+                            option = option + i + ';';
+                        }
+                        $('#equestionOption').val(option);
+                    }
+                } else {
+                    $.myNotify.warning('请输入数字');
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }
+        } else {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
+    $('#addBtn').on('click', function () {
+        $('.input-group-add').text('');
+    })
+
+</script>

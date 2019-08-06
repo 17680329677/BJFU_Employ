@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.RoleResourceMapper">
+	<!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+	<!-- 字段与DTO映射 -->
+	<resultMap id="roleResourceDTO" type="com.tbms.core.dto.RoleResourceDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="role_id" property="roleId" javaType="java.lang.Integer" /><!--角色ID-->
+		<result column="resource_id" property="resourceId" javaType="java.lang.Integer" /><!--资源ID-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`role_id`,
+		`resource_id`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id`=#{id}
+		</if>
+		<if test=" roleId != null ">
+			AND `role_id`=#{roleId}
+		</if>
+		<if test=" resourceId != null ">
+			AND `resource_id`=#{resourceId}
+		</if>
+	</sql>
+
+	<!--根据条件获取RoleResource列表-->
+	<select id="getRoleResourceList" resultMap="roleResourceDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM role_resource
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--根据条件获取RoleResource列表-->
+	<select id="getRoleResourcePage" resultMap="roleResourceDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM role_resource
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="offset !=null">
+			limit #{offset},#{size}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<!--根据条件获取RoleResource总数-->
+	<select id="getRoleResourceListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM role_resource
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+
+	<!--添加RoleResource-->
+	<insert id="addRoleResource" parameterType="com.tbms.core.dto.RoleResourceDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO role_resource(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="roleId!=null">
+				`role_id`,
+			</if>
+			<if test="resourceId!=null">
+				`resource_id`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="roleId!=null">
+				#{roleId},
+			</if>
+			<if test="resourceId!=null">
+				#{resourceId},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除RoleResource-->
+	<delete id="deleteRoleResourceById" parameterType="java.lang.Integer">
+		DELETE FROM role_resource
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新RoleResource-->
+	<update id="updateRoleResource" parameterType="com.tbms.core.dto.RoleResourceDTO">
+		UPDATE role_resource
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" roleId != null">
+				`role_id`=#{roleId},
+			</if>
+			<if test=" resourceId != null">
+				`resource_id`=#{resourceId},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询RoleResource-->
+	<select id="getRoleResourceById" resultMap="roleResourceDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM role_resource
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

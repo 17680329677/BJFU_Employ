@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.MajorMapper">
+
+	<!-- 专业字段与DTO映射 -->
+	<resultMap id="majorDTO" type="com.tbms.core.dto.MajorDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="code" property="code" javaType="java.lang.String" /><!--专业代码-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--专业名称-->
+		<result column="depart_code" property="departCode" javaType="java.lang.String" /><!--学院代码-->
+		<result column="depart_name" property="departName" javaType="java.lang.String" /><!--学院名称-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`code`,
+		`name`,
+		`depart_code`,
+		`depart_name`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" code != null ">
+			AND `code` LIKE "%${code}%"
+		</if>
+		<if test=" name != null ">
+			AND `name` LIKE "%${name}%"
+		</if>
+		<if test=" departCode != null ">
+			AND `depart_code` = #{departCode}
+		</if>
+		<if test=" departName != null ">
+			AND `depart_name` LIKE "%${departName}%"
+		</if>
+	</sql>
+
+	<!--根据条件获取Major列表-->
+	<select id="getMajorList" resultMap="majorDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM major
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset !=null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Major总数-->
+	<select id="getMajorListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM major
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Major-->
+	<insert id="addMajor" parameterType="com.tbms.core.dto.MajorDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO major(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="code!=null">
+				`code`,
+			</if>
+			<if test="name!=null">
+				`name`,
+			</if>
+			<if test="departCode!=null">
+				`depart_code`,
+			</if>
+			<if test="departName!=null">
+				`depart_name`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="code!=null">
+				#{code},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+			<if test="departCode!=null">
+				#{departCode},
+			</if>
+			<if test="departName!=null">
+				#{departName},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除Major-->
+	<delete id="deleteMajorById" parameterType="java.lang.Integer">
+		DELETE FROM major
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Major-->
+	<update id="updateMajor" parameterType="com.tbms.core.dto.MajorDTO">
+		UPDATE major
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" code != null">
+				`code`=#{code},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+			<if test=" departCode != null">
+				`depart_code`=#{departCode},
+			</if>
+			<if test=" departName != null">
+				`depart_name`=#{departName},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Major-->
+	<select id="getMajorById" resultMap="majorDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM major
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

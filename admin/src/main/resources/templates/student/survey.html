@@ -1,0 +1,178 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        调查问卷
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active"><a href="#">调查问卷</a></li>
+    </ol>
+</section>
+
+<section class="content" xmlns:th="http://www.thymeleaf.org">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="border: 1px solid #778899">
+                        <h3 style="text-align: center" id="paperTitle">调查问卷</h3>
+                        <form id="surveyForm" style="margin-left: 50px; margin-right: 50px">
+
+                            <div class="form-group" th:each="question, quesStat:${questionList}" th:switch="${question.questionType}">
+                                <!-- 单选题 -->
+                                <div th:case="1">
+                                    <span class="asterisk">*</span>
+                                    <label th:text="${quesStat.index+1} + '、' + ${question.questionTitle}"></label>
+                                    <span class="label label-success">单选题</span>
+                                    <div class="radio" th:each="option,optStat:${question.questionOption.split(';')}">
+                                        <label>
+                                            <input type="radio" th:name="'optionsRadios' + ${question.id}"
+                                                   th:id="'optionsRadios'+ ${question.id} + ${optStat.index}"
+                                                   th:value="${option}" th:text="${option}">
+                                        </label>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <!-- 多选题 -->
+                                <div th:case="2">
+                                    <span class="asterisk">*</span>
+                                    <label th:text="${quesStat.index+1} + '、' + ${question.questionTitle}"></label>
+                                    <span class="label label-info">多选题</span>
+                                    <div class="checkbox" th:each="option,optStat:${question.questionOption.split(';')}">
+                                        <label>
+                                            <input type="checkbox" th:name="'optionsCheckBox' + ${question.id}" th:value="${option}" th:text="${option}">
+                                        </label>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <!-- 评分题 -->
+                                <div th:case="3">
+                                    <span class="asterisk">*</span>
+                                    <label th:text="${quesStat.index+1} + '、' + ${question.questionTitle}"></label>
+                                    <span class="label label-primary">评分题</span>
+                                    <div>
+                                        <label class="radio-inline"  th:each="option,optStat:${question.questionOption.split(';')}">
+                                            <input type="radio" th:name="'optionsRadios' + ${question.id}"
+                                                   th:id="'optionsRadios'+ ${question.id} + ${optStat.index}"
+                                                   th:value="${option}" th:text="${option}">
+                                        </label>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                                <!-- 简答题 -->
+                                <div th:case="4">
+                                    <label th:text="${quesStat.index+1} + '、' + ${question.questionTitle}"></label>
+                                    <span class="label label-default">简答题</span>
+                                    <div>
+                                        <textarea th:id="'textArea'+${question.id}" placeholder="非必填项，默认为无" style="width: 60%; height: 150px"></textarea>
+                                    </div>
+                                    <hr>
+                                </div>
+
+                            </div>
+                        </form>
+                        <button class="btn btn-primary" id="subBtn"
+                                style="margin-bottom: 50px; float: right; margin-top: 20px">
+                            提交
+                        </button>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+    let questionList = [[${questionList}]];
+    let paper = [[${paper}]];
+    let paper_id = paper.id;
+    // 问卷标题
+    $('#paperTitle').text(paper.title);
+
+   $(function () {
+       $('#subBtn').on('click', function (e) {
+           let anwserList = [];
+           // alert("input[name='optionsRadios'" + questionList[0].id + "]:checked")
+           for (let i = 0; i < questionList.length; i++) {
+               // 获取单选题答案
+                if (questionList[i].questionType === 1 || questionList[i].questionType === 3) {
+                    let param = 'optionsRadios' + questionList[i].id;
+                    let answer = $("input[name=" + param + "]:checked").val();
+                    if (answer != null && answer != '') {
+                        let content = {};
+                        content.paperId = paper_id;
+                        content.questionId = questionList[i].id;
+                        content.questionType = 1;
+                        content.submitOption = answer;
+                        anwserList.push(content);
+                    } else {
+                        $.myNotify.warning('请将问卷填写完整');
+                        return;
+                    }
+                } else if (questionList[i].questionType === 2) {
+                    let param = 'optionsCheckBox' + questionList[i].id;
+                    let answer = '';
+                    $.each($("input[name=" + param + "]:checked"),function(){
+                        if ($(this).val() != '' && $(this).val() != null) {
+                            answer = answer + $(this).val() + ';';
+                        }
+                    });
+                    if (answer != null && answer != '') {
+                        let content = {};
+                        content.paperId = paper_id;
+                        content.questionId = questionList[i].id;
+                        content.questionType = 2;
+                        content.submitOption = answer;
+                        anwserList.push(content);
+                    } else {
+                        $.myNotify.warning('请将问卷填写完整');
+                        return;
+                    }
+                } else if (questionList[i].questionType === 4) {
+                    let param = 'textArea' + questionList[i].id;
+                    let answer = $('#' + param).val();
+                    if (answer == null || answer == ''){answer = '无';}
+                    let content = {};
+                    content.paperId = paper_id;
+                    content.questionId = questionList[i].id;
+                    content.questionType = 3;
+                    content.submitOption = answer;
+                    anwserList.push(content);
+                }
+           }
+           console.log()
+           $.ajax({
+               type: 'post',
+               url: '/stu/survey_add',
+               data: JSON.stringify(anwserList),
+               cache: false,
+               async:true,
+               dataType: 'JSON',
+               contentType: "application/json; charset=utf-8",
+               success: function (obj) {
+                   if (obj.code == 200) {
+                       $.myNotify.success(obj.msg);
+                       setTimeout(function () {
+                           window.location.href="#survey";
+                           window.location.reload();
+                       }, 2000)
+                   } else {
+                       $.myNotify.success(obj.msg);
+                   }
+               },
+               error: function () {
+                   $.myNotify.danger("发生不可预知的错误")
+               }
+           });
+       })
+   })
+</script>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.TokenMapper">
+
+	<!-- 字段与DTO映射 -->
+	<resultMap id="tokenDTO" type="com.tbms.core.dto.TokenDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="student_id" property="studentId" javaType="java.lang.Integer" /><!---->
+		<result column="access_token" property="accessToken" javaType="java.lang.String" /><!---->
+		<result column="refresh_token" property="refreshToken" javaType="java.lang.String" /><!---->
+		<result column="update_time" property="updateTime" javaType="java.util.Date" /><!---->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`student_id`,
+		`access_token`,
+		`refresh_token`,
+		`update_time`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" studentId != null ">
+			AND `student_id` = #{studentId}
+		</if>
+		<if test=" accessToken != null ">
+			AND `access_token` = #{accessToken}
+		</if>
+		<if test=" refreshToken != null ">
+			AND `refresh_token` = #{refreshToken}
+		</if>
+		<if test=" updateTime_Start != null ">
+			AND `update_time` &gt;= #{updateTime_Start}
+		</if>
+		<if test=" updateTime_End != null ">
+			AND `update_time` &lt;= #{updateTime_End}
+		</if>
+		<if test=" updateTime != null ">
+			AND `update_time` = #{updateTime}
+		</if>
+	</sql>
+
+	<!--根据条件获取Token列表-->
+	<select id="getTokenList" resultMap="tokenDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM token
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Token总数-->
+	<select id="getTokenListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM token
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Token-->
+	<insert id="addToken" parameterType="com.tbms.core.dto.TokenDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO token(
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				`id`,
+			</if>
+			<if test="studentId != null">
+				`student_id`,
+			</if>
+			<if test="accessToken != null">
+				`access_token`,
+			</if>
+			<if test="refreshToken != null">
+				`refresh_token`,
+			</if>
+			<if test="updateTime != null">
+				`update_time`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="studentId != null">
+				#{studentId},
+			</if>
+			<if test="accessToken != null">
+				#{accessToken},
+			</if>
+			<if test="refreshToken != null">
+				#{refreshToken},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加Token-->
+	<insert id="addTokenBatch" parameterType="java.util.List">
+		INSERT INTO token(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					#{s.id},
+					#{s.studentId},
+					#{s.accessToken},
+					#{s.refreshToken},
+					#{s.updateTime},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Token-->
+	<delete id="deleteTokenById" parameterType="java.lang.Integer">
+		DELETE FROM token
+		WHERE ID=#{id}
+	</delete>
+
+	<!--根据id批量删除Token-->
+	<delete id="deleteTokenBatch" parameterType="Integer[]">
+		DELETE FROM token
+		WHERE ID IN
+		<foreach collection="array" item="arr" index="no" open="(" separator="," close=")">
+			#{arr}
+		</foreach>
+	</delete>
+
+
+	<!--根据ID更新Token-->
+	<update id="updateToken" parameterType="com.tbms.core.dto.TokenDTO">
+		UPDATE token
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" studentId != null">
+				`student_id`=#{studentId},
+			</if>
+			<if test=" accessToken != null">
+				`access_token`=#{accessToken},
+			</if>
+			<if test=" refreshToken != null">
+				`refresh_token`=#{refreshToken},
+			</if>
+			<if test=" updateTime != null">
+				`update_time`=#{updateTime},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--批量更新Token-->
+	<update id="updateTokenBatch">
+		UPDATE token
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="token.id != null">
+			`id` = #{token.id},
+		</if>
+		<if test="token.studentId != null">
+			`student_id` = #{token.studentId},
+		</if>
+		<if test="token.accessToken != null">
+			`access_token` = #{token.accessToken},
+		</if>
+		<if test="token.refreshToken != null">
+			`refresh_token` = #{token.refreshToken},
+		</if>
+		<if test="token.updateTime != null">
+			`update_time` = #{token.updateTime},
+		</if>
+		</trim>
+		WHERE id IN
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!--根据id查询Token-->
+	<select id="getTokenById" resultMap="tokenDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM token
+		WHERE ID=#{id}
+	</select>
+
+	<!--根据student_id查询Token-->
+	<select id="getTokenByStudentId" resultMap="tokenDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM token
+		WHERE student_id=#{student_id}
+	</select>
+
+</mapper>

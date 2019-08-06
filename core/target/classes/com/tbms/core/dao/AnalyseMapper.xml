@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.AnalyseMapper">
+
+	<!-- 就业统计字段与DTO映射 -->
+	<resultMap id="analyseDTO" type="com.tbms.core.dto.AnalyseDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="depart" property="depart" javaType="java.lang.String" /><!--学院-->
+		<result column="depart_code" property="departCode" javaType="java.lang.String" /><!--学院代码-->
+		<result column="major" property="major" javaType="java.lang.String" /><!--专业-->
+		<result column="major_code" property="majorCode" javaType="java.lang.String" /><!--专业代码-->
+		<result column="count" property="count" javaType="java.lang.Integer" /><!--学生人数-->
+		<result column="total" property="total" javaType="java.lang.Integer" /><!--学生总数-->
+		<result column="agreement" property="agreement" javaType="java.lang.Integer" /><!--签三方-->
+		<result column="contract" property="contract" javaType="java.lang.Integer" /><!--签合同-->
+		<result column="incumbent" property="incumbent" javaType="java.lang.Integer" /><!--在职-->
+		<result column="relearning" property="relearning" javaType="java.lang.Integer" /><!--升学-->
+		<result column="signings" property="signings" javaType="java.lang.Integer" /><!--签约合计-->
+		<result column="signrate" property="signrate" javaType="java.lang.Double" /><!--签约率-->
+		<result column="abroad" property="abroad" javaType="java.lang.Integer" /><!--出国-->
+		<result column="certificate" property="certificate" javaType="java.lang.Integer" /><!--单位证明-->
+		<result column="liberal" property="liberal" javaType="java.lang.Integer" /><!--自由职业-->
+		<result column="selfemployed" property="selfemployed" javaType="java.lang.Integer" /><!--自主创业-->
+		<result column="intention" property="intention" javaType="java.lang.Integer" /><!--有意向在考虑-->
+		<result column="signing" property="signing" javaType="java.lang.Integer" /><!--签约中-->
+		<result column="employs" property="employs" javaType="java.lang.Integer" /><!--就业合计-->
+		<result column="employrate" property="employrate" javaType="java.lang.Double" /><!--就业率-->
+		<result column="officer" property="officer" javaType="java.lang.Integer" /><!--拟参加公招考试-->
+		<result column="other" property="other" javaType="java.lang.Integer" /><!--其他求职中-->
+		<result column="work" property="work" javaType="java.lang.Integer" /><!--拟创业-->
+		<result column="unemploy" property="unemploy" javaType="java.lang.Integer" /><!--暂不就业-->
+		<result column="inrelearning" property="inrelearning" javaType="java.lang.Integer" /><!--拟升学-->
+		<result column="inabroad" property="inabroad" javaType="java.lang.Integer" /><!--拟出国出境-->
+		<result column="unemploys" property="unemploys" javaType="java.lang.Integer" /><!--未就业合计-->
+		<result column="unemployrate" property="unemployrate" javaType="java.lang.Double" /><!--未就业率-->
+		<result column="allsignrate" property="allsignrate" javaType="java.lang.Double" /><!--总签约率-->
+		<result column="allemployrate" property="allemployrate" javaType="java.lang.Double" /><!--总就业率-->
+		<result column="allunemployrate" property="allunemployrate" javaType="java.lang.Double" /><!--总未就业率-->
+		<result column="create_time" property="createTime" javaType="java.util.Date" /><!--添加时间-->
+		<result column="update_time" property="updateTime" javaType="java.util.Date" /><!--修改时间-->
+		<result column="year" property="year" javaType="java.lang.Integer" /><!--年度-->
+		<result column="type" property="type" javaType="java.lang.String" /><!--学生类型-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--状态-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`depart`,
+		`depart_code`,
+		`major`,
+		`major_code`,
+		`count`,
+		`total`,
+		`agreement`,
+		`contract`,
+		`incumbent`,
+		`relearning`,
+		`signings`,
+		`signrate`,
+		`abroad`,
+		`certificate`,
+		`liberal`,
+		`selfemployed`,
+		`intention`,
+		`signing`,
+		`employs`,
+		`employrate`,
+		`officer`,
+		`other`,
+		`work`,
+		`unemploy`,
+		`inrelearning`,
+		`inabroad`,
+		`unemploys`,
+		`unemployrate`,
+		`allsignrate`,
+		`allemployrate`,
+		`allunemployrate`,
+		`create_time`,
+		`update_time`,
+		`year`,
+		`type`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" depart != null ">
+			AND `depart` LIKE "%${depart}%"
+		</if>
+		<if test=" departCode != null ">
+			AND `depart_code` = #{departCode}
+		</if>
+		<if test=" major != null ">
+			AND `major` LIKE "%${major}%"
+		</if>
+		<if test=" majorCode != null ">
+			AND `major_code` = #{majorCode}
+		</if>
+		<if test=" count != null ">
+			AND `count` = #{count}
+		</if>
+		<if test=" total != null ">
+			AND `total` = #{total}
+		</if>
+		<if test=" agreement != null ">
+			AND `agreement` = #{agreement}
+		</if>
+		<if test=" contract != null ">
+			AND `contract` = #{contract}
+		</if>
+		<if test=" incumbent != null ">
+			AND `incumbent` = #{incumbent}
+		</if>
+		<if test=" relearning != null ">
+			AND `relearning` = #{relearning}
+		</if>
+		<if test=" signings != null ">
+			AND `signings` = #{signings}
+		</if>
+		<if test=" signrate != null ">
+			AND `signrate` = #{signrate}
+		</if>
+		<if test=" abroad != null ">
+			AND `abroad` = #{abroad}
+		</if>
+		<if test=" certificate != null ">
+			AND `certificate` = #{certificate}
+		</if>
+		<if test=" liberal != null ">
+			AND `liberal` = #{liberal}
+		</if>
+		<if test=" selfemployed != null ">
+			AND `selfemployed` = #{selfemployed}
+		</if>
+		<if test=" intention != null ">
+			AND `intention` = #{intention}
+		</if>
+		<if test=" signing != null ">
+			AND `signing` = #{signing}
+		</if>
+		<if test=" employs != null ">
+			AND `employs` = #{employs}
+		</if>
+		<if test=" employrate != null ">
+			AND `employrate` = #{employrate}
+		</if>
+		<if test=" officer != null ">
+			AND `officer` = #{officer}
+		</if>
+		<if test=" other != null ">
+			AND `other` = #{other}
+		</if>
+		<if test=" work != null ">
+			AND `work` = #{work}
+		</if>
+		<if test=" unemploy != null ">
+			AND `unemploy` = #{unemploy}
+		</if>
+		<if test=" inrelearning != null ">
+			AND `inrelearning` = #{inrelearning}
+		</if>
+		<if test=" inabroad != null ">
+			AND `inabroad` = #{inabroad}
+		</if>
+		<if test=" unemploys != null ">
+			AND `unemploys` = #{unemploys}
+		</if>
+		<if test=" unemployrate != null ">
+			AND `unemployrate` = #{unemployrate}
+		</if>
+		<if test=" allsignrate != null ">
+			AND `allsignrate` = #{allsignrate}
+		</if>
+		<if test=" allemployrate != null ">
+			AND `allemployrate` = #{allemployrate}
+		</if>
+		<if test=" allunemployrate != null ">
+			AND `allunemployrate` = #{allunemployrate}
+		</if>
+		<if test=" createTime_Start != null ">
+			AND `create_time` &gt;= #{createTime_Start}
+		</if>
+		<if test=" createTime_End != null ">
+			AND `create_time` &lt;= #{createTime_End}
+		</if>
+		<if test=" createTime != null ">
+			AND to_days(create_time) = to_days(#{createTime})
+		</if>
+		<if test=" updateTime_Start != null ">
+			AND `update_time` &gt;= #{updateTime_Start}
+		</if>
+		<if test=" updateTime_End != null ">
+			AND `update_time` &lt;= #{updateTime_End}
+		</if>
+		<if test=" updateTime != null ">
+			AND `update_time` = #{updateTime}
+		</if>
+		<if test=" year != null ">
+			AND `year` = #{year}
+		</if>
+		<if test=" type != null ">
+			AND `type` = #{type}
+		</if>
+		<if test=" status != null ">
+			AND `status` = #{status}
+		</if>
+	</sql>
+
+	<!--week sql-->
+	<sql id="weekSql">
+		(agreement+contract+incumbent+relearning) as signings,
+		CONVERT((agreement+contract+incumbent+relearning)/count*100,DECIMAL(10,2)) as signrate,
+		(agreement+contract+incumbent+relearning+abroad+certificate+liberal+selfemployed+intention+signing) as employs,
+		CONVERT((agreement+contract+incumbent+relearning+abroad+certificate+liberal+selfemployed+intention+signing)/count*100,DECIMAL(10,2)) as employrate,
+		(officer+other+work+unemploy+inrelearning+inabroad) as unemploys,
+		CONVERT((officer+other+work+unemploy+inrelearning+inabroad)/count*100,DECIMAL(10,2)) as unemployrate,
+		NOW(),#{obj.year},#{obj.degreeCode}
+	</sql>
+
+	<!--student sql-->
+	<sql id="studentSql">
+		depart,depart_code,major,major_code,
+		count(1) as count,count(1) as total,
+		<foreach collection="params.keys" item="key" open=" " separator=", " close=" ">
+			SUM(IF(employ_code =#{params[${key}]},1,0)) as ${key}
+		</foreach>
+	</sql>
+
+	<!--周报统计-->
+	<sql id="search_week">
+		SELECT *,
+			<include refid="weekSql"/>
+		FROM (
+			SELECT
+				<include refid="studentSql"/>
+			FROM student
+			<where>
+				<if test="obj.degreeCode != null">
+					AND degree_code = #{obj.degreeCode}
+				</if>
+				<if test="obj.year != null">
+					AND graduate_year = ${obj.year}
+				</if>
+				<if test="obj.graduate != null">
+					AND graduate = ${obj.graduate}
+				</if>
+			</where>
+			GROUP BY major_code
+		) as a
+	</sql>
+
+	<!--按学院合计计算-->
+	<sql id="search_week_total">
+		depart,IFNULL(depart_code,'all') as depart_code,#{obj.msg},major_code,
+		SUM(count) as count,sum(count) as total,
+		<foreach collection="params.keys" item="key" open=" " separator=", " close=",">
+			SUM(${key}) as ${key}
+		</foreach>
+		SUM(agreement+contract+incumbent+relearning) as signings,
+		CONVERT(SUM(agreement+contract+incumbent+relearning)/SUM(count)*100,DECIMAL(10,2)) as signrate,
+		SUM(agreement+contract+incumbent+relearning+abroad+certificate+liberal+selfemployed+intention+signing) as employs,
+		CONVERT(SUM(agreement+contract+incumbent+relearning+abroad+certificate+liberal+selfemployed+intention+signing)/SUM(count)*100,DECIMAL(10,2)) as employrate,
+		SUM(officer+other+work+unemploy+inrelearning+inabroad) as unemploys,
+		CONVERT(SUM(officer+other+work+unemploy+inrelearning+inabroad)/SUM(count)*100,DECIMAL(10,2)) as unemployrate,
+		NOW(),#{obj.year},#{obj.degreeCode}
+	</sql>
+
+	<sql id="insert_week">
+		INSERT INTO analyse(
+		`depart`,
+		`depart_code`,
+		`major`,
+		`major_code`,
+		`count`,
+		`total`,
+		<foreach collection="params.keys" item="key" open=" " separator=", " close=",">
+			${key}
+		</foreach>
+		`signings`,
+		`signrate`,
+		`employs`,
+		`employrate`,
+		`unemploys`,
+		`unemployrate`,
+		`create_time`,
+		`year`,
+		`type`
+		)
+	</sql>
+
+	<!--根据条件获取专业Analyse列表-->
+	<select id="getWeekAnalyseList" resultMap="analyseDTO">
+		<include refid="search_week" />
+	</select>
+
+	<!--根据条件获取部门汇总列表-->
+	<select id="getWeekDepartAnalyseList" resultMap="analyseDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="search_week_total" />
+		FROM (
+			<include refid="search_week" />
+		) AS b
+		GROUP BY depart_code
+		WITH ROLLUP
+	</select>
+
+	<!--按专业统计结果插入数据库-->
+	<insert id="insertMajorWeekAnalyse" parameterType="java.util.Map">
+		<include refid="insert_week"/>
+		<include refid="search_week"/>
+	</insert>
+
+	<!--按部门合计结果插入数据库-->
+	<insert id="insertDepartWeekAnalyse" parameterType="java.util.Map">
+		<include refid="insert_week"/>
+		SELECT
+			<include refid="search_week_total" />
+		FROM (
+			<include refid="search_week" />
+		) AS c
+		GROUP BY depart_code
+		WITH ROLLUP
+	</insert>
+
+	<!--根据条件获取Analyse列表-->
+	<select id="getAnalyseList" resultMap="analyseDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM analyse
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Analyse总数-->
+	<select id="getAnalyseListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM analyse
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Analyse-->
+	<insert id="addAnalyse" parameterType="com.tbms.core.dto.AnalyseDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO analyse(
+		<trim suffixOverrides=",">
+			<if test="depart != null">
+				`depart`,
+			</if>
+			<if test="departCode != null">
+				`depart_code`,
+			</if>
+			<if test="major != null">
+				`major`,
+			</if>
+			<if test="majorCode != null">
+				`major_code`,
+			</if>
+			<if test="count != null">
+				`count`,
+			</if>
+			<if test="total != null">
+				`total`,
+			</if>
+			<if test="agreement != null">
+				`agreement`,
+			</if>
+			<if test="contract != null">
+				`contract`,
+			</if>
+			<if test="incumbent != null">
+				`incumbent`,
+			</if>
+			<if test="relearning != null">
+				`relearning`,
+			</if>
+			<if test="signings != null">
+				`signings`,
+			</if>
+			<if test="signrate != null">
+				`signrate`,
+			</if>
+			<if test="abroad != null">
+				`abroad`,
+			</if>
+			<if test="certificate != null">
+				`certificate`,
+			</if>
+			<if test="liberal != null">
+				`liberal`,
+			</if>
+			<if test="selfemployed != null">
+				`selfemployed`,
+			</if>
+			<if test="intention != null">
+				`intention`,
+			</if>
+			<if test="signing != null">
+				`signing`,
+			</if>
+			<if test="employs != null">
+				`employs`,
+			</if>
+			<if test="employrate != null">
+				`employrate`,
+			</if>
+			<if test="officer != null">
+				`officer`,
+			</if>
+			<if test="other != null">
+				`other`,
+			</if>
+			<if test="work != null">
+				`work`,
+			</if>
+			<if test="unemploy != null">
+				`unemploy`,
+			</if>
+			<if test="inrelearning != null">
+				`inrelearning`,
+			</if>
+			<if test="inabroad != null">
+				`inabroad`,
+			</if>
+			<if test="unemploys != null">
+				`unemploys`,
+			</if>
+			<if test="unemployrate != null">
+				`unemployrate`,
+			</if>
+			<if test="allsignrate != null">
+				`allsignrate`,
+			</if>
+			<if test="allemployrate != null">
+				`allemployrate`,
+			</if>
+			<if test="allunemployrate != null">
+				`allunemployrate`,
+			</if>
+			<if test="createTime != null">
+				`create_time`,
+			</if>
+			<if test="updateTime != null">
+				`update_time`,
+			</if>
+			<if test="year != null">
+				`year`,
+			</if>
+			<if test="type != null">
+				`type`,
+			</if>
+			<if test="status != null">
+				`status`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="depart != null">
+				#{depart},
+			</if>
+			<if test="departCode != null">
+				#{departCode},
+			</if>
+			<if test="major != null">
+				#{major},
+			</if>
+			<if test="majorCode != null">
+				#{majorCode},
+			</if>
+			<if test="count != null">
+				#{count},
+			</if>
+			<if test="total != null">
+				#{total},
+			</if>
+			<if test="agreement != null">
+				#{agreement},
+			</if>
+			<if test="contract != null">
+				#{contract},
+			</if>
+			<if test="incumbent != null">
+				#{incumbent},
+			</if>
+			<if test="relearning != null">
+				#{relearning},
+			</if>
+			<if test="signings != null">
+				#{signings},
+			</if>
+			<if test="signrate != null">
+				#{signrate},
+			</if>
+			<if test="abroad != null">
+				#{abroad},
+			</if>
+			<if test="certificate != null">
+				#{certificate},
+			</if>
+			<if test="liberal != null">
+				#{liberal},
+			</if>
+			<if test="selfemployed != null">
+				#{selfemployed},
+			</if>
+			<if test="intention != null">
+				#{intention},
+			</if>
+			<if test="signing != null">
+				#{signing},
+			</if>
+			<if test="employs != null">
+				#{employs},
+			</if>
+			<if test="employrate != null">
+				#{employrate},
+			</if>
+			<if test="officer != null">
+				#{officer},
+			</if>
+			<if test="other != null">
+				#{other},
+			</if>
+			<if test="work != null">
+				#{work},
+			</if>
+			<if test="unemploy != null">
+				#{unemploy},
+			</if>
+			<if test="inrelearning != null">
+				#{inrelearning},
+			</if>
+			<if test="inabroad != null">
+				#{inabroad},
+			</if>
+			<if test="unemploys != null">
+				#{unemploys},
+			</if>
+			<if test="unemployrate != null">
+				#{unemployrate},
+			</if>
+			<if test="allsignrate != null">
+				#{allsignrate},
+			</if>
+			<if test="allemployrate != null">
+				#{allemployrate},
+			</if>
+			<if test="allunemployrate != null">
+				#{allunemployrate},
+			</if>
+			<if test="createTime != null">
+				unix_timestamp(),
+			</if>
+			<if test="updateTime != null">
+				unix_timestamp(),
+			</if>
+			<if test="year != null">
+				#{year},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加Analyse-->
+	<insert id="addAnalyseBatch" parameterType="java.util.List">
+		INSERT INTO analyse(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+				null,
+				#{s.depart},
+				#{s.departCode},
+				#{s.major},
+				#{s.majorCode},
+				#{s.count},
+				#{s.total},
+				#{s.agreement},
+				#{s.contract},
+				#{s.incumbent},
+				#{s.relearning},
+				#{s.signings},
+				#{s.signrate},
+				#{s.abroad},
+				#{s.certificate},
+				#{s.liberal},
+				#{s.selfemployed},
+				#{s.intention},
+				#{s.signing},
+				#{s.employs},
+				#{s.employrate},
+				#{s.officer},
+				#{s.other},
+				#{s.work},
+				#{s.unemploy},
+				#{s.inrelearning},
+				#{s.inabroad},
+				#{s.unemploys},
+				#{s.unemployrate},
+				#{s.allsignrate},
+				#{s.allemployrate},
+				#{s.allunemployrate},
+				unix_timestamp(),
+				unix_timestamp(),
+				#{s.year},
+				#{s.type},
+				#{s.status},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Analyse-->
+	<delete id="deleteAnalyseById" parameterType="java.lang.Integer">
+		DELETE FROM analyse
+		WHERE ID=#{id}
+	</delete>
+
+	<!--根据id批量删除Analyse-->
+	<delete id="deleteAnalyseBatch" parameterType="Integer[]">
+		DELETE FROM analyse
+		WHERE ID IN
+		<foreach collection="array" item="arr" index="no" open="(" separator="," close=")">
+			#{arr}
+		</foreach>
+	</delete>
+
+	<!--根据ID更新Analyse-->
+	<update id="updateAnalyse" parameterType="com.tbms.core.dto.AnalyseDTO">
+		UPDATE analyse
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" depart != null">
+				`depart`=#{depart},
+			</if>
+			<if test=" departCode != null">
+				`depart_code`=#{departCode},
+			</if>
+			<if test=" major != null">
+				`major`=#{major},
+			</if>
+			<if test=" majorCode != null">
+				`major_code`=#{majorCode},
+			</if>
+			<if test=" count != null">
+				`count`=#{count},
+			</if>
+			<if test=" total != null">
+				`total`=#{total},
+			</if>
+			<if test=" agreement != null">
+				`agreement`=#{agreement},
+			</if>
+			<if test=" contract != null">
+				`contract`=#{contract},
+			</if>
+			<if test=" incumbent != null">
+				`incumbent`=#{incumbent},
+			</if>
+			<if test=" relearning != null">
+				`relearning`=#{relearning},
+			</if>
+			<if test=" signings != null">
+				`signings`=#{signings},
+			</if>
+			<if test=" signrate != null">
+				`signrate`=#{signrate},
+			</if>
+			<if test=" abroad != null">
+				`abroad`=#{abroad},
+			</if>
+			<if test=" certificate != null">
+				`certificate`=#{certificate},
+			</if>
+			<if test=" liberal != null">
+				`liberal`=#{liberal},
+			</if>
+			<if test=" selfemployed != null">
+				`selfemployed`=#{selfemployed},
+			</if>
+			<if test=" intention != null">
+				`intention`=#{intention},
+			</if>
+			<if test=" signing != null">
+				`signing`=#{signing},
+			</if>
+			<if test=" employs != null">
+				`employs`=#{employs},
+			</if>
+			<if test=" employrate != null">
+				`employrate`=#{employrate},
+			</if>
+			<if test=" officer != null">
+				`officer`=#{officer},
+			</if>
+			<if test=" other != null">
+				`other`=#{other},
+			</if>
+			<if test=" work != null">
+				`work`=#{work},
+			</if>
+			<if test=" unemploy != null">
+				`unemploy`=#{unemploy},
+			</if>
+			<if test=" inrelearning != null">
+				`inrelearning`=#{inrelearning},
+			</if>
+			<if test=" inabroad != null">
+				`inabroad`=#{inabroad},
+			</if>
+			<if test=" unemploys != null">
+				`unemploys`=#{unemploys},
+			</if>
+			<if test=" unemployrate != null">
+				`unemployrate`=#{unemployrate},
+			</if>
+			<if test=" allsignrate != null">
+				`allsignrate`=#{allsignrate},
+			</if>
+			<if test=" allemployrate != null">
+				`allemployrate`=#{allemployrate},
+			</if>
+			<if test=" allunemployrate != null">
+				`allunemployrate`=#{allunemployrate},
+			</if>
+			<if test=" createTime != null">
+				`create_time`=#{createTime},
+			</if>
+			<if test=" updateTime != null">
+				`update_time`=unix_timestamp(),
+			</if>
+			<if test=" year != null">
+				`year`=#{year},
+			</if>
+			<if test=" type != null">
+				`type`=#{type},
+			</if>
+			<if test=" status != null">
+				`status`=#{status},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--批量更新Analyse-->
+	<update id="updateAnalyseBatch">
+		UPDATE analyse
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="analyse.depart != null">
+				`depart` = #{analyse.depart},
+			</if>
+			<if test="analyse.departCode != null">
+				`depart_code` = #{analyse.departCode},
+			</if>
+			<if test="analyse.major != null">
+				`major` = #{analyse.major},
+			</if>
+			<if test="analyse.majorCode != null">
+				`major_code` = #{analyse.majorCode},
+			</if>
+			<if test="analyse.count != null">
+				`count` = #{analyse.count},
+			</if>
+			<if test="analyse.total != null">
+				`total` = #{analyse.total},
+			</if>
+			<if test="analyse.agreement != null">
+				`agreement` = #{analyse.agreement},
+			</if>
+			<if test="analyse.contract != null">
+				`contract` = #{analyse.contract},
+			</if>
+			<if test="analyse.incumbent != null">
+				`incumbent` = #{analyse.incumbent},
+			</if>
+			<if test="analyse.relearning != null">
+				`relearning` = #{analyse.relearning},
+			</if>
+			<if test="analyse.signings != null">
+				`signings` = #{analyse.signings},
+			</if>
+			<if test="analyse.signrate != null">
+				`signrate` = #{analyse.signrate},
+			</if>
+			<if test="analyse.abroad != null">
+				`abroad` = #{analyse.abroad},
+			</if>
+			<if test="analyse.certificate != null">
+				`certificate` = #{analyse.certificate},
+			</if>
+			<if test="analyse.liberal != null">
+				`liberal` = #{analyse.liberal},
+			</if>
+			<if test="analyse.selfemployed != null">
+				`selfemployed` = #{analyse.selfemployed},
+			</if>
+			<if test="analyse.intention != null">
+				`intention` = #{analyse.intention},
+			</if>
+			<if test="analyse.signing != null">
+				`signing` = #{analyse.signing},
+			</if>
+			<if test="analyse.employs != null">
+				`employs` = #{analyse.employs},
+			</if>
+			<if test="analyse.employrate != null">
+				`employrate` = #{analyse.employrate},
+			</if>
+			<if test="analyse.officer != null">
+				`officer` = #{analyse.officer},
+			</if>
+			<if test="analyse.other != null">
+				`other` = #{analyse.other},
+			</if>
+			<if test="analyse.work != null">
+				`work` = #{analyse.work},
+			</if>
+			<if test="analyse.unemploy != null">
+				`unemploy` = #{analyse.unemploy},
+			</if>
+			<if test="analyse.inrelearning != null">
+				`inrelearning` = #{analyse.inrelearning},
+			</if>
+			<if test="analyse.inabroad != null">
+				`inabroad` = #{analyse.inabroad},
+			</if>
+			<if test="analyse.unemploys != null">
+				`unemploys` = #{analyse.unemploys},
+			</if>
+			<if test="analyse.unemployrate != null">
+				`unemployrate` = #{analyse.unemployrate},
+			</if>
+			<if test="analyse.allsignrate != null">
+				`allsignrate` = #{analyse.allsignrate},
+			</if>
+			<if test="analyse.allemployrate != null">
+				`allemployrate` = #{analyse.allemployrate},
+			</if>
+			<if test="analyse.allunemployrate != null">
+				`allunemployrate` = #{analyse.allunemployrate},
+			</if>
+			<if test="analyse.createTime != null">
+				`create_time` = #{analyse.createTime},
+			</if>
+			<if test="analyse.updateTime != null">
+				`update_time` = unix_timestamp(),
+			</if>
+			<if test="analyse.year != null">
+				`year` = #{analyse.year},
+			</if>
+			<if test="analyse.type != null">
+				`type` = #{analyse.type},
+			</if>
+			<if test="analyse.status != null">
+				`status` = #{analyse.status},
+			</if>
+		</trim>
+		WHERE id IN
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!--根据id查询Analyse-->
+	<select id="getAnalyseById" resultMap="analyseDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM analyse
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

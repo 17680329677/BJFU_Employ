@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.UserMapper">
+	<!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+	<!-- 管理员字段与DTO映射 -->
+	<resultMap id="userDTO" type="com.tbms.core.dto.UserDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="name" property="name" javaType="java.lang.String" /><!--账号-->
+		<result column="username" property="username" javaType="java.lang.String" /><!--用户名-->
+		<result column="password" property="password" javaType="java.lang.String" /><!--密码-->
+		<result column="phone" property="phone" javaType="java.lang.String" /><!--手机号-->
+		<result column="email" property="email" javaType="java.lang.String" /><!--邮箱-->
+		<result column="depart_code" property="departCode" javaType="java.lang.String" /><!--部门代码-->
+		<result column="depart_name" property="departName" javaType="java.lang.String" /><!--部门名称-->
+		<result column="role_id" property="roleId" javaType="java.lang.String" /><!--角色ID-->
+		<result column="role_name" property="roleName" javaType="java.lang.String" /><!--角色名称-->
+		<result column="last_login_ip" property="lastLoginIp" javaType="java.lang.String" /><!--最后登录IP-->
+		<result column="last_login_time" property="lastLoginTime" javaType="java.lang.Integer" /><!--最后登录时间-->
+		<result column="login_count" property="loginCount" javaType="java.lang.Integer" /><!--登录次数-->
+		<result column="create_time" property="createTime" javaType="java.lang.Integer" /><!--创建时间-->
+		<result column="update_time" property="updateTime" javaType="java.lang.Integer" /><!--更新时间-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--管理员状态-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`name`,
+		`username`,
+		`password`,
+		`phone`,
+		`email`,
+		`depart_code`,
+		`depart_name`,
+		`role_id`,
+		`role_name`,
+		`last_login_ip`,
+		`last_login_time`,
+		`login_count`,
+		`create_time`,
+		`update_time`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" username != null ">
+			AND `username` LIKE #{username}
+		</if>
+		<if test=" name != null ">
+			AND `name` LIKE #{name}
+		</if>
+		<if test=" phone != null ">
+			AND `phone` LIKE #{phone}
+		</if>
+		<if test=" email != null ">
+			AND `email` LIKE #{email}
+		</if>
+		<if test=" departCode != null ">
+			AND `depart_code` = #{departCode}
+		</if>
+		<if test=" departName != null ">
+			AND `depart_name` LIKE #{departName}
+		</if>
+		<if test=" roleId != null ">
+			AND `role_id` = #{roleId}
+		</if>
+		<if test=" roleName != null ">
+			AND `role_name` LIKE #{roleName}
+		</if>
+		<if test=" lastLoginIp != null ">
+			AND `last_login_ip` LIKE #{lastLoginIp}
+		</if>
+		<if test=" loginCount != null ">
+			AND `login_count` = #{loginCount}
+		</if>
+		<if test=" status != null ">
+			AND `status` = #{status}
+		</if>
+	</sql>
+
+	<!--根据条件获取User列表-->
+	<select id="getUserList" resultMap="userDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM user
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取User总数-->
+	<select id="getUserListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM user
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加User-->
+	<insert id="addUser" parameterType="com.tbms.core.dto.UserDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="name!=null">
+				`name`,
+			</if>
+			<if test="username!=null">
+				`username`,
+			</if>
+			<if test="password!=null">
+				`password`,
+			</if>
+			<if test="phone!=null">
+				`phone`,
+			</if>
+			<if test="email!=null">
+				`email`,
+			</if>
+			<if test="departCode!=null">
+				`depart_code`,
+				`depart_name`,
+			</if>
+			<if test="roleId!=null">
+				`role_id`,
+				`role_name`,
+			</if>
+			<if test="lastLoginIp!=null">
+				`last_login_ip`,
+			</if>
+			<if test="lastLoginTime!=null">
+				`last_login_time`,
+			</if>
+			<if test="loginCount!=null">
+				`login_count`,
+			</if>
+			<if test="createTime!=null">
+				`create_time`,
+			</if>
+			<if test="updateTime!=null">
+				`update_time`,
+			</if>
+			<if test="status!=null">
+				`status`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+			<if test="username!=null">
+				#{username},
+			</if>
+			<if test="password!=null">
+				#{password},
+			</if>
+			<if test="phone!=null">
+				#{phone},
+			</if>
+			<if test="email!=null">
+				#{email},
+			</if>
+			<if test="departCode!=null">
+				#{departCode},
+				(select name from depart where code = #{departCode}),
+			</if>
+			<if test="roleId!=null">
+				#{roleId},
+				(select name from role where id = #{roleId}),
+			</if>
+			<if test="lastLoginIp!=null">
+				#{lastLoginIp},
+			</if>
+			<if test="lastLoginTime!=null">
+				unix_timestamp(),
+			</if>
+			<if test="loginCount!=null">
+				#{loginCount},
+			</if>
+			<if test="createTime!=null">
+				unix_timestamp(),
+			</if>
+			<if test="updateTime!=null">
+				unix_timestamp(),
+			</if>
+			<if test="status!=null">
+				1,
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除User-->
+	<delete id="deleteUserById" parameterType="java.lang.Integer">
+		DELETE FROM user
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新User-->
+	<update id="updateUser" parameterType="com.tbms.core.dto.UserDTO">
+		UPDATE user
+		<trim prefix="set" suffixOverrides=",">
+			<if test="id != null">
+				`id`=#{id},
+			</if>
+			<if test="name != null">
+				`name`=#{name},
+			</if>
+			<if test="username != null">
+				`username`=#{username},
+			</if>
+			<if test="password != null">
+				`password`=#{password},
+			</if>
+			<if test="phone != null">
+				`phone`=#{phone},
+			</if>
+			<if test=" email != null">
+				`email`=#{email},
+			</if>
+			<if test="departCode != null">
+				`depart_code`=#{departCode},
+				`depart_name` = (select name from depart where code = #{departCode}),
+			</if>
+			<if test="roleId != null">
+				`role_id`=#{roleId},
+				`role_name` = (select name from role where id = #{roleId}),
+			</if>
+			<if test="lastLoginIp != null">
+				`last_login_ip`=#{lastLoginIp},
+			</if>
+			<if test="lastLoginTime != null">
+				`last_login_time`=unix_timestamp(),
+			</if>
+			<if test="loginCount != 0">
+				`login_count`=#{loginCount},
+			</if>
+			<if test="createTime != 0">
+				`create_time`=#{createTime},
+			</if>
+			<if test="updateTime != null">
+				`update_time`=unix_timestamp(),
+			</if>
+			<if test="status != null">
+				`status`=#{status},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询User-->
+	<select id="getUserById" resultMap="userDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM user
+		WHERE ID=#{id}
+	</select>
+
+	<!--根据Name查询User-->
+	<select id="getUserByName" resultMap="userDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM user
+		WHERE status=1 and username=#{username}
+	</select>
+
+	<!--根据ID注销User-->
+	<delete id="unableUserById" parameterType="java.lang.Integer">
+		UPDATE user SET status = 0
+		WHERE ID=#{id}
+	</delete>
+
+</mapper>

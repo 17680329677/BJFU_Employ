@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.DepartMapper">
+
+	<!-- 部门管理字段与DTO映射 -->
+	<resultMap id="departDTO" type="com.tbms.core.dto.DepartDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="code" property="code" javaType="java.lang.String" /><!--部门代码-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--部门名称-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`code`,
+		`name`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" code != null ">
+			AND `code` = #{code}
+		</if>
+		<if test=" name != null ">
+			AND `name` LIKE "%${name}%"
+		</if>
+	</sql>
+
+	<!--根据条件获取Depart列表-->
+	<select id="getDepartList" resultMap="departDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM depart
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset !=null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Depart总数-->
+	<select id="getDepartListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM depart
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Depart-->
+	<insert id="addDepart" parameterType="com.tbms.core.dto.DepartDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO depart(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="code!=null">
+				`code`,
+			</if>
+			<if test="name!=null">
+				`name`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="code!=null">
+				#{code},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除Depart-->
+	<delete id="deleteDepartById" parameterType="java.lang.Integer">
+		DELETE FROM depart
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Depart-->
+	<update id="updateDepart" parameterType="com.tbms.core.dto.DepartDTO">
+		UPDATE depart
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" code != null">
+				`code`=#{code},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Depart-->
+	<select id="getDepartById" resultMap="departDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM depart
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

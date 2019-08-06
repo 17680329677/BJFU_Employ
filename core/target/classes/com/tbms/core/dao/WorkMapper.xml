@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.WorkMapper">
+
+	<!-- 学生全部信息字段与DTO映射 -->
+	<resultMap id="workDTO" type="com.tbms.core.dto.WorkDTO">
+		<result column="sid" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="username" property="username" javaType="java.lang.String" /><!--用户名-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--用户名-->
+		<result column="birthday" property="birthday" javaType="java.lang.String" /><!--出生日期-->
+		<result column="card" property="card" javaType="java.lang.String" /><!--身份证号-->
+		<result column="phone" property="phone" javaType="java.lang.String" /><!--手机电话-->
+		<result column="email" property="email" javaType="java.lang.String" /><!--邮箱-->
+		<result column="gender" property="gender" javaType="java.lang.String" /><!--性别-->
+		<result column="gender_code" property="genderCode" javaType="java.lang.Integer" /><!--性别代码-->
+		<result column="ethnicity" property="ethnicity" javaType="java.lang.String" /><!--民族-->
+		<result column="ethnicity_code" property="ethnicityCode" javaType="java.lang.Integer" /><!--民族代码-->
+		<result column="candidate_number" property="candidateNumber" javaType="java.lang.String" /><!--考生号-->
+		<result column="graduate_date" property="graduateDate" javaType="java.lang.String" /><!--毕业日期-->
+		<result column="graduate_year" property="graduateYear" javaType="java.lang.Integer" /><!--毕业年份-->
+		<result column="enrollment_addr" property="enrollmentAddr" javaType="java.lang.String" /><!--生源所在地-->
+		<result column="enrollment_code" property="enrollmentCode" javaType="java.lang.Integer" /><!--生源省市代码-->
+		<result column="political" property="political" javaType="java.lang.String" /><!--政治面貌-->
+		<result column="political_code" property="politicalCode" javaType="java.lang.Integer" /><!--政治面貌代码-->
+		<result column="school" property="school" javaType="java.lang.String" /><!--院校名称-->
+		<result column="school_code" property="schoolCode" javaType="java.lang.String" /><!--院校代码-->
+		<result column="depart" property="depart" javaType="java.lang.String" /><!--二级学院名称-->
+		<result column="depart_code" property="departCode" javaType="java.lang.String" /><!--二级学院代码-->
+		<result column="major" property="major" javaType="java.lang.String" /><!--专业-->
+		<result column="major_code" property="majorCode" javaType="java.lang.String" /><!--专业代码-->
+		<result column="classes" property="classes" javaType="java.lang.String" /><!--班级名称-->
+		<result column="classes_code" property="classesCode" javaType="java.lang.String" /><!--班级代码-->
+		<result column="type" property="type" javaType="java.lang.String" /><!--学制-->
+		<result column="type_code" property="typeCode" javaType="java.lang.Integer" /><!--学制代码-->
+		<result column="degree" property="degree" javaType="java.lang.String" /><!--学位层次-->
+		<result column="degree_code" property="degreeCode" javaType="java.lang.Integer" /><!--学位层次代码-->
+		<result column="education" property="education" javaType="java.lang.String" /><!--学历-->
+		<result column="education_code" property="educationCode" javaType="java.lang.Integer" /><!--学历代码-->
+		<result column="graduation" property="graduation" javaType="java.lang.String" /><!--毕结业结论-->
+		<result column="enrollment" property="enrollment" javaType="java.lang.String" /><!--入学时间-->
+		<result column="normal" property="normal" javaType="java.lang.String" /><!--师范生类别-->
+		<result column="normal_code" property="normalCode" javaType="java.lang.Integer" /><!--师范生类别代码-->
+		<result column="unemployed" property="unemployed" javaType="java.lang.String" /><!--有意向未就业原因-->
+		<result column="unemployed_code" property="unemployedCode" javaType="java.lang.Integer" /><!--有意向未就业原因代码-->
+		<result column="training" property="training" javaType="java.lang.String" /><!--培养方式-->
+		<result column="training_code" property="trainingCode" javaType="java.lang.Integer" /><!--培养方式代码-->
+		<result column="training_unit" property="trainingUnit" javaType="java.lang.String" /><!--培养单位-->
+		<result column="grade" property="grade" javaType="java.lang.Integer" /><!--当前所在级(在校生)-->
+		<result column="graduate" property="graduate" javaType="java.lang.Integer" /><!--是否毕业-->
+		<result column="spring_graduate" property="springGraduate" javaType="java.lang.String" /><!--是否春季毕业生-->
+		<result column="syn_evaluation" property="synEvaluation" javaType="java.lang.String" /><!--综合测评-->
+		<result column="rank" property="rank" javaType="java.lang.String" /><!--班级排名-->
+		<result column="difficulty" property="difficulty" javaType="java.lang.String" /><!--困难生类别-->
+		<result column="assistant" property="assistant" javaType="java.lang.String" /><!--是否担任过助管-->
+		<result column="employ" property="employ" javaType="java.lang.String" /><!--就业状态-->
+		<result column="employ_code" property="employCode" javaType="java.lang.Integer" /><!--就业状态代码-->
+		<result column="employ_time" property="employTime" javaType="java.lang.Integer" /><!--就业状态修改时间-->
+		<result column="employ_program" property="employProgram" javaType="java.lang.String" /><!--就业项目-->
+		<result column="contract" property="contract" javaType="java.lang.String" /><!--签约时间-->
+		<result column="instructor" property="instructor" javaType="java.lang.String" /><!--是否担任过学业辅导员-->
+		<result column="forest" property="forest" javaType="java.lang.String" /><!--涉林行业-->
+		<result column="cadre" property="cadre" javaType="java.lang.String" /><!--是否担任过学生干部-->
+		<result column="mentor" property="mentor" javaType="java.lang.String" /><!--导师姓名-->
+		<result column="mentor_title" property="mentorTitle" javaType="java.lang.String" /><!--导师职称-->
+		<result column="undergraduate_cat" property="undergraduateCat" javaType="java.lang.String" /><!--本科院校类别-->
+		<result column="undergraduate" property="undergraduate" javaType="java.lang.String" /><!--本科院校-->
+		<result column="changes" property="changes" javaType="java.lang.String" /><!--学籍变动-->
+		<result column="changes_code" property="changesCode" javaType="java.lang.Integer" /><!--学籍变动代码-->
+		<result column="job" property="job" javaType="java.lang.String" /><!--工作职位类别-->
+		<result column="job_code" property="jobCode" javaType="java.lang.Integer" /><!--工作职位类别代码-->
+		<result column="company" property="company" javaType="java.lang.String" /><!--单位名称-->
+		<result column="company_code" property="companyCode" javaType="java.lang.String" /><!--单位组织机构代码-->
+		<result column="organization" property="organization" javaType="java.lang.String" /><!--单位隶属部门-->
+		<result column="organization_code" property="organizationCode" javaType="java.lang.String" /><!--单位隶属部门代码-->
+		<result column="industry" property="industry" javaType="java.lang.String" /><!--单位行业-->
+		<result column="industry_code" property="industryCode" javaType="java.lang.Integer" /><!--单位行业代码-->
+		<result column="property" property="property" javaType="java.lang.String" /><!--单位性质-->
+		<result column="property_code" property="propertyCode" javaType="java.lang.String" /><!--单位性质代码-->
+		<result column="company_addr" property="companyAddr" javaType="java.lang.String" /><!--单位所在地-->
+		<result column="company_addr_code" property="companyAddrCode" javaType="java.lang.String" /><!--单位所在地代码-->
+		<result column="com_contacts" property="comContacts" javaType="java.lang.String" /><!--单位联系人-->
+		<result column="com_phone" property="comPhone" javaType="java.lang.String" /><!--单位联系电话-->
+		<result column="com_email" property="comEmail" javaType="java.lang.String" /><!--单位电子信箱-->
+		<result column="com_address" property="comAddress" javaType="java.lang.String" /><!--单位地址-->
+		<result column="com_postcode" property="comPostcode" javaType="java.lang.String" /><!--单位邮政编码-->
+		<result column="com_fax" property="comFax" javaType="java.lang.String" /><!--单位传真-->
+		<result column="certificate" property="certificate" javaType="java.lang.String" /><!--基层证书发放范围-->
+		<result column="certificate_code" property="certificateCode" javaType="java.lang.Integer" /><!--基层证书发放范围代码-->
+		<result column="special_job" property="specialJob" javaType="java.lang.String" /><!--特殊职位-->
+		<result column="special_job_code" property="specialJobCode" javaType="java.lang.Integer" /><!--特殊职位代码-->
+		<result column="channels" property="channels" javaType="java.lang.String" /><!--落实工作渠道-->
+		<result column="channels_code" property="channelsCode" javaType="java.lang.Integer" /><!--落实工作渠道代码-->
+		<result column="register_type" property="registerType" javaType="java.lang.String" /><!--报到证签发类别-->
+		<result column="register_code" property="registerCode" javaType="java.lang.Integer" /><!--报到证签发类别代码-->
+		<result column="employ_form" property="employForm" javaType="java.lang.String" /><!--就业形式-->
+		<result column="employ_form_code" property="employFormCode" javaType="java.lang.Integer" /><!--就业形式代码-->
+		<result column="destination" property="destination" javaType="java.lang.String" /><!--毕业去向-->
+		<result column="destination_code" property="destinationCode" javaType="java.lang.Integer" /><!--毕业去向代码-->
+		<result column="employ_range" property="employRange" javaType="java.lang.String" /><!--就业范围-->
+		<result column="employ_range_code" property="employRangeCode" javaType="java.lang.Integer" /><!--就业范围代码-->
+		<result column="dispatch_time" property="dispatchTime" javaType="java.lang.String" /><!--派遣时间-->
+		<result column="regist_deadline" property="registDeadline" javaType="java.lang.String" /><!--报到期限-->
+		<result column="record_company" property="recordCompany" javaType="java.lang.String" /><!--档案转寄单位-->
+		<result column="record_postcode" property="recordPostcode" javaType="java.lang.String" /><!--档案转寄邮政编码-->
+		<result column="record_addr" property="recordAddr" javaType="java.lang.String" /><!--档案转寄地址-->
+		<result column="permanent_addr" property="permanentAddr" javaType="java.lang.String" /><!--户口迁移地址-->
+		<result column="implement_comp_code" property="implementCompCode" javaType="java.lang.String" /><!--具体落实单位所在地代码-->
+		<result column="implement_comp_addr" property="implementCompAddr" javaType="java.lang.String" /><!--具体落实单位所在地-->
+		<result column="implement_comp" property="implementComp" javaType="java.lang.String" /><!--具体落实单位名称-->
+		<result column="dispatch_register_code" property="dispatchRegisterCode" javaType="java.lang.String" /><!--派遣报到证号-->
+		<result column="record_receiver_cellphone" property="recordReceiverCellphone" javaType="java.lang.String" /><!--档案收件人手机-->
+		<result column="record_receiver" property="recordReceiver" javaType="java.lang.String" /><!--档案收件人-->
+		<result column="record_receiver_phone" property="recordReceiverPhone" javaType="java.lang.String" /><!--档案收件人电话-->
+		<result column="special_employ" property="specialEmploy" javaType="java.lang.String" /><!--特殊就业类别-->
+		<result column="create_time" property="createTime" javaType="java.lang.Integer" /><!--添加时间-->
+		<result column="update_time" property="updateTime" javaType="java.lang.Integer" /><!--修改时间-->
+		<result column="remark" property="remark" javaType="java.lang.String" /><!--学生状态-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--学生状态-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`sid`,
+		`username`,
+		`name`,
+		`birthday`,
+		`card`,
+		`phone`,
+		`email`,
+		`gender`,
+		`gender_code`,
+		`ethnicity`,
+		`ethnicity_code`,
+		`candidate_number`,
+		`graduate_date`,
+		`graduate_year`,
+		`enrollment_addr`,
+		`enrollment_code`,
+		`political`,
+		`political_code`,
+		`school`,
+		`school_code`,
+		`depart`,
+		`depart_code`,
+		`major`,
+		`major_code`,
+		`classes`,
+		`classes_code`,
+		`type`,
+		`type_code`,
+		`degree`,
+		`degree_code`,
+		`education`,
+		`education_code`,
+		`graduation`,
+		`enrollment`,
+		`normal`,
+		`normal_code`,
+		`unemployed`,
+		`unemployed_code`,
+		`training`,
+		`training_code`,
+		`training_unit`,
+		`grade`,
+		`graduate`,
+		`spring_graduate`,
+		`syn_evaluation`,
+		`rank`,
+		`difficulty`,
+		`assistant`,
+		`employ`,
+		`employ_code`,
+		`employ_time`,
+		`employ_program`,
+		`contract`,
+		`instructor`,
+		`forest`,
+		`cadre`,
+		`mentor`,
+		`mentor_title`,
+		`undergraduate_cat`,
+		`undergraduate`,
+		`changes`,
+		`changes_code`,
+		`job`,
+		`job_code`,
+		`company`,
+		`company_code`,
+		`organization`,
+		`organization_code`,
+		`industry`,
+		`industry_code`,
+		`property`,
+		`property_code`,
+		`company_addr`,
+		`company_addr_code`,
+		`com_contacts`,
+		`com_phone`,
+		`com_email`,
+		`com_address`,
+		`com_postcode`,
+		`com_fax`,
+		`certificate`,
+		`certificate_code`,
+		`special_job`,
+		`special_job_code`,
+		`channels`,
+		`channels_code`,
+		`register_type`,
+		`register_code`,
+		`employ_form`,
+		`employ_form_code`,
+		`destination`,
+		`destination_code`,
+		`employ_range`,
+		`employ_range_code`,
+		`dispatch_time`,
+		`regist_deadline`,
+		`record_company`,
+		`record_postcode`,
+		`record_addr`,
+		`permanent_addr`,
+		`implement_comp_code`,
+		`implement_comp_addr`,
+		`implement_comp`,
+		`dispatch_register_code`,
+		`record_receiver_cellphone`,
+		`record_receiver`,
+		`record_receiver_phone`,
+		`special_employ`,
+		`create_time`,
+		`update_time`,
+		`remark`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" username != null ">
+			AND `username` LIKE "%${username}%"
+		</if>
+		<if test=" account != null ">
+			AND `username` = #{account}
+		</if>
+		<if test=" name != null ">
+			AND `name` LIKE "%${name}%"
+		</if>
+		<if test=" birthday != null ">
+			AND `birthday` LIKE "%${birthday}%"
+		</if>
+		<if test=" card != null ">
+			AND `card` LIKE "%${card}%"
+		</if>
+		<if test=" phone != null ">
+			AND `phone` LIKE "%${phone}%"
+		</if>
+		<if test=" email != null ">
+			AND `email` LIKE "%${email}%"
+		</if>
+		<if test=" gender != null ">
+			AND `gender` LIKE "%${gender}%"
+		</if>
+		<if test=" genderCode != null ">
+			AND `gender_code` = #{genderCode}
+		</if>
+		<if test=" ethnicity != null ">
+			AND `ethnicity` LIKE "%${ethnicity}%"
+		</if>
+		<if test=" ethnicityCode != null ">
+			AND `ethnicity_code` = #{ethnicityCode}
+		</if>
+		<if test=" candidateNumber != null ">
+			AND `candidate_number` LIKE "%${candidateNumber}%"
+		</if>
+		<if test=" graduateDate != null ">
+			AND `graduate_date` LIKE "%${graduateDate}%"
+		</if>
+		<if test=" graduateYear != null ">
+			AND `graduate_year` = #{graduateYear}
+		</if>
+		<if test=" enrollmentAddr != null ">
+			AND `enrollment_addr` LIKE "%${enrollmentAddr}%"
+		</if>
+		<if test=" enrollmentCode != null ">
+			AND `enrollment_code` = #{enrollmentCode}
+		</if>
+		<if test=" political != null ">
+			AND `political` LIKE "%${political}%"
+		</if>
+		<if test=" politicalCode != null ">
+			AND `political_code` = #{politicalCode}
+		</if>
+		<if test=" school != null ">
+			AND `school` LIKE "%${school}%"
+		</if>
+		<if test=" schoolCode != null ">
+			AND `school_code` = #{schoolCode}
+		</if>
+		<if test=" depart != null ">
+			AND `depart` LIKE "%${depart}%"
+		</if>
+		<if test=" departCode != null ">
+			AND `depart_code` = #{departCode}
+		</if>
+		<if test=" major != null ">
+			AND `major` LIKE "%${major}%"
+		</if>
+		<if test=" majorCode != null ">
+			AND `major_code` = #{majorCode}
+		</if>
+		<if test=" classes != null ">
+			AND `classes` LIKE "%${classes}%"
+		</if>
+		<if test=" classesCode != null ">
+			AND `classes_code` = #{classesCode}
+		</if>
+		<if test=" type != null ">
+			AND `type` LIKE "%${type}%"
+		</if>
+		<if test=" typeCode != null ">
+			AND `type_code` = #{typeCode}
+		</if>
+		<if test=" degree != null ">
+			AND `degree` LIKE "%${degree}%"
+		</if>
+		<if test=" degreeCode != null ">
+			AND `degree_code` = #{degreeCode}
+		</if>
+		<if test=" education != null ">
+			AND `education` LIKE "%${education}%"
+		</if>
+		<if test=" educationCode != null ">
+			AND `education_code` = #{educationCode}
+		</if>
+		<if test=" graduation != null ">
+			AND `graduation` LIKE "%${graduation}%"
+		</if>
+		<if test=" enrollment != null ">
+			AND `enrollment` LIKE "%${enrollment}%"
+		</if>
+		<if test=" normal != null ">
+			AND `normal` LIKE "%${normal}%"
+		</if>
+		<if test=" normalCode != null ">
+			AND `normal_code` = #{normalCode}
+		</if>
+		<if test=" unemployed != null ">
+			AND `unemployed` LIKE "%${unemployed}%"
+		</if>
+		<if test=" unemployedCode != null ">
+			AND `unemployed_code` = #{unemployedCode}
+		</if>
+		<if test=" training != null ">
+			AND `training` LIKE "%${training}%"
+		</if>
+		<if test=" trainingCode != null ">
+			AND `training_code` = #{trainingCode}
+		</if>
+		<if test=" trainingUnit != null ">
+			AND `training_unit` LIKE "%${trainingUnit}%"
+		</if>
+		<if test=" grade != null ">
+			AND `grade` = #{grade}
+		</if>
+		<if test=" graduate != null ">
+			AND `graduate` = #{graduate}
+		</if>
+		<if test=" springGraduate != null ">
+			AND `spring_graduate` = #{springGraduate}
+		</if>
+		<if test=" synEvaluation != null ">
+			AND `syn_evaluation` = #{synEvaluation}
+		</if>
+		<if test=" rank != null ">
+			AND `rank` = #{rank}
+		</if>
+		<if test=" difficulty != null ">
+			AND `difficulty` LIKE "%${difficulty}%"
+		</if>
+		<if test=" assistant != null ">
+			AND `assistant` = #{assistant}
+		</if>
+		<if test=" employ != null ">
+			AND `employ` LIKE "%${employ}%"
+		</if>
+		<if test=" employCode != null ">
+			AND `employ_code` = #{employCode}
+		</if>
+		<if test=" employTime_Start != null ">
+			AND `employ_time` &gt;= #{employTime_Start}
+		</if>
+		<if test=" employTime_End != null ">
+			AND `employ_time` &lt;= #{employTime_End}
+		</if>
+		<if test=" employTime != null ">
+			AND `employ_time` = #{employTime}
+		</if>
+		<if test=" employProgram != null ">
+			AND `employ_program` = #{employProgram}
+		</if>
+		<if test=" contract != null ">
+			AND `contract` = #{contract}
+		</if>
+		<if test=" instructor != null ">
+			AND `instructor` = #{instructor}
+		</if>
+		<if test=" forest != null ">
+			AND `forest` = #{forest}
+		</if>
+		<if test=" cadre != null ">
+			AND `cadre` = #{cadre}
+		</if>
+		<if test=" mentor != null ">
+			AND `mentor` LIKE "%${mentor}%"
+		</if>
+		<if test=" mentorTitle != null ">
+			AND `mentor_title` LIKE "%${mentorTitle}%"
+		</if>
+		<if test=" undergraduateCat != null ">
+			AND `undergraduate_cat` LIKE "%${undergraduateCat}%"
+		</if>
+		<if test=" undergraduate != null ">
+			AND `undergraduate` LIKE "%${undergraduate}%"
+		</if>
+		<if test=" changes != null ">
+			AND `changes` LIKE "%${changes}%"
+		</if>
+		<if test=" changesCode != null ">
+			AND `changes_code` = #{changesCode}
+		</if>
+		<if test=" job != null ">
+			AND `job` LIKE "%${job}%"
+		</if>
+		<if test=" jobCode != null ">
+			AND `job_code` = #{jobCode}
+		</if>
+		<if test=" company != null ">
+			AND `company` LIKE "%${company}%"
+		</if>
+		<if test=" companyCode != null ">
+			AND `company_code` = #{companyCode}
+		</if>
+		<if test=" organization != null ">
+			AND `organization` LIKE "%${organization}%"
+		</if>
+		<if test=" organizationCode != null ">
+			AND `organization_code` = #{organizationCode}
+		</if>
+		<if test=" industry != null ">
+			AND `industry` LIKE "%${industry}%"
+		</if>
+		<if test=" industryCode != null ">
+			AND `industry_code` = #{industryCode}
+		</if>
+		<if test=" property != null ">
+			AND `property` LIKE "%${property}%"
+		</if>
+		<if test=" propertyCode != null ">
+			AND `property_code` = #{propertyCode}
+		</if>
+		<if test=" companyAddr != null ">
+			AND `company_addr` LIKE "%${companyAddr}%"
+		</if>
+		<if test=" companyAddrCode != null ">
+			AND `company_addr_code` = #{companyAddrCode}
+		</if>
+		<if test=" comContacts != null ">
+			AND `com_contacts` LIKE "%${comContacts}%"
+		</if>
+		<if test=" comPhone != null ">
+			AND `com_phone` LIKE "%${comPhone}%"
+		</if>
+		<if test=" comEmail != null ">
+			AND `com_email` LIKE "%${comEmail}%"
+		</if>
+		<if test=" comAddress != null ">
+			AND `com_address` LIKE "%${comAddress}%"
+		</if>
+		<if test=" comPostcode != null ">
+			AND `com_postcode` LIKE "%${comPostcode}%"
+		</if>
+		<if test=" comFax != null ">
+			AND `com_fax` LIKE "%${comFax}%"
+		</if>
+		<if test=" certificate != null ">
+			AND `certificate` LIKE "%${certificate}%"
+		</if>
+		<if test=" certificateCode != null ">
+			AND `certificate_code` = #{certificateCode}
+		</if>
+		<if test=" specialJob != null ">
+			AND `special_job` LIKE "%${specialJob}%"
+		</if>
+		<if test=" specialJobCode != null ">
+			AND `special_job_code` = #{specialJobCode}
+		</if>
+		<if test=" channels != null ">
+			AND `channels` LIKE "%${channels}%"
+		</if>
+		<if test=" channelsCode != null ">
+			AND `channels_code` = #{channelsCode}
+		</if>
+		<if test=" registerType != null ">
+			AND `register_type` LIKE "%${registerType}%"
+		</if>
+		<if test=" registerCode != null ">
+			AND `register_code` = #{registerCode}
+		</if>
+		<if test=" employForm != null ">
+			AND `employ_form` LIKE "%${employForm}%"
+		</if>
+		<if test=" employFormCode != null ">
+			AND `employ_form_code` = #{employFormCode}
+		</if>
+		<if test=" destination != null ">
+			AND `destination` LIKE "%${destination}%"
+		</if>
+		<if test=" destinationCode != null ">
+			AND `destination_code` = #{destinationCode}
+		</if>
+		<if test=" employRange != null ">
+			AND `employ_range` LIKE "%${employRange}%"
+		</if>
+		<if test=" employRangeCode != null ">
+			AND `employ_range_code` = #{employRangeCode}
+		</if>
+		<if test=" dispatchTime != null ">
+			AND `dispatch_time` LIKE "%${dispatchTime}%"
+		</if>
+		<if test=" registDeadline != null ">
+			AND `regist_deadline` LIKE "%${registDeadline}%"
+		</if>
+		<if test=" recordCompany != null ">
+			AND `record_company` LIKE "%${recordCompany}%"
+		</if>
+		<if test=" recordPostcode != null ">
+			AND `record_postcode` LIKE "%${recordPostcode}%"
+		</if>
+		<if test=" recordAddr != null ">
+			AND `record_addr` LIKE "%${recordAddr}%"
+		</if>
+		<if test=" permanentAddr != null ">
+			AND `permanent_addr` LIKE "%${permanentAddr}%"
+		</if>
+		<if test=" implementCompCode != null ">
+			AND `implement_comp_code` = #{implementCompCode}
+		</if>
+		<if test=" implementCompAddr != null ">
+			AND `implement_comp_addr` LIKE "%${implementCompAddr}%"
+		</if>
+		<if test=" implementComp != null ">
+			AND `implement_comp` LIKE "%${implementComp}%"
+		</if>
+		<if test=" dispatchRegisterCode != null ">
+			AND `dispatch_register_code` LIKE "%${dispatchRegisterCode}%"
+		</if>
+		<if test=" recordReceiverCellphone != null ">
+			AND `record_receiver_cellphone` LIKE "%${recordReceiverCellphone}%"
+		</if>
+		<if test=" recordReceiver != null ">
+			AND `record_receiver` LIKE "%${recordReceiver}%"
+		</if>
+		<if test=" recordReceiverPhone != null ">
+			AND `record_receiver_phone` LIKE "%${recordReceiverPhone}%"
+		</if>
+		<if test=" specialEmploy != null ">
+			AND `special_employ` LIKE "%${specialEmploy}%"
+		</if>
+		<if test=" createTime != null ">
+			AND `create_time` = #{createTime}
+		</if>
+		<if test=" updateTime_Start != null ">
+			AND `update_time` &gt;= #{updateTime_Start}
+		</if>
+		<if test=" updateTime_End != null ">
+			AND `update_time` &lt;= #{updateTime_End}
+		</if>
+		<if test=" updateTime != null ">
+			AND `update_time` = #{updateTime}
+		</if>
+		<if test=" status != null ">
+			AND s.status = #{status}
+		</if>
+	</sql>
+
+	<!--根据条件获取Work列表-->
+	<select id="getWorkList" resultMap="workDTO" parameterType="java.util.Map">
+		SELECT *,s.id as sid,e.id as eid,r.id as rid,s.status,s.remark
+		FROM student s
+		JOIN employ e ON s.username = e.account
+		JOIN record r ON s.username = r.account
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					s.id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Work总数-->
+	<select id="getWorkListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM student s
+		JOIN employ e ON s.username = e.account
+		JOIN record r ON s.username = r.account
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+</mapper>

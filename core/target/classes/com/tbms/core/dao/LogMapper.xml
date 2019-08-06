@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.LogMapper">
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+	<!-- 字段与DTO映射 -->
+	<resultMap id="logDTO" type="com.tbms.core.dto.LogDTO">
+		<result column="id" property="id" javaType="java.lang.Long" /><!--ID-->
+		<result column="username" property="username" javaType="java.lang.String" /><!--用户名-->
+		<result column="ip" property="ip" javaType="java.lang.String" /><!--IP-->
+		<result column="method" property="method" javaType="java.lang.String" /><!--请求方法-->
+		<result column="uri" property="uri" javaType="java.lang.String" /><!--URI-->
+		<result column="execMethod" property="execMethod" javaType="java.lang.String" /><!--执行方法-->
+		<result column="execTime" property="execTime" javaType="java.lang.Long" /><!--执行时间-->
+		<result column="args" property="args" javaType="java.lang.String" /><!--参数-->
+		<result column="returnVal" property="returnVal" javaType="java.lang.String" /><!--返回值-->
+		<result column="execDesc" property="execDesc" javaType="java.lang.String" /><!--执行描述-->
+		<result column="create_time" property="createTime" javaType="java.lang.Integer" /><!--添加时间-->
+		<result column="status" property="status" javaType="java.lang.String" /><!--状态-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`username`,
+		`ip`,
+		`method`,
+		`uri`,
+		`execMethod`,
+		`execTime`,
+		`args`,
+		`returnVal`,
+		`execDesc`,
+		`create_time`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id`=#{id}
+		</if>
+		<if test=" username != null ">
+			AND `username`=#{username}
+		</if>
+		<if test=" ip != null ">
+			AND `ip`=#{ip}
+		</if>
+		<if test=" method != null ">
+			AND `method`=#{method}
+		</if>
+		<if test=" uri != null ">
+			AND `uri`=#{uri}
+		</if>
+		<if test=" execMethod != null ">
+			AND `execMethod`=#{execMethod}
+		</if>
+		<if test=" execTime != null ">
+			AND `execTime`=#{execTime}
+		</if>
+		<if test=" args != null ">
+			AND `args`=#{args}
+		</if>
+		<if test=" returnVal != null ">
+			AND `returnVal`=#{returnVal}
+		</if>
+		<if test=" execDesc != null ">
+			AND `execDesc`=#{execDesc}
+		</if>
+		<if test=" createTime != null ">
+			AND `create_time`=#{createTime}
+		</if>
+		<if test=" status != null ">
+			AND `status`=#{status}
+		</if>
+	</sql>
+
+	<!-- 分页查询条件 -->
+	<sql id="Page_Condition">
+		<where>
+		<if test=" id != null ">
+			AND id LIKE #{id}
+		</if>
+		<if test=" username != null ">
+			AND username LIKE #{username}
+		</if>
+		<if test=" ip != null ">
+			AND ip LIKE #{ip}
+		</if>
+		<if test=" method != null ">
+			AND method LIKE #{method}
+		</if>
+		<if test=" uri != null ">
+			AND uri LIKE #{uri}
+		</if>
+		<if test=" execMethod != null ">
+			AND execMethod LIKE #{execMethod}
+		</if>
+		<if test=" execTime != null ">
+			AND execTime LIKE #{execTime}
+		</if>
+		<if test=" args != null ">
+			AND args LIKE #{args}
+		</if>
+		<if test=" returnVal != null ">
+			AND returnVal LIKE #{returnVal}
+		</if>
+		<if test=" execDesc != null ">
+			AND execDesc LIKE #{execDesc}
+		</if>
+		<if test=" createTime != null ">
+			AND create_time LIKE #{createTime}
+		</if>
+		<if test=" status != null ">
+			AND status LIKE #{status}
+		</if>
+		</where>
+		order by
+		<choose>
+			<when test="sort != null ">
+				${sort}
+			</when>
+			<otherwise>
+				id
+			</otherwise>
+		</choose>
+		${order}
+	</sql>
+
+	<!--根据条件获取Log列表-->
+	<select id="getLogList" resultMap="logDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM log
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="offset !=null AND size != null">
+			limit #{offset},#{size}
+		</if>
+		ORDER BY ID DESC
+	</select>
+
+	<!--根据条件分页查询获取Depart列表-->
+	<select id="getLogPage" resultMap="logDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM log
+		<include refid="Page_Condition" />
+		limit #{offset}, #{size}
+	</select>
+
+
+
+	<!--根据条件获取Log总数-->
+	<select id="getLogListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM log
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+
+
+
+	<!--添加Log-->
+	<insert id="addLog" parameterType="com.tbms.core.dto.LogDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO log(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="username!=null">
+				`username`,
+			</if>
+			<if test="ip!=null">
+				`ip`,
+			</if>
+			<if test="method!=null">
+				`method`,
+			</if>
+			<if test="uri!=null">
+				`uri`,
+			</if>
+			<if test="execMethod!=null">
+				`execMethod`,
+			</if>
+			<if test="execTime!=null">
+				`execTime`,
+			</if>
+			<if test="args!=null">
+				`args`,
+			</if>
+			<if test="returnVal!=null">
+				`returnVal`,
+			</if>
+			<if test="execDesc!=null">
+				`execDesc`,
+			</if>
+			<if test="createTime!=null">
+				`create_time`,
+			</if>
+			<if test="status!=null">
+				`status`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="username!=null">
+				#{username},
+			</if>
+			<if test="ip!=null">
+				#{ip},
+			</if>
+			<if test="method!=null">
+				#{method},
+			</if>
+			<if test="uri!=null">
+				#{uri},
+			</if>
+			<if test="execMethod!=null">
+				#{execMethod},
+			</if>
+			<if test="execTime!=null">
+				#{execTime},
+			</if>
+			<if test="args!=null">
+				#{args},
+			</if>
+			<if test="returnVal!=null">
+				#{returnVal},
+			</if>
+			<if test="execDesc!=null">
+				#{execDesc},
+			</if>
+			<if test="createTime!=null">
+				unix_timestamp(),
+			</if>
+			<if test="status!=null">
+				#{status},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除Log-->
+	<delete id="deleteLogById" parameterType="java.lang.Integer">
+		DELETE FROM log
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Log-->
+	<update id="updateLog" parameterType="com.tbms.core.dto.LogDTO">
+		UPDATE log
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" username != null">
+				`username`=#{username},
+			</if>
+			<if test=" ip != null">
+				`ip`=#{ip},
+			</if>
+			<if test=" method != null">
+				`method`=#{method},
+			</if>
+			<if test=" uri != null">
+				`uri`=#{uri},
+			</if>
+			<if test=" execMethod != null">
+				`execMethod`=#{execMethod},
+			</if>
+			<if test=" execTime != null">
+				`execTime`=#{execTime},
+			</if>
+			<if test=" args != null">
+				`args`=#{args},
+			</if>
+			<if test=" returnVal != null">
+				`returnVal`=#{returnVal},
+			</if>
+			<if test=" execDesc != null">
+				`execDesc`=#{execDesc},
+			</if>
+			<if test=" createTime != null">
+				`create_time`=#{createTime},
+			</if>
+			<if test=" status != null">
+				`status`=#{status},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Log-->
+	<select id="getLogById" resultMap="logDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM log
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

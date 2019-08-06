@@ -1,0 +1,786 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        就业管理
+        <small>就业信息页面</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">就业管理</a></li>
+        <li class="active">就业信息页面</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm" id="toolbar">
+                        <button type="button" id="lockBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#lockModal" data-shiro-hasRole="root"
+                                data-action="{type:'check',form:'#lockForm',idField:'id',table:'#table',after:'editAfter'}"
+                                disabled>
+                            <i class="glyphicon glyphicon-lock"></i> 批量审核
+                        </button>
+                        <button type="button" id="unlockBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#unlockModal" data-shiro-hasRole="root"
+                                data-action="{type:'check',form:'#unlockForm',idField:'id',table:'#table',after:'editAfter'}" disabled><i
+                                class="glyphicon glyphicon-open"></i> 取消锁定
+                        </button>
+                        <button type="button" id="downLoadBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#downLoadModal">
+                            <i class="glyphicon glyphicon-download-alt"></i> 下载
+                        </button>
+                        <button type="button" id="checkBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#checkModal"
+                                data-action="{type:'check',form:'#checkForm',idField:'id',table:'#table',after:'editAfter'}"
+                                disabled>
+                            <i class="glyphicon glyphicon-saved"></i> 毕业结论
+                        </button>
+                        <button type="button" id="setBatchBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#setBatchModal">
+                            <i class="glyphicon glyphicon-saved"></i> 批量设置
+                        </button>
+                        <!-- Indicates caution should be taken with this action -->
+                        <button type="button" id="editBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#editModal"
+                                data-action="{type:'editable',form:'#editForm',table:'#table',after:'editAfter'}"
+                                disabled><i class="glyphicon glyphicon-ok"></i> 审核
+                        </button>
+                    </div>
+                    <table id="table"></table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<!-- edit Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog modal-lg" style="width: 80%" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editModalLabel">审核学生信息</h4>
+            </div>
+            <div class="modal-body panel-group" id="accordion">
+                <form id="editForm" role="form">
+                    <!--就业信息审核信息-->
+                    <input type="hidden" name="id">
+                    <input type="hidden" name="username">
+                           <div class="panel panel-info">
+                               <div class="panel-heading">
+                                    <h3 class="panel-title">基本信息</h3>
+                               </div>
+                            <table class="table table-bordered">
+                            <tr>
+                                <th>学号</th>
+                                <td><input type="text" class="form-control" name="username" disabled></td>
+                                <th>姓名</th>
+                                <td><input type="text" class="form-control" name="name" disabled></td>
+                                <th>性别</th>
+                                <td><input type="text" class="form-control" name="gender" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>民族</th>
+                                <td>
+                                    <input type="hidden" name="ethnicity">
+                                    <select name="ethnicityCode" class="form-control"  data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${ethnicityList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>生日</th>
+                                <td><input type="text" class="form-control" name="birthday" disabled></td>
+                                <th>身份证</th>
+                                <td><input type="text" class="form-control" name="card" disabled></td>
+                            </tr>
+                            <tr>
+                                <th>政治面貌</th>
+                                <td>
+                                    <input type="hidden" name="political">
+                                    <select name="politicalCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${politicalList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>电话</th>
+                                <td><input type="text" class="form-control" name="phone"></td>
+                                <th>邮箱</th>
+                                <td><input type="text" class="form-control" name="email"></td>
+                            </tr>
+                            <tr>
+                                <th>学院</th>
+                                <td><input type="text" class="form-control" name="depart" disabled></td>
+                                <th>专业</th>
+                                <td><input type="text" class="form-control" name="major" disabled></td>
+                                <th>班级</th>
+                                <td><input type="text" class="form-control" name="classes"></td>
+                            </tr>
+                            <tr>
+                                <th>学制</th>
+                                <td>
+                                    <input type="hidden" name="type">
+                                    <select name="typeCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option value="2">二</option>
+                                        <option value="3">三</option>
+                                        <option value="4">四</option>
+                                        <option value="5">五</option>
+                                        <option value="6">六</option>
+                                    </select>
+                                </td>
+                                <th>学历</th>
+                                <td>
+                                    <input type="hidden" name="education">
+                                    <select name="educationCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${educationList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>学位</th>
+                                <td>
+                                    <input type="hidden" name="degree">
+                                    <select name="degreeCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${degreeList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>入学时间</th>
+                                <td><input type="number" class="form-control" name="enrollment"></td>
+                                <th>培养方式</th>
+                                <td>
+                                    <input type="hidden" name="training">
+                                    <select name="trainingCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${trainingList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>培养单位</th>
+                                <td><input type="text" class="form-control" name="trainingUnit"></td>
+                            </tr>
+                            <tr>
+                                <th>生源地</th>
+                                <td><input type="text" class="form-control" name="enrollmentAddr"></td>
+                                <th>年级</th>
+                                <td><input type="number" class="form-control" name="grade"></td>
+                                <th>是否春季毕业</th>
+                                <td>
+                                    <input type="radio" name="springGraduate" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="springGraduate" value="否"><span>否</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>本科院校类别</th>
+                                <td>
+                                    <select name="undergraduateCat" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${undergraduateCatList}" th:value="${item.name}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>本科院校</th>
+                                <td><input type="text" class="form-control" name="undergraduate"></td>
+                                <th>基层证书发放范围</th>
+                                <td>
+                                    <input type="hidden" name="certificate">
+                                    <select name="certificateCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${certificateList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>是否担任过助管</th>
+                                <td>
+                                    <input type="radio" name="assistant" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="assistant" value="否"><span>否</span>
+                                </td>
+                                <th>是否担任过辅导员</th>
+                                <td>
+                                    <input type="radio" name="instructor" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="instructor" value="否"><span>否</span>
+                                </td>
+                                <th>是否担任过学生干部</th>
+                                <td>
+                                    <input type="radio" name="cadre" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="cadre" value="否"><span>否</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>导师姓名</th>
+                                <td><input type="text" class="form-control" name="mentor"></td>
+                                <th>导师职称</th>
+                                <td>
+                                    <select name="mentorTitle" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option value="教授">教授</option>
+                                        <option value="副教授">副教授</option>
+                                        <option value="讲师">讲师</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </table>
+                            </div>
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">就业信息</h3>
+                                </div>
+                                <table class="table table-bordered">
+                            <tr>
+                                <th>毕业去向</th>
+                                <td>
+                                    <input type="hidden" name="destination">
+                                    <select name="destinationCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${destinationList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>就业形式</th>
+                                <td>
+                                    <input type="hidden" name="employForm">
+                                    <select name="employFormCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${employFormList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>就业范围</th>
+                                <td><input type="text" class="form-control" name="employRange"></td>
+                            </tr>
+                            <tr>
+                                <th>有意向未就业原因</th>
+                                <td><input type="text" class="form-control" name="unemployed"></td>
+                                <th>签约时间</th>
+                                <td><input type="text" class="form-control" name="contract"></td>
+                                <th>特殊就业类别</th>
+                                <td><input type="text" class="form-control" name="specialEmploy"></td>
+                            </tr>
+                            <tr>
+                                <th>工作职位类别</th>
+                                <td>
+                                    <input type="hidden" name="job">
+                                    <select name="jobCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${jobList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>单位名称</th>
+                                <td><input type="text" class="form-control" name="company"></td>
+                                <th>单位隶属部门</th>
+                                <td><input type="text" class="form-control" name="organization"></td>
+                            </tr>
+                            <tr>
+                                <th>单位行业</th>
+                                <td>
+                                    <input type="hidden" name="industry">
+                                    <select name="industryCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${industryList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>单位性质</th>
+                                <td>
+                                    <input type="hidden" name="property">
+                                    <select name="propertyCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${propertyList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>单位所在地</th>
+                                <td><input type="text" class="form-control" name="companyAddr"></td>
+                            </tr>
+                            <tr>
+                                <th>单位联系人</th>
+                                <td><input type="text" class="form-control" name="comContacts"></td>
+                                <th>单位联系电话</th>
+                                <td><input type="text" class="form-control" name="comPhone"></td>
+                                <th>单位电子信箱</th>
+                                <td><input type="text" class="form-control" name="comEmail"></td>
+                            </tr>
+                            <tr>
+                                <th>单位地址</th>
+                                <td><input type="text" class="form-control" name="comAddress"></td>
+                                <th>单位邮政编码</th>
+                                <td><input type="text" class="form-control" name="comPostcode"></td>
+                                <th>单位传真</th>
+                                <td><input type="text" class="form-control" name="comFax"></td>
+                            </tr>
+                            <tr>
+                                <th>特殊职位</th>
+                                <td><input type="text" class="form-control" name="specialJob"></td>
+                                <th>就业项目</th>
+                                <td><input type="text" class="form-control" name="employProgram"></td>
+                                <th>涉林行业</th>
+                                <td><input type="text" class="form-control" name="forest"></td>
+                            </tr>
+                             </table>
+                            </div>
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">档案信息</h3>
+                                </div>
+                                <table class="table table-bordered">
+                            <tr>
+                                <th>报到证签发类别</th>
+                                <td>
+                                    <input type="hidden" name="registerType">
+                                    <select name="registerTypeCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${registerTypeList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>派遣时间</th>
+                                <td><input type="text" class="form-control" name="dispatchTime"></td>
+                                <th>报到期限</th>
+                                <td><input type="text" class="form-control" name="registDeadline"></td>
+                            </tr>
+                            <tr>
+                                <th>档案转寄单位</th>
+                                <td><input type="text" class="form-control" name="recordCompany"></td>
+                                <th><span>档案转寄邮政编码</span></th>
+                                <td><input type="text" class="form-control" name="recordPostcode"></td>
+                                <th>档案转寄地址</th>
+                                <td><input type="text" class="form-control" name="recordAddr"></td>
+                            </tr>
+                            <tr>
+                                <th>户口迁移地址</th>
+                                <td><input type="text" class="form-control" name="permanentAddr"></td>
+                                <th>具体落实单位所在地</th>
+                                <td><input type="text" class="form-control" name="implementCompAddr"></td>
+                                <th>具体落实单位名称</th>
+                                <td><input type="text" class="form-control" name="implementComp"></td>
+                            </tr>
+                            <tr>
+                                <th>档案收件人</th>
+                                <td><input type="text" class="form-control" name="recordReceiver"></td>
+                                <th>档案收件人电话</th>
+                                <td><input type="text" class="form-control" name="recordReceiverPhone"></td>
+                                <th>档案收件人手机</th>
+                                <td><input type="text" class="form-control" name="recordReceiverCellphone"></td>
+                            </tr>
+                                </table>
+                            </div>
+                        </table>
+
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">审核意见</h3>
+                        </div>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>状态</th>
+                                    <td>
+                                        <span>
+                                            <input name="status" id="s1" style="margin-left: 10%" type="radio" value="-1">
+                                            <label for="s1">未通过</label>
+                                        </span>
+                                        <span data-shiro-hasRole="admin">
+                                            <input name="status" id="s2" style="margin-left: 10%" type="radio" value="1">
+                                            <label for="s2">通过</label>
+                                        </span>
+                                        <span data-shiro-hasRole="root">
+                                            <input name="status" id="s3" style="margin-left: 10%" type="radio" value="2">
+                                            <label for="s3">锁定</label>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>备注</th>
+                                    <td>
+                                        <input id="remark" type="text" class="form-control" name="remark" placeholder="输入备注">
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="editForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#editForm',url:'graduate/update',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- downLoad modal -->
+<div class="modal fade" id="downLoadModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="downLoadModalLabel">学生信息下载</h4>
+            </div>
+            <div class="modal-body">
+                <form id="downLoadForm">
+                    <div class="form-group">
+                        <label class="control-label" for="downYear"><span class="asterisk">*</span>毕业年度:</label>
+                        <input id="downYear" type="text" class="form-control" name="graduateYear" readonly required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="downLoad" class="btn btn-primary">
+                    下载
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- check modal -->
+<div class="modal fade" id="checkModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel">
+    <div class="modal-dialog" role="document" xmlns:th="http://www.thymeleaf.org">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="checkModalLabel">修改毕业结论</h4>
+            </div>
+            <div class="modal-body">
+                <form id="checkForm">
+                    <div class="form-group">
+                        <label class="control-label" for="date"><span class="asterisk">*</span>毕业时间:</label>
+                        <input id="date" type="text" class="form-control" name="graduateDate" readonly required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="graduate"><span class="asterisk">*</span>毕业结论:</label>
+                        <input type="hidden" name="graduation">
+                        <select name="graduate" id="graduate" class="form-control"
+                                data-placeholder="请从列表选择一项" required>
+                            <option value="0">--请选择--</option>
+                            <option th:each="item:${graduationList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"
+                        data-action="{type:'submit',check:'true',form:'#checkForm',url:'graduate/update',table:'#table',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- unlock model-->
+<div class="modal fade" id="unlockModal" tabindex="-1" role="dialog" aria-labelledby="unlockSmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="unlockSmallModalLabel">取消锁定学生信息</h4>
+            </div>
+            <div class="modal-body">
+                <form id="unlockForm"></form>
+                确定取消锁定选中的 <span class="records"></span> 条记录?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="unlockForm" class="btn btn-primary"
+                        data-action="{type:'submit',check:'true',form:'#unlockForm',url:'graduate/unlock',table:'#table',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- setBatch modal -->
+<div class="modal fade" id="setBatchModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel">
+    <div class="modal-dialog" role="document" xmlns:th="http://www.thymeleaf.org">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="setBatchModalLabel">批量设置</h4>
+            </div>
+            <div class="modal-body">
+                <form id="setBatchForm">
+                    <div class="form-group">
+                        <label class="control-label"><span class="asterisk">*</span>学生名单:</label>
+                        <textarea class="form-control" rows="5" name="username"></textarea>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="setBatch"><span class="asterisk">*</span>设置类型:</label>
+                        <select id="setBatch" name="batchType" class="form-control"
+                                data-placeholder="请从列表选择一项" required>
+                            <option value="0">--请选择--</option>
+                            <option value="graduation">毕业结论</option>
+                            <option value="state">审核状态</option>
+                        </select>
+                    </div>
+                    <div id="graduation" style="display: none">
+                        <div class="form-group">
+                            <label class="control-label" for="setDate"><span class="asterisk">*</span>毕业时间:</label>
+                            <input id="setDate" type="text" class="form-control" name="graduateDate" readonly required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="graduate"><span class="asterisk">*</span>毕业结论:</label>
+                            <input type="hidden" name="graduation">
+                            <select name="graduate" id="setGraduate" class="form-control selector"
+                                    data-placeholder="请从列表选择一项" required>
+                                <option value="0">--请选择--</option>
+                                <option th:each="item:${graduationList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group" id="state" style="display: none">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>审核意见</th>
+                                <td>
+                                    <span>
+                                        <input name="status" id="s4" style="margin-left: 10%" type="radio" value=-1>
+                                        <label for="s4">未通过</label>
+                                    </span>
+                                    <span data-shiro-hasRole="admin">
+                                        <input name="status" id="s5" style="margin-left: 10%" type="radio" value=1>
+                                        <label for="s5">通过</label>
+                                    </span>
+                                    <span data-shiro-hasRole="root">
+                                        <input name="status" id="s6" style="margin-left: 10%" type="radio" value=2>
+                                        <label for="s6">锁定</label>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>备注</th>
+                                <td>
+                                    <input type="text" class="form-control" name="remark" placeholder="输入备注">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#setBatchForm',url:'graduate/batch',table:'#table',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- lock modal -->
+<div class="modal fade" id="lockModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="lockModalLabel">批量审核学生信息</h4>
+            </div>
+            <div class="modal-body">
+                <form id="lockForm">
+                    <div class="panel">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>审核意见</th>
+                                <td>
+                                    <span>
+                                        <input name="status" id="s11" style="margin-left: 10%" type="radio" value="-1">
+                                        <label for="s11">未通过</label>
+                                    </span>
+                                    <span data-shiro-hasRole="admin">
+                                        <input name="status" id="s12" style="margin-left: 10%" type="radio" value="1">
+                                        <label for="s12">通过</label>
+                                    </span>
+                                    <span data-shiro-hasRole="root">
+                                        <input name="status" id="s13" style="margin-left: 10%" type="radio" value="2">
+                                        <label for="s13">锁定</label>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>备注</th>
+                                <td>
+                                    <input type="text" class="form-control" name="remark" placeholder="输入备注">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary"
+                        data-action="{type:'submit',check:'true',form:'#lockForm',url:'graduate/lock',table:'#table',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var $table = $('#table');
+    var currentYear = [[${currentYear}]];
+    $(function () {
+        // bootstrap table初始化
+        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+        $table.bootstrapTable({
+            url: 'graduate/list',
+            idField: 'id',
+            queryParams:function (params) {
+                //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                var temp = {
+                    limit: params.limit,                         //页面大小
+                    offset: params.offset,   //页码
+                    sort: params.sort,      //排序列名
+                    order: params.order, //排位命令（desc，asc）
+                    scolumn:params.scolumn?params.scolumn.toString():'graduateYear',//默认当前年度
+                    search:params.search?params.search:currentYear>0?currentYear:(new Date()).getFullYear()
+                };
+                return temp;
+            },
+            columns: [
+                {checkbox: true,searchable:false},
+                {field: 'username', title: '学号', sortable: true, halign: 'left',searchable:true},
+                {field: 'name', title: '姓名', sortable: true, halign: 'left',searchable:true},
+                {field: 'gender', title: '性别', sortable: true, halign: 'left',searchable:true},
+                {field: 'depart', title: '学院', sortable: true, halign: 'left',searchable:true},
+                {field: 'major', title: '专业', sortable: true, halign: 'left',searchable:true},
+                {field: 'graduateDate', title: '毕业日期', sortable: false, halign: 'left',searchable:true},
+                {field: 'education', title: '学历', sortable: true, halign: 'left',searchable:true},
+                {field: 'graduation', title: '毕业结论', sortable: true, halign: 'left',searchable:true},
+                {field: 'training', title: '培养方式', sortable: true, halign: 'left',searchable:true},
+                {field: 'employForm', title: '就业形式', sortable: false, halign: 'left',searchable:true},
+                {field: 'updateTime', title: '最近时间',searchable:false, halign: 'left',formatter:function (value, row, index) {
+                        return new Date(value*1000).toLocaleString();
+                    }},
+                {field: 'status', title: '状态',halign: 'left',formatter:"forbid"},
+                {
+                    field: 'action',
+                    title: '操作',
+                    halign: 'center',
+                    align: 'center',
+                    formatter: 'actionFormatter',
+                    events: 'actionEvents',
+                    searchable:false
+                }
+            ]
+        });
+    });
+
+    // 数据表格展开内容
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+
+
+    function forbid(value, row, index) {
+        var info;
+        switch (value){
+            case 2:
+                info = '<button type="button" class="btn btn-primary btn-xs">已锁定</button>';
+                break;
+            case 1:
+                info = '<button type="button" class="btn btn-success btn-xs">已审核</button>';
+                break;
+            case 0:
+                info = '未填报';
+                break;
+            case -1:
+                info = '<button type="button" class="btn btn-danger btn-xs">未通过</button>';
+                break;
+            case -2:
+                info = '<button type="button" class="btn btn-default btn-xs">待审核</button>';
+                break;
+            default:
+                info = "无";
+        }
+        return info;
+    }
+
+    function editAfter(obj,row) {
+        $.myAdmin.refreshComponent();
+    }
+
+    function actionFormatter(value, row, index) {
+        return '\
+        <a class="edit ml10" href="javascript:void(0)" data-toggle="tooltip" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>　\
+        \ ';
+    }
+
+    window.actionEvents = {
+        'click .edit': function (e, value, row, index) {
+            $('#editModal').modal('show');
+            $('#editForm').fillForm(row);
+            editAfter('',row);
+        }
+    };
+
+    //editForm 中 select 改变相应的 hidden input 对应修改
+    $("#editForm select").on('change', function(event) {
+        $(this).prev().val($(this).find(":selected").text());
+    });
+
+    //毕业结论
+    $("#graduate").on('change', function(event) {
+        $(this).prev().val($(this).find(":selected").text());
+    });
+
+    //设置时间
+    var dateMonthConfig = {
+        language: "zh-CN", //语言
+        todayHighlight: true, //是否今日高亮
+        format: 'yyyymmdd', //点击月份后显示在input中的格式
+        autoclose: true, //是否开启自动关闭
+        startView: 'months', //开始视图层，为月视图层
+        maxViewMode:'years', //最大视图层，为年视图层
+        minViewMode:'days' //最小视图层，为日视图层
+    };
+    //毕业结论设置毕业日期
+    $('#date').datepicker(dateMonthConfig);
+    $('#date').datepicker("setDate",new Date());
+
+    //批量设置毕业日期
+    $('#setDate').datepicker(dateMonthConfig);
+    $('#setDate').datepicker("setDate",new Date());
+
+    //设置下载年度
+    var downYearConfig = {
+        language: "zh-CN", //语言
+        todayHighlight: true, //是否今日高亮
+        format: 'yyyy', //点击月份后显示在input中的格式
+        autoclose: true, //是否开启自动关闭
+        startView: 'years', //开始视图层，为月视图层
+        maxViewMode:'years', //最大视图层，为年视图层
+        minViewMode:'years' //最小视图层，为日视图层
+    };
+    $('#downYear').datepicker(downYearConfig);
+    $('#downYear').datepicker("setDate",new Date());
+
+    /**
+     * 搜索字段多选
+     */
+    $(function () {
+        $.generateApi.selectField();
+    });
+
+    //下载文件
+    $("#downLoad").on("click",function () {
+        var graduateYear = $("#downYear").val();
+        window.open('graduate/download/'+graduateYear);
+        $("#downLoadModal").modal("hide");
+    });
+
+    //批量设置
+    $("#setBatch").on("change",function () {
+        $(this).find("option").each(function () {
+            $("#"+this.value).hide();
+        });
+        $("#"+this.value).show();
+    });
+    //毕业结论
+    $("#setGraduate").on('change', function(event) {
+        $(this).prev().val($(this).find(":selected").text());
+    });
+
+</script>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.DifficultyMapper">
+
+	<!-- 困难学生信息字段与DTO映射 -->
+	<resultMap id="difficultyDTO" type="com.tbms.core.dto.DifficultyDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="account" property="account" javaType="java.lang.String" /><!--学号-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--姓名-->
+		<result column="depart" property="depart" javaType="java.lang.String" /><!--学院-->
+		<result column="major" property="major" javaType="java.lang.String" /><!--专业-->
+		<result column="graduate_year" property="graduateYear" javaType="java.lang.Integer" /><!--毕业年份-->
+		<result column="description" property="description" javaType="java.lang.String" /><!--就业困难情况概述-->
+		<result column="code" property="code" javaType="java.lang.Integer" /><!--类型代码-->
+		<result column="type" property="type" javaType="java.lang.String" /><!--就业困难类型-->
+		<result column="process" property="process" javaType="java.lang.String" /><!--目前就业进展-->
+		<result column="measure" property="measure" javaType="java.lang.String" /><!--学院帮扶措施-->
+		<result column="create_time" property="createTime" javaType="java.lang.Integer" /><!--添加时间-->
+		<result column="update_time" property="updateTime" javaType="java.lang.Integer" /><!--修改时间-->
+		<result column="remark" property="remark" javaType="java.lang.String" /><!--备注-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--状态-->
+		<result column="count" property="count" javaType="java.lang.Integer" /><!--状态-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`account`,
+		`name`,
+		`depart`,
+		`major`,
+		`graduate_year`,
+		`description`,
+		`code`,
+		`type`,
+		`process`,
+		`measure`,
+		`create_time`,
+		`update_time`,
+		`remark`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" account != null ">
+			AND `account` LIKE "%${account}%"
+		</if>
+		<if test=" name != null ">
+			AND s.name LIKE "%${name}%"
+		</if>
+		<if test=" depart != null ">
+			AND s.depart LIKE "%${depart}%"
+		</if>
+		<if test=" departCode != null ">
+			AND s.depart_code = #{departCode}
+		</if>
+		<if test=" major != null ">
+			AND s.major LIKE "%${major}%"
+		</if>
+		<if test=" graduateYear != null ">
+			AND s.graduate_year = #{graduateYear}
+		</if>
+		<if test=" description != null ">
+			AND `description` LIKE "%${description}%"
+		</if>
+		<if test=" code != null ">
+			AND `code` = #{code}
+		</if>
+		<if test=" type != null ">
+			AND `type` LIKE "%${type}%"
+		</if>
+		<if test=" process != null ">
+			AND `process` LIKE "%${process}%"
+		</if>
+		<if test=" measure != null ">
+			AND `measure` LIKE "%${measure}%"
+		</if>
+		<if test=" createTime != null ">
+			AND `create_time` = #{createTime}
+		</if>
+		<if test=" updateTime != null ">
+			AND `update_time` = #{updateTime}
+		</if>
+		<if test=" remark != null ">
+			AND `remark` = #{remark}
+		</if>
+		<if test=" status != null ">
+			AND `status` = #{status}
+		</if>
+	</sql>
+
+	<!--根据条件获取Difficulty列表-->
+	<select id="getDifficultyList" resultMap="difficultyDTO" parameterType="java.util.Map">
+		SELECT
+			d.*,s.name,s.depart,s.major,s.graduate_year
+		FROM difficulty d
+		JOIN student s ON d.account = s.username
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--按学院分组统计Difficulty人数-->
+	<select id="getDifficultyListView" resultMap="difficultyDTO" parameterType="java.util.Map">
+		SELECT
+		 s.depart,d.code,d.type,count(1) as count,s.graduate_year
+		FROM difficulty d
+		JOIN student s ON d.account = s.username
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		GROUP BY s.depart_code
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+	</select>
+
+	<!--根据条件获取Difficulty总数-->
+	<select id="getDifficultyListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM difficulty d
+		JOIN student s ON d.account = s.username
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Difficulty-->
+	<insert id="addDifficulty" parameterType="com.tbms.core.dto.DifficultyDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO difficulty(
+		<trim suffixOverrides=",">
+			<if test="account != null">
+				`account`,
+			</if>
+			<if test="description != null">
+				`description`,
+			</if>
+			<if test="code != null">
+				`code`,
+			</if>
+			<if test="type != null">
+				`type`,
+			</if>
+			<if test="process != null">
+				`process`,
+			</if>
+			<if test="measure != null">
+				`measure`,
+			</if>
+			<if test="createTime != null">
+				`create_time`,
+			</if>
+			<if test="updateTime != null">
+				`update_time`,
+			</if>
+			<if test="remark != null">
+				`remark`,
+			</if>
+			<if test="status != null">
+				`status`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="account != null">
+				#{account},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="code != null">
+				#{code},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="process != null">
+				#{process},
+			</if>
+			<if test="measure != null">
+				#{measure},
+			</if>
+			<if test="createTime != null">
+				unix_timestamp(),
+			</if>
+			<if test="updateTime != null">
+				unix_timestamp(),
+			</if>
+			<if test="remark != null">
+				#{remark},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加Difficulty-->
+	<insert id="addDifficultyBatch" parameterType="java.util.List">
+		INSERT INTO difficulty(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					null,
+					#{s.account},
+					#{s.description},
+					#{s.code},
+					#{s.type},
+					#{s.process},
+					#{s.measure},
+					unix_timestamp(),
+					#{s.updateTime},
+					#{s.remark},
+					#{s.status},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Difficulty-->
+	<delete id="deleteDifficultyById" parameterType="java.lang.Integer">
+		DELETE FROM difficulty
+		WHERE ID=#{id}
+	</delete>
+
+	<!--根据id批量删除Difficulty-->
+	<delete id="deleteDifficultyBatch" parameterType="Integer[]">
+		DELETE FROM difficulty
+		WHERE ID IN
+		<foreach collection="array" item="arr" index="no" open="(" separator="," close=")">
+			#{arr}
+		</foreach>
+	</delete>
+
+
+	<!--根据ID更新Difficulty-->
+	<update id="updateDifficulty" parameterType="com.tbms.core.dto.DifficultyDTO">
+		UPDATE difficulty
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" account != null">
+				`account`=#{account},
+			</if>
+			<if test=" description != null">
+				`description`=#{description},
+			</if>
+			<if test=" code != null">
+				`code`=#{code},
+			</if>
+			<if test=" type != null">
+				`type`=#{type},
+			</if>
+			<if test=" process != null">
+				`process`=#{process},
+			</if>
+			<if test=" measure != null">
+				`measure`=#{measure},
+			</if>
+			<if test=" createTime != null">
+				`create_time`=#{createTime},
+			</if>
+			<if test=" updateTime != null">
+				`update_time`=unix_timestamp(),
+			</if>
+			<if test=" remark != null">
+				`remark`=#{remark},
+			</if>
+			<if test=" status != null">
+				`status`=#{status},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--批量更新Difficulty-->
+	<update id="updateDifficultyBatch">
+		UPDATE difficulty
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="difficulty.account != null">
+			`account` = #{difficulty.account},
+		</if>
+		<if test="difficulty.description != null">
+			`description` = #{difficulty.description},
+		</if>
+		<if test="difficulty.code != null">
+			`code` = #{difficulty.code},
+		</if>
+		<if test="difficulty.type != null">
+			`type` = #{difficulty.type},
+		</if>
+		<if test="difficulty.process != null">
+			`process` = #{difficulty.process},
+		</if>
+		<if test="difficulty.measure != null">
+			`measure` = #{difficulty.measure},
+		</if>
+		<if test="difficulty.createTime != null">
+			`create_time` = #{difficulty.createTime},
+		</if>
+		<if test="difficulty.updateTime != null">
+			`update_time` = unix_timestamp(),
+		</if>
+		<if test="difficulty.remark != null">
+			`remark` = #{difficulty.remark},
+		</if>
+		<if test="difficulty.status != null">
+			`status` = #{difficulty.status},
+		</if>
+		</trim>
+		WHERE id IN
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<!--根据id查询Difficulty-->
+	<select id="getDifficultyById" resultMap="difficultyDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM difficulty
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

@@ -1,0 +1,695 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        就业管理
+        <small>就业信息页面</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">就业管理</a></li>
+        <li class="active">就业信息页面</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm" id="toolbar">
+                        <!-- Indicates caution should be taken with this action -->
+                        <button type="button" id="editBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#editModal"
+                                data-action="{type:'editable',form:'#editForm',table:'#table',after:'editAfter'}"
+                                disabled><i class="glyphicon glyphicon-edit"></i> 填报信息
+                        </button>
+                        <button type="button" id="uploadBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#uploadModal"><i class="glyphicon glyphicon-open"></i> 上传附件
+                        </button>
+                    </div>
+                    <table id="table"></table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<!-- edit Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog modal-lg" style="width: 80%" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editModalLabel">填报就业信息</h4>
+            </div>
+            <div class="modal-body panel-group" id="accordion">
+                <form id="editForm" role="form">
+                    <!--就业信息审核信息-->
+                    <input type="hidden" name="id">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">基本信息</h3>
+                        </div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>生日</th>
+                                <td><input type="text" class="form-control" name="birthday" disabled></td>
+                                <th>身份证</th>
+                                <td><input type="text" class="form-control" name="card" disabled></td>
+                                <th>民族</th>
+                                <td>
+                                    <input type="hidden" name="ethnicity" id="ethnicity">
+                                    <select name="ethnicityCode" class="form-control"  data-placeholder="请从列表选择一项" id="ethCode">
+                                        <option th:each="item:${ethnicityList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>政治面貌</th>
+                                <td>
+                                    <input type="hidden" name="political">
+                                    <select name="politicalCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${politicalList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>电话</th>
+                                <td><input type="text" class="form-control" name="phone"></td>
+                                <th>邮箱</th>
+                                <td><input type="text" class="form-control" name="email"></td>
+                            </tr>
+                            <tr>
+                                <th>入学时间</th>
+                                <td><input type="number" class="form-control" name="enrollment" disabled></td>
+                                <th>培养方式</th>
+                                <td>
+                                    <input type="hidden" name="training">
+                                    <select name="trainingCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${trainingList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>培养单位</th>
+                                <td><input type="text" class="form-control" name="trainingUnit"></td>
+                            </tr>
+                            <tr>
+                                <th>本科院校类别</th>
+                                <td>
+                                    <select name="undergraduateCat" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${undergraduateCatList}" th:value="${item.name}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>本科院校</th>
+                                <td><input type="text" class="form-control" name="undergraduate" disabled></td>
+                                <th>是否春季毕业</th>
+                                <td>
+                                    <input type="radio" name="springGraduate" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="springGraduate" value="否"><span>否</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>是否担任过助管</th>
+                                <td>
+                                    <input type="radio" name="assistant" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="assistant" value="否"><span>否</span>
+                                </td>
+                                <th>是否担任过辅导员</th>
+                                <td>
+                                    <input type="radio" name="instructor" value="是"><span>是</span>
+                                    <input type="radio" style="margin-left: 30%;" name="instructor" value="否"><span>否</span>
+                                </td>
+                                <th>是否担任过学生干部</th>
+                                <td>
+                                    <input type="hidden" name="cadre" id="cadre">
+                                    <input type="checkbox" id="cadre1" name="icadre" value="校研会"><label for="cadre1">校研会</label>
+                                    <input type="checkbox" id="cadre2" name="icadre" value="院研会"><label for="cadre2">院研会</label>
+                                    <input type="checkbox" id="cadre3" name="icadre" value="党支部"><label for="cadre3">党支部</label>
+                                    <input type="checkbox" id="cadre4" name="icadre" value="班级"><label for="cadre4">班级</label>
+                                    <span style="color: #FF0000">(没有担任则不选)</span>
+                                 </td>
+                            </tr>
+                            <tr>
+                                <th>导师姓名</th>
+                                <td><input type="text" class="form-control" name="mentor"></td>
+                                <th>导师职称</th>
+                                <td>
+                                    <select name="mentorTitle" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option value="教授">教授</option>
+                                        <option value="副教授">副教授</option>
+                                        <option value="讲师">讲师</option>
+                                    </select>
+                                </td>
+                                <th>生源地</th>
+                                <td>
+                                    <!--<input type="text" class="form-control" name="enrollmentAddr">-->
+                                    <select style="width: 28%; height: 100%" id="stuProvince" name="province" data-placeholder="请选择省份">
+                                        <option value="">请选择省份</option>
+                                        <option th:each="province:${provinceList}" th:id="${province.code}" th:value="${province.name}"><span th:text="${province.name}"></span></option>
+                                    </select>
+                                    <input type="hidden">
+                                    <select style="width: 34%; height: 100%" id="stuCity" name="City" data-placeholder="请选择城市"></select>
+                                    <input id="stuLocation" type="hidden" class="form-control" name="enrollmentAddr">
+                                    <select style="width: 34%; height: 100%" id="stuArea" name="enrollmentCode" data-placeholder="请选择地区"></select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">就业信息</h3>
+                        </div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>毕业去向</th>
+                                <td>
+                                    <input type="hidden" name="destination">
+                                    <select name="destinationCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${destinationList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>就业形式</th>
+                                <td>
+                                    <input type="hidden" name="employForm">
+                                    <select name="employFormCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${employFormList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>就业范围</th>
+                                <td><input type="text" class="form-control" name="employRange"></td>
+                            </tr>
+                            <tr>
+                                <th>有意向未就业原因</th>
+                                <td><input type="text" class="form-control" name="unemployed"></td>
+                                <th>签约时间</th>
+                                <td><input type="text" class="form-control" name="contract"></td>
+                                <th>特殊就业类别</th>
+                                <td><input type="text" class="form-control" name="specialEmploy"></td>
+                            </tr>
+                            <tr>
+                                <th>工作职位类别</th>
+                                <td>
+                                    <input type="hidden" name="job">
+                                    <select name="jobCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${jobList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>单位名称</th>
+                                <td><input type="text" class="form-control" name="company"></td>
+                                <th>单位隶属部门</th>
+                                <td><input type="text" class="form-control" name="organization"></td>
+                            </tr>
+                            <tr>
+                                <th>单位行业</th>
+                                <td>
+                                    <input type="hidden" name="industry">
+                                    <select name="industryCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${industryList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>单位性质</th>
+                                <td>
+                                    <input type="hidden" name="property">
+                                    <select name="propertyCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${propertyList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>单位所在地</th>
+                                <td>
+<!--                                    <input type="text" class="form-control" name="companyAddr">-->
+                                    <select style="width: 28%; height: 100%" id="comProvince" name="province" data-placeholder="请选择省份">
+                                        <option value="">请选择省份</option>
+                                        <option th:each="province:${provinceList}" th:id="${province.code}" th:value="${province.name}"><span th:text="${province.name}"></span></option>
+                                    </select>
+                                    <input type="hidden">
+                                    <select style="width: 34%; height: 100%" id="comCity" name="City" data-placeholder="请选择城市"></select>
+                                    <input id="comLocation" type="hidden" class="form-control" name="companyAddr">
+                                    <select style="width: 34%; height: 100%" id="comArea" name="companyAddrCode" data-placeholder="请选择地区"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>单位联系人</th>
+                                <td><input type="text" class="form-control" name="comContacts"></td>
+                                <th>单位联系电话</th>
+                                <td><input type="text" class="form-control" name="comPhone"></td>
+                                <th>单位电子信箱</th>
+                                <td><input type="text" class="form-control" name="comEmail"></td>
+                            </tr>
+                            <tr>
+                                <th>单位地址</th>
+                                <td><input type="text" class="form-control" name="comAddress"></td>
+                                <th>单位邮政编码</th>
+                                <td><input type="text" class="form-control" name="comPostcode"></td>
+                                <th>单位传真</th>
+                                <td><input type="text" class="form-control" name="comFax"></td>
+                            </tr>
+                            <tr>
+                                <th>特殊职位</th>
+                                <td><input type="text" class="form-control" name="specialJob"></td>
+                                <th>就业项目</th>
+                                <td><input type="text" class="form-control" name="employProgram"></td>
+                                <th>涉林行业</th>
+                                <td><input type="text" class="form-control" name="forest"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">档案信息</h3>
+                        </div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>报到证签发类别</th>
+                                <td>
+                                    <input type="hidden" name="registerType">
+                                    <select name="registerTypeCode" class="form-control" data-placeholder="请从列表选择一项">
+                                        <option th:each="item:${registerTypeList}" th:value="${item.code}"><span th:text="${item.name}"></span></option>
+                                    </select>
+                                </td>
+                                <th>派遣时间</th>
+                                <td><input type="text" class="form-control" name="dispatchTime"></td>
+                                <th>报到期限</th>
+                                <td><input type="text" class="form-control" name="registDeadline"></td>
+                            </tr>
+                            <tr>
+                                <th>档案转寄单位</th>
+                                <td><input type="text" class="form-control" name="recordCompany"></td>
+                                <th><span>档案转寄邮政编码</span></th>
+                                <td><input type="text" class="form-control" name="recordPostcode"></td>
+                                <th>档案转寄地址</th>
+                                <td><input type="text" class="form-control" name="recordAddr"></td>
+                            </tr>
+                            <tr>
+                                <th>户口迁移地址</th>
+                                <td><input type="text" class="form-control" name="permanentAddr"></td>
+                                <th>具体落实单位所在地</th>
+                                <td>
+                                    <!--<input type="text" class="form-control" name="implementCompAddr">-->
+                                    <select style="width: 28%; height: 100%" id="icomProvince" name="province" data-placeholder="请选择省份">
+                                        <option value="">请选择省份</option>
+                                        <option th:each="province:${provinceList}" th:id="${province.code}" th:value="${province.name}"><span th:text="${province.name}"></span></option>
+                                    </select>
+                                    <input type="hidden">
+                                    <select style="width: 34%; height: 100%" id="icomCity" name="City" data-placeholder="请选择城市"></select>
+                                    <input id="icomLocation" type="hidden" class="form-control" name="implementCompAddr">
+                                    <select style="width: 34%; height: 100%" id="icomArea" name="implementCompCode" data-placeholder="请选择地区"></select>
+                                </td>
+                                <th>具体落实单位名称</th>
+                                <td><input type="text" class="form-control" name="implementComp"></td>
+                            </tr>
+                            <tr>
+                                <th>档案收件人</th>
+                                <td><input type="text" class="form-control" name="recordReceiver"></td>
+                                <th>档案收件人电话</th>
+                                <td><input type="text" class="form-control" name="recordReceiverPhone"></td>
+                                <th>档案收件人手机</th>
+                                <td><input type="text" class="form-control" name="recordReceiverCellphone"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="editForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#editForm',url:'update',after:'$.myAction.refreshTable'}"
+                        onclick="checkBox()">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- uploadModal-->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="uploadModalLabel">上传附件</h4>
+            </div>
+            <div class="about-import">
+                <p style="padding: 20px 20px 0 20px;color: red;">三方协议[每张照片小于1M]</p>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" enctype="multipart/form-data" method="post">
+                    <div class="form-group">
+                        <label class="control-label" for="filename"><span class="asterisk">*</span>附件:</label>
+                        <input id="filename" style="height: 38px;line-height: 25px;" type="file" class="form-control" name="file" placeholder="请选择图片文件" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="upload" form="uploadForm" name="student" class="btn btn-primary">
+                    上传
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+
+    let status = [[${status}]];
+    $(function () {
+       if (status === -4) {
+           $.myNotify.warning('请先填写调查问卷！');
+           setTimeout(function () {
+               window.location.href="#survey";
+               window.location.reload();
+           }, 2500)
+       }
+    });
+
+    $('#stuProvince').change(function () {
+        let provinceCode = $('#stuProvince').find("option:selected").attr("id")
+        $('#stuCity').empty()
+        $('#stuArea').empty()
+        $(function () {
+            $('#stuCity').append("<option value=''>请选择城市</option>")
+            $.ajax({
+                type: 'get',
+                url: '/location/findCityByProvince',
+                data:{"province_code": provinceCode},
+                cache: false,
+                async:true,
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        $.each(res.cityList, function (index, item) {
+                            let cityCode = res.cityList[index].code
+                            let cityName = res.cityList[index].name
+                            $('#stuCity').append("<option id='"+cityCode+"' value='"+cityName+"'>"+cityName+"</option>")
+                        })
+                    } else {
+                        $.myNotify.danger(res.msg)
+                    }
+                },
+                error: function () {
+                    $.myNotify.danger("发生不可预知的错误")
+                }
+            });
+        })
+    })
+
+    $('#stuCity').change(function () {
+        let cityCode = $('#stuCity').find("option:selected").attr("id")
+        $('#stuArea').empty()
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: '/location/findAreaByCity',
+                data:{"city_code": cityCode},
+                cache: false,
+                async:true,
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        $('#stuArea').append("<option value=''>请选择地区</option>")
+                        $.each(res.areaList, function (index, item) {
+                            let areaCode = res.areaList[index].code
+                            let areaName = res.areaList[index].name
+                            $('#stuArea').append("<option id='"+areaCode+"' value='"+areaCode+"'>"+areaName+"</option>")
+                        })
+                    } else {
+                        $.myNotify.danger(res.msg)
+                    }
+                },
+                error: function () {
+                    $.myNotify.danger("发生不可预知的错误")
+                }
+            });
+        })
+    })
+
+    $('#comProvince').change(function () {
+        let provinceCode = $('#comProvince').find("option:selected").attr("id")
+        $('#comCity').empty()
+        $('#comArea').empty()
+        $(function () {
+            $('#comCity').append("<option value=''>请选择城市</option>")
+            $.ajax({
+                type: 'get',
+                url: '/location/findCityByProvince',
+                data:{"province_code": provinceCode},
+                cache: false,
+                async:true,
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        $.each(res.cityList, function (index, item) {
+                            let cityCode = res.cityList[index].code
+                            let cityName = res.cityList[index].name
+                            $('#comCity').append("<option id='"+cityCode+"' value='"+cityName+"'>"+cityName+"</option>")
+                        })
+                    } else {
+                        $.myNotify.danger(res.msg)
+                    }
+                },
+                error: function () {
+                    $.myNotify.danger("发生不可预知的错误")
+                }
+            });
+        })
+    })
+
+    $('#comCity').change(function () {
+        let cityCode = $('#comCity').find("option:selected").attr("id")
+        $('#comArea').empty()
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: '/location/findAreaByCity',
+                data:{"city_code": cityCode},
+                cache: false,
+                async:true,
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        $('#comArea').append("<option value=''>请选择地区</option>")
+                        $.each(res.areaList, function (index, item) {
+                            let areaCode = res.areaList[index].code
+                            let areaName = res.areaList[index].name
+                            $('#comArea').append("<option id='"+areaCode+"' value='"+areaCode+"'>"+areaName+"</option>")
+                        })
+                    } else {
+                        $.myNotify.danger(res.msg)
+                    }
+                },
+                error: function () {
+                    $.myNotify.danger("发生不可预知的错误")
+                }
+            });
+        })
+    })
+
+    $('#icomProvince').change(function () {
+        let provinceCode = $('#icomProvince').find("option:selected").attr("id")
+        $('#icomCity').empty()
+        $('#icomArea').empty()
+        $(function () {
+            $('#icomCity').append("<option value=''>请选择城市</option>")
+            $.ajax({
+                type: 'get',
+                url: '/location/findCityByProvince',
+                data:{"province_code": provinceCode},
+                cache: false,
+                async:true,
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        $.each(res.cityList, function (index, item) {
+                            let cityCode = res.cityList[index].code
+                            let cityName = res.cityList[index].name
+                            $('#icomCity').append("<option id='"+cityCode+"' value='"+cityName+"'>"+cityName+"</option>")
+                        })
+                    } else {
+                        $.myNotify.danger(res.msg)
+                    }
+                },
+                error: function () {
+                    $.myNotify.danger("发生不可预知的错误")
+                }
+            });
+        })
+    })
+
+    $('#icomCity').change(function () {
+        let cityCode = $('#icomCity').find("option:selected").attr("id")
+        $('#icomArea').empty()
+        $(function () {
+            $.ajax({
+                type: 'get',
+                url: '/location/findAreaByCity',
+                data:{"city_code": cityCode},
+                cache: false,
+                async:true,
+                dataType: 'JSON',
+                contentType: "application/json; charset=utf-8",
+                success: function (res) {
+                    if (res.code === 200) {
+                        $('#icomArea').append("<option value=''>请选择地区</option>")
+                        $.each(res.areaList, function (index, item) {
+                            let areaCode = res.areaList[index].code
+                            let areaName = res.areaList[index].name
+                            $('#icomArea').append("<option id='"+areaCode+"' value='"+areaCode+"'>"+areaName+"</option>")
+                        })
+                    } else {
+                        $.myNotify.danger(res.msg)
+                    }
+                },
+                error: function () {
+                    $.myNotify.danger("发生不可预知的错误")
+                }
+            });
+        })
+    })
+
+    var $table = $('#table');
+    $(function () {
+        // bootstrap table初始化
+        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+        $table.bootstrapTable({
+            url: 'list',
+            idField: 'id',
+            search: false,
+            columns: [
+                {checkbox: true,searchable:false},
+                {field: 'username', title: '学号', sortable: true, halign: 'left',searchable:true},
+                {field: 'name', title: '姓名', sortable: true, halign: 'left',searchable:true},
+                {field: 'gender', title: '性别', sortable: true, halign: 'left',searchable:true},
+                {field: 'depart', title: '学院', sortable: true, halign: 'left',searchable:true},
+                {field: 'major', title: '专业', sortable: true, halign: 'left',searchable:true},
+                {field: 'graduateDate', title: '毕业日期', sortable: false, halign: 'left',searchable:true},
+                {field: 'education', title: '学历', sortable: true, halign: 'left',searchable:true},
+                {field: 'degree', title: '学位', sortable: true, halign: 'left',searchable:true},
+                {field: 'graduation', title: '毕业结论', sortable: true, halign: 'left',searchable:true},
+                {field: 'type', title: '学制', sortable: true, halign: 'left',searchable:true},
+                {field: 'instructor', title: '指导教师', sortable: false, halign: 'left',searchable:true},
+                {field: 'updateTime', title: '最近时间',searchable:false, halign: 'left',formatter:function (value, row, index) {
+                        return new Date(value*1000).toLocaleString();
+                    }},
+                {field: 'status', title: '状态',halign: 'left',formatter:"forbid"},
+                {
+                    field: 'action',
+                    title: '操作',
+                    halign: 'center',
+                    align: 'center',
+                    formatter: 'actionFormatter',
+                    events: 'actionEvents',
+                    searchable:false
+                }
+
+            ]
+        });
+    });
+
+    // 数据表格展开内容
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+
+    function actionFormatter(value, row, index) {
+        return '<a class="edit ml10" href="javascript:void(0)" data-toggle="tooltip" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>';
+    }
+
+    function forbid(value, row, index) {
+        var info;
+        switch (value){
+            case 2:
+                info = '<button type="button" class="btn btn-primary btn-xs">已锁定</button>';
+                break;
+            case 1:
+                info = '<button type="button" class="btn btn-success btn-xs">已审核</button>';
+                break;
+            case 0:
+                info = '未填报';
+                break;
+            case -1:
+                info = '<button type="button" class="btn btn-danger btn-xs">未通过</button>';
+                break;
+            case -2:
+                info = '<button type="button" class="btn btn-default btn-xs">待审核</button>';
+                break;
+            default:
+                info = "无";
+        }
+        return info;
+    }
+
+    function editAfter(obj,row) {
+        $.myAdmin.refreshComponent();
+    }
+
+    window.actionEvents = {
+        'click .edit': function (e, value, row, index) {
+            $('#editModal').modal('show');
+            fillCadre(row.cadre)
+            getStudentCurrentArea(row.enrollmentCode)
+            getStudentCurrentCity(row.enrollmentCode)
+            getComCurrentArea(row.companyAddrCode)
+            getComCurrentCity(row.companyAddrCode)
+            getIComCurrentArea(row.implementCompCode)
+            getIComCurrentCity(row.implementCompCode)
+            $('#editForm').fillForm(row);
+            editAfter('',row);
+        }
+    };
+
+    function fillCadre(cadre) {
+        $.each($("input[name='icadre']"), function(){
+            if(cadre.indexOf(this.value) !== -1){
+                this.checked = true
+            }
+        });
+    }
+
+    //editForm 中 select 改变相应的 hidden input 对应修改
+    $("#editForm select").on('change', function(event) {
+        if ($(this).prev().attr('id') === 'stuLocation') {
+            let location = $('#stuProvince').find("option:selected").html()
+                + $('#stuCity').find("option:selected").html()
+                + $('#stuArea').find("option:selected").html()
+            $('#stuLocation').val(location)
+        } else if ($(this).prev().attr('id') === 'comLocation') {
+            let location = $('#comProvince').find("option:selected").html()
+                + $('#comCity').find("option:selected").html()
+                + $('#comArea').find("option:selected").html()
+            $('#comLocation').val(location)
+        } else if ($(this).prev().attr('id') === 'comLocation') {
+            let location = $('#icomProvince').find("option:selected").html()
+                + $('#icomCity').find("option:selected").html()
+                + $('#icomArea').find("option:selected").html()
+            $('#icomLocation').val(location)
+        } else {
+            $(this).prev().val($(this).find(":selected").text());
+        }
+    });
+
+    function checkBox() {
+        var cadre = ''
+        $.each($("input[name='icadre']"), function(){
+            if(this.checked){
+                cadre = cadre + $(this).val() + ','
+            }
+        });
+        $('#cadre').val(cadre)
+        console.log($('#cadre').val())
+    }
+
+</script>

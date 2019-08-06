@@ -1,0 +1,18 @@
+.asterisk {
+    font-style: normal;
+    color: red;
+}
+.records {
+    color: red;
+    font-weight: bold;
+}
+td{
+    vertical-align:middle;
+}
+[data-notify="container"] {
+    width: auto;
+}
+[data-notify="message"] {
+    padding-left:10px;
+    padding-right:10px;
+}

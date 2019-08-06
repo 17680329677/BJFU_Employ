@@ -1,0 +1,372 @@
+<!-- Content Header (Page header) -->
+<section class="content-header" style="">
+    <h1>
+        用户管理
+        <small>系统用户管理页面</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">用户管理</a></li>
+        <li class="active">系统用户管理</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm" id="toolbar">
+                        <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                        <button type="button" id="addBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#addModal"><i class="glyphicon glyphicon-plus"></i> 添加
+                        </button>
+                        <!-- Indicates caution should be taken with this action -->
+                        <button type="button" id="editBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#editModal"
+                                data-action="{type:'editable',form:'#editForm',table:'#table',after:'editAfter'}"
+                                disabled><i class="glyphicon glyphicon-edit"></i> 修改
+                        </button>
+                        <button type="button" id="editPwdBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#PasswordModal"
+                                data-action="{type:'editable',form:'#passwordForm',table:'#table',after:'editAfter'}"
+                                disabled><i class="glyphicon glyphicon-edit"></i> 修改密码
+                        </button>
+                        <button type="button" id="unableBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#unableModal"
+                                data-action="{type:'check',form:'#unableForm',idField:'id',table:'#table'}" disabled><i
+                                class="glyphicon glyphicon-ban-circle"></i> 注销
+                        </button>
+                        <!-- Indicates a dangerous or potentially negative action -->
+                        <button type="button" id="deleteBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#deleteModal"
+                                data-action="{type:'delete',form:'#deleteForm',idField:'id',table:'#table'}" disabled><i
+                                class="glyphicon glyphicon-remove"></i> 删除
+                        </button>
+                    </div>
+                    <table id="table"></table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<!-- add Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="addModalLabel">添加用户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <input type="hidden" name="status" value="1">
+                    <div class="form-group">
+                        <label class="control-label" for="username"><span class="asterisk">*</span>用户名:</label>
+                        <input id="username" type="text" class="form-control" name="username" placeholder="输入用户名"
+                               minlength="5" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="name"><span class="asterisk">*</span>姓名:</label>
+                        <input id="name" type="text" class="form-control" name="name" placeholder="输入姓名"
+                               minlength="2" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="password"><span class="asterisk">*</span>密码:</label>
+                        <input type="password" class="form-control" id="password" minlength="6"
+                               name="password" placeholder="输入密码" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="addroleId"><span class="asterisk">*</span>角色列表:</label>
+                        <select name="roleId" id="addroleId" class="form-control chosen-select"
+                                data-placeholder="请从列表选择一项" required>
+                            <option th:each="role,iterStat:${roleList}" th:value="${role.id}"><span th:text="${role.name}"></span></option>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="addDepartName"><span class="asterisk">*</span>所属部门:</label>
+                        <select name="departCode" id="addDepartName" class="form-control chosen-select"
+                                data-placeholder="请从列表选择一项" required>
+                            <option th:each="depart,iterStat:${departList}" th:value="${depart.code}">
+                                <span th:text="${depart.name}"></span>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="phone">手机号:</label>
+                        <input id="phone" type="text" class="form-control" name="phone" placeholder="输入手机号"
+                               minlength="11">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="email">邮箱:</label>
+                        <input id="email" type="text" class="form-control" name="email" placeholder="输入邮箱"
+                               minlength="8">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="addForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#addForm',url:'user/create',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editModalLabel">修改用户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" name="id"/>
+                    <div class="form-group">
+                        <label class="control-label" for="username"><span class="asterisk">*</span>用户名:</label>
+                        <input id="editUsername" type="text" class="form-control" name="username" placeholder="输入用户名"
+                               minlength="2" required readonly>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="editName"><span class="asterisk">*</span>姓名:</label>
+                        <input id="editName" type="text" class="form-control" name="name" placeholder="输入姓名"
+                               minlength="5" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="roleId"><span class="asterisk">*</span>角色列表:</label>
+                        <select name="roleId" id="roleId" class="form-control chosen-select"
+                                data-placeholder="请从列表选择一项" required>
+                            <option th:each="role,iterStat:${roleList}" th:value="${role.id}"><span th:text="${role.name}"></span></option>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="editDepartName"><span class="asterisk">*</span>所属部门:</label>
+                        <select name="departCode" id="editDepartName" class="form-control chosen-select"
+                                data-placeholder="请从列表选择一项" required>
+                            <option th:each="depart,iterStat:${departList}" th:value="${depart.code}">
+                                <span th:text="${depart.name}"></span>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="phone">手机号:</label>
+                        <input id="editPhone" type="text" class="form-control" name="phone" placeholder="输入手机号"
+                               minlength="11">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="email">邮箱:</label>
+                        <input id="editEmail" type="text" class="form-control" name="email" placeholder="输入邮箱"
+                               minlength="8">
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="eStatus"><span class="asterisk">*</span>状态:</label>
+                        <select name="status" id="eStatus" class="form-control chosen-select"
+                                data-placeholder="请从列表选择一项">
+                            <option value="1">启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="editForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#editForm',url:'user/update',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteSmallModalLabel">删除用户</h4>
+            </div>
+            <div class="modal-body">
+                <form id="deleteForm"></form>
+                确定要删除选中的 <span class="records"></span> 条记录?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="deleteForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#deleteForm',url:'user/delete',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--password Model-->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="PasswordModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editPassword">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form id="passwordForm">
+                    <input type="hidden" name="id"/>
+                    <input type="hidden" name="status"/>
+                    <div class="form-group">
+                        <label class="control-label" for="pusername"><span class="asterisk">*</span>用户名:</label>
+                        <input id="pusername" type="text" class="form-control" name="username" placeholder="输入用户名" readonly>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="pName"><span class="asterisk">*</span>姓名:</label>
+                        <input id="pName" type="text" class="form-control" name="name" placeholder="输入姓名"
+                               disabled>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="password"><span class="asterisk">*</span>密码:</label>
+                        <input type="password" class="form-control" id="pwd" minlength="6"
+                               name="password" placeholder="输入密码" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="passwordForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#passwordForm',url:'user/update',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- unable model-->
+<div class="modal fade" id="unableModal" tabindex="-1" role="dialog" aria-labelledby="unableSmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="unableSmallModalLabel">注销管理员</h4>
+            </div>
+            <div class="modal-body">
+                <form id="unableForm"></form>
+                确定要注销选中的 <span class="records"></span> 条记录?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="unableForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#unableForm',url:'user/unable',table:'#table',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var $table = $('#table');
+    $(function () {
+        // bootstrap table初始化
+        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+        $table.bootstrapTable({
+            url: 'user/list',
+            idField: 'id',
+            columns: [
+                {checkbox: true,searchable:false},
+                {field: 'username', title: '用户名', sortable: true, halign: 'left'},
+                {field: 'name', title: '姓名', sortable: true, halign: 'left'},
+                {field: 'roleName', title: '角色',halign: 'left'},
+                {field: 'departName', title: '部门',halign: 'left'},
+                {field: 'email', title: '邮箱',  halign: 'left',searchable:false},
+                {field: 'phone', title: '电话号码', sortable: true, halign: 'left'},
+                {field: 'lastLoginIp', title: '最近登录IP', halign: 'left'},
+                {field: 'lastLoginTime', title: '最近登录时间',searchable:false, halign: 'left',formatter:function (value, row, index) {
+                        return new Date(value*1000).toLocaleString();
+                    }},
+                {field: 'status', title: '状态', sortable: true, halign: 'left',formatter:"forbid"},
+                {
+                    field: 'action',
+                    title: '操作',
+                    halign: 'center',
+                    align: 'center',
+                    formatter: 'actionFormatter',
+                    events: 'actionEvents',
+                    clickToSelect: false,
+                    searchable:false
+                }
+            ]
+        });
+    });
+
+    function forbid(value, row, index) {
+        if (value === 0)
+            return '<button type="button"  class="btn btn-default btn-xs">禁用</button>';
+        if (value === 1)
+            return '<button type="button"  class="btn btn-success btn-xs">启用</button>';
+    }
+
+    // 数据表格展开内容
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+
+    function editAfter(obj,row) {
+        $("#pwd").val("");
+        $.myAdmin.refreshComponent();
+    }
+
+    function actionFormatter(value, row, index) {
+        return '\
+        <a class="edit ml10" href="javascript:void(0)" data-toggle="tooltip" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>　\
+        \
+        <a class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　\
+        \
+        ';
+    }
+
+    window.actionEvents = {
+        'click .edit': function (e, value, row, index) {
+            $('#editModal').modal('show');
+            $('#editForm').fillForm(row);
+            editAfter('',row);
+        },
+        'click .remove': function (e, value, row, index) {
+            $('#deleteModal').modal('show');
+            $('.records').html('1');
+            var html = '';
+            for (var key in row) {
+                html += '<input type="hidden" name="' + key + '" value="' + row[key] + '">';
+            }
+            $('#deleteForm').html(html);
+        }
+    };
+</script>

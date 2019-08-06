@@ -1,0 +1,582 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        周报管理
+        <small>周报统计页面</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">周报管理</a></li>
+        <li class="active">周报统计页面</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="btn-group btn-group-sm" id="toolbar">
+                        <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+                        <button type="button" id="addBtnBatch" class="btn btn-default" data-toggle="modal"
+                                data-target="#generateModal"><i class="glyphicon glyphicon-plus"></i> 生成周报数据
+                        </button>
+                        <!-- Indicates a dangerous or potentially negative action -->
+                        <button type="button" id="deleteBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#deleteModal"
+                                data-action="{type:'delete',form:'#deleteForm',idField:'id',table:'#table'}" disabled><i
+                                class="glyphicon glyphicon-remove"></i> 删除
+                        </button>
+                        <button type="button" id="downLoadBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#downLoadModal">
+                            <i class="glyphicon glyphicon-download-alt"></i> 下载
+                        </button>
+                        <button type="button" id="viewBtn" class="btn btn-default" data-toggle="modal"
+                                data-target="#viewModal"><i class="glyphicon glyphicon-filter"></i> 查看图表
+                        </button>
+                    </div>
+                    <table id="table"></table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<!-- delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteSmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="deleteSmallModalLabel">删除周报统计</h4>
+            </div>
+            <div class="modal-body">
+                <form id="deleteForm"></form>
+                确定要删除选中的 <span class="records"></span> 条记录?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" form="deleteForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#deleteForm',url:'analyse/delete',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- generate modal -->
+<div class="modal fade" id="generateModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="generateModalLabel">周报统计生成</h4>
+            </div>
+            <div class="modal-body">
+                <form id="generateForm">
+                    <div class="form-group">
+                        <label class="control-label" for="graduateYear"><span class="asterisk">*</span>毕业时间:</label>
+                        <input id="graduateYear" type="text" class="form-control" name="graduateYear" readonly required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="generate" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#generateForm',url:'analyse/generate',after:'$.myAction.refreshTable'}">
+                    生成
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- downLoad modal -->
+<div class="modal fade" id="downLoadModal" tabindex="-1" role="dialog" aria-labelledby="checkModalLabel" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="downLoadModalLabel">周报统计下载</h4>
+            </div>
+            <div class="modal-body">
+                <form id="downLoadForm">
+                    <div class="form-group">
+                        <label class="control-label">生成时间:</label>
+                        <div id="startdiv" class="input-group date form_date" data-date-format="yyyy-mm-dd" data-link-field="dtp_input1" data-link-format="yyyy-mm-dd">
+                            <input id="startTime" class="form-control" size="16" type="text" placeholder="请选择生成时间" value="" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" id="downLoad" class="btn btn-primary">
+                    下载
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- view Modal -->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel">
+    <div class="modal-dialog modal-lg" style="width: 80%;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="viewModalLabel">就业状态统计视图</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div id="view" style="width:100%;height:600px;"></div>
+                    <div class="form-group col-sm-2">
+                        <label>生成时间:</label>
+                        <input id="atTime" type="text" class="form-control" name="graduateYear" readonly required>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>学生类型:</label>
+                        <select id="type" class="form-control" data-placeholder="请从列表选择一项" required>
+                            <option value="11">硕士</option>
+                            <option value="1">博士</option>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>就业类型:</label>
+                        <select id="describe" class="form-control" data-placeholder="请从列表选择一项" required>
+                            <option value="signings">签约人数</option>
+                            <option value="employs">就业人数</option>
+                            <option value="unemploys">未就业人数</option>
+                            <option th:each="item:${employList}" th:value="${item.describe}"><span th:text="${item.name}"></span>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>历史记录:</label>
+                        <select id="history" class="form-control" value="depart" data-placeholder="请从列表选择一项" required>
+                            <option value="0">--请选择--</option>
+                            <option value="depart">学院</option>
+                            <option value="major">专业</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>学院:</label>
+                        <select id="depart" class="form-control" value="depart" data-placeholder="请从列表选择一项" required>
+                            <option value="0">--请选择--</option>
+                            <option th:each="item:${departList}" th:value="${item.code}"><span th:text="${item.name}"></span>
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>专业:</label>
+                        <select id="major" class="form-control" value="depart" data-placeholder="请从列表选择一项" required>
+                            <option value="0">--请选择--</option>
+                        </select>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var $table = $('#table');
+    var currentYear = [[${currentYear}]];
+    $(function () {
+        // bootstrap table初始化
+        // http://bootstrap-table.wenzhixin.net.cn/zh-cn/documentation/
+        $table.bootstrapTable({
+            url: 'analyse/list',
+            idField: 'id',
+            queryParams:function (params) {
+                //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                var temp = {
+                    limit: params.limit,                         //页面大小
+                    offset: params.offset,   //页码
+                    sort: params.sort,      //排序列名
+                    order: params.order, //排位命令（desc，asc）
+                    scolumn:params.scolumn?params.scolumn.toString():'year',//默认当前年度
+                    search:params.search?params.search:currentYear>0?currentYear:(new Date()).getFullYear()
+                };
+                return temp;
+            },
+            columns: [
+                {checkbox: true,searchable:false},
+                {field: 'depart', title: '学院', sortable: true, halign: 'left',searchable:true},
+                {field: 'major', title: '专业', sortable: true, halign: 'left',searchable:true},
+                {field: 'count', title: '人数', sortable: true, halign: 'left',searchable:true},
+                {field: 'agreement', title: '签三方', sortable: true, halign: 'left',searchable:true},
+                {field: 'contract', title: '签合同', sortable: true, halign: 'left',searchable:true},
+                {field: 'incumbent', title: '在职', sortable: true, halign: 'left',searchable:true},
+                {field: 'relearning', title: '升学', sortable: true, halign: 'left',searchable:true},
+                {field: 'signings', title: '签约合计', sortable: true, halign: 'left',searchable:true},
+                {field: 'signrate', title: '签约率', sortable: true, halign: 'left',searchable:true},
+                {field: 'abroad', title: '出国', sortable: true, halign: 'left',searchable:true},
+                {field: 'certificate', title: '单位证明', sortable: true, halign: 'left',searchable:true},
+                {field: 'liberal', title: '自由职业', sortable: true, halign: 'left',searchable:true},
+                {field: 'selfemployed', title: '自主创业', sortable: true, halign: 'left',searchable:true},
+                {field: 'intention', title: '有意向在考虑', sortable: true, halign: 'left',searchable:true},
+                {field: 'signing', title: '签约中', sortable: true, halign: 'left',searchable:true},
+                {field: 'employs', title: '就业合计', sortable: true, halign: 'left',searchable:true},
+                {field: 'employrate', title: '就业率', sortable: true, halign: 'left',searchable:true},
+                {field: 'officer', title: '拟参加公招考试', sortable: true, halign: 'left',searchable:true},
+                {field: 'other', title: '其他求职中', sortable: true, halign: 'left',searchable:true},
+                {field: 'work', title: '拟创业', sortable: true, halign: 'left',searchable:true},
+                {field: 'unemploy', title: '暂不就业', sortable: true, halign: 'left',searchable:true},
+                {field: 'inrelearning', title: '拟升学', sortable: true, halign: 'left',searchable:true},
+                {field: 'inabroad', title: '拟出国出境', sortable: true, halign: 'left',searchable:true},
+                {field: 'unemploys', title: '未就业合计', sortable: true, halign: 'left',searchable:true},
+                {field: 'unemployrate', title: '未就业率', sortable: true, halign: 'left',searchable:true},
+                {field: 'year', title: '年度', sortable: true, halign: 'left',searchable:true},
+                {field: 'type', title: '学生类型', sortable: true, halign: 'left',searchable:true,formatter:function (value) {
+                        if(value == 1){
+                            return "博士";
+                        }else{
+                            return "硕士";
+                        }
+                    }},
+                {field: 'createTime', title: '添加时间',searchable:false, halign: 'left',formatter:'changeDateFormat'},
+                {
+                    field: 'action',
+                    title: '操作',
+                    halign: 'center',
+                    align: 'center',
+                    formatter: 'actionFormatter',
+                    events: 'actionEvents',
+                    searchable:false
+                }
+            ]
+        });
+    });
+
+    //修改——转换日期格式(时间戳转换为datetime格式)
+    function changeDateFormat(cellval) {
+        if (cellval != null) {
+            var date = new Date(cellval);
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hms = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+            return date.getFullYear() + "-" + month + "-" + currentDate+" "+hms;
+        }
+    }
+
+    // 数据表格展开内容
+    function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+
+    function editAfter(obj,row) {
+        $.myAdmin.refreshComponent();
+    }
+
+    function actionFormatter(value, row, index) {
+        return '\
+        <a class="remove ml10" href="javascript:void(0)" data-toggle="tooltip" title="删除"><i class="glyphicon glyphicon-remove"></i></a>　\
+        ';
+    }
+
+    window.actionEvents = {
+        'click .edit': function (e, value, row, index) {
+            $('#editModal').modal('show');
+            $('#editForm').fillForm(row);
+            editAfter('',row);
+        },
+        'click .remove': function (e, value, row, index) {
+            $('#deleteModal').modal('show');
+            $('.records').html('1');
+            var html = '';
+            for (var key in row) {
+                html += '<input type="hidden" name="' + key + '" value="' + row[key] + '">';
+            }
+            $('#deleteForm').html(html);
+        }
+    };
+    //下载文件
+    $("#downLoad").on("click",function () {
+        var startTime = $("#startTime").val();
+        window.open('analyse/download/'+startTime);
+        $("#downLoadModal").modal("hide");
+    });
+
+    /**
+     * 搜索字段多选
+     */
+    $(function () {
+        $.generateApi.selectField();
+    });
+
+    /**
+     *  初始化时间
+     */
+    $(function () {
+        //设置毕业时间
+        var dateMonthConfig = {
+            language: "zh-CN", //语言
+            todayHighlight: true, //是否今日高亮
+            format: 'yyyy', //点击月份后显示在input中的格式
+            autoclose: true, //是否开启自动关闭
+            startView: 'years', //开始视图层，为月视图层
+            maxViewMode:'years', //最大视图层，为年视图层
+            minViewMode:'years'//最小视图层，为日视图层
+        };
+
+        $('#graduateYear').datepicker(dateMonthConfig);
+
+        var date = new Date();
+
+        $('#atTime').datepicker({
+                language: "zh-CN",
+                format: "yyyy-mm-dd",
+                autoclose: true,//选中之后自动隐藏日期选择框
+            }
+        );
+
+        $('#startTime').datepicker({
+            language: "zh-CN",
+            format: "yyyy-mm-dd",
+            autoclose: true,//选中之后自动隐藏日期选择框
+            viewDate:date
+        });
+
+        $('#atTime').datepicker("setDate",date);
+        $('#startTime').datepicker("setDate",date);
+        $('#graduateYear').datepicker("setDate",date);
+    });
+
+</script>
+
+<script>
+    $(function () {
+        var viewData;
+        changeView();
+
+        //可视化视图
+        $("#atTime").on("change",function (e) {
+            changeView();
+        });
+
+        $("#type").on("change",function (e) {
+            changeView();
+        });
+
+        $("#describe").on("change",function (e) {
+            var describe = $("#describe").val();
+            fillView(viewData,describe);
+        });
+
+        function changeView(){
+            $.generateApi.loadInfo("analyse/show/"+$("#atTime").val()+"/"+$("#type").val(),function (data) {
+                viewData = data.data;//加载的数据保存为全局变量
+                var describe = $("#describe").val();
+                if(data.code == 200){
+                    fillView(viewData,describe);
+                }else {
+                    $.myNotify.warning(data.msg);
+                }
+            });
+        }
+
+        function fillView(data,describe) {
+            var xData = [];
+            var counts = [];
+            var total = [];
+            $.each(data,function (index,obj) {
+                //表示是超级管理员
+                if(obj.major == "合计"){
+                    xData[index] = obj.depart;
+                }else{
+                    xData[index] = obj.major;
+                }
+                counts[index] = obj[describe];
+                total[index] = obj.count;
+            });
+
+            var json = {
+                chart : {
+                    type: 'column'
+                },
+                title : {
+                    text: $("#atTime").val()+'日就业状态统计'
+                },
+                xAxis : {
+                    categories: xData,
+                    crosshair: true
+                },
+                yAxis : {
+                    min: 0,
+                    title: {
+                        text: '学生人数'
+                    }
+                },
+                tooltip : {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.0f}人</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions : {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                credits : {
+                    enabled: false
+                },
+                series : [{
+                    name: "总人数",
+                    data: total
+                },{
+                    name: $("#describe").find(":selected").text(),
+                    data: counts
+                }
+                ]
+            };
+            $('#view').highcharts(json);
+        }
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#history").on("change",function () {
+            if($("#history").val() == "major"){
+                $("#major").attr("disabled",false);
+            }else{
+                $("#major").empty();
+                $("#major").attr("disabled",true);
+            }
+        });
+        
+        $("#depart").on("change",function () {
+            if($("#history").val() == "depart"){
+                var type = $("#history").val();
+                var code = $("#depart").val();
+                var stu = $("#type").val();
+                if(type != 0 && code != 0){
+                    changeViewLine(type,code,stu);
+                }
+            }
+            if($("#history").val() == "major"){
+                $.generateApi.loadInfo("major/code/"+$("#depart").val(),fillMajor);
+            }
+        });
+        //填充专业
+        function fillMajor(data) {
+            $("#major").empty();
+            var option = "<option value='0'>--请选择--</option>";
+            $.each(data,function (index,obj) {
+                option += "<option value='"+obj.code+"'>"+obj.name+"【"+obj.code+"】</option>";
+            });
+            $("#major").append(option);
+        }
+        
+        $("#major").on("change",function () {
+            if($("#history").val() == "major") {
+                var type = $("#history").val();
+                var code = $("#major").val();
+                var stu = $("#type").val();
+                if(type != 0 && code != 0){
+                    changeViewLine(type,code,stu);
+                }
+            }
+        });
+
+        function changeViewLine(type,code,stu){
+            $.generateApi.loadInfo("analyse/showLine/"+type+"/"+code+"/"+stu,function (data) {
+                if(data.code == 200){
+                    fillViewLine(data.data);
+                }else {
+                    $.myNotify.warning(data.msg);
+                }
+            });
+        }
+        
+        function fillViewLine(data) {
+            console.log(data);
+            var xData = [];
+            var counts = [];//总人数
+            var employs = [];//就业人数
+            var signings = [];//签约人数
+            var unemploys = [];//未就业人数
+            $.each(data,function (index,obj) {
+                xData[index] = changeDateFormat(obj.createTime);
+                counts[index] = obj.count;
+                employs[index] = obj.employs;
+                signings[index] = obj.signings;
+                unemploys[index] = obj.unemploys;
+            });
+
+            var json = {
+                legend : {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                title : {
+                    text: '历史就业状态统计'
+                },
+                xAxis : {
+                    categories: xData,
+                    crosshair: true
+                },
+                yAxis : {
+                    min: 0,
+                    title: {
+                        text: '学生人数'
+                    },plotLines: [{
+                        value: 0,
+                        width: 1,
+                        color: '#808080'
+                    }]
+                },
+                tooltip : {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.0f}人</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                credits : {
+                    enabled: false
+                },
+                series : [{
+                    name: "总人数",
+                    data: counts
+                },{
+                    name: "签约人数",
+                    data: signings
+                },{
+                    name: "就业人数",
+                    data: employs
+                },{
+                    name: "未就业人数",
+                    data: unemploys
+                }
+                ]
+            };
+            $('#view').highcharts(json);
+        }
+    });
+</script>

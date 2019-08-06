@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.ResourceMapper">
+	<!--<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>-->
+	<!-- 字段与DTO映射 -->
+	<resultMap id="resourceDTO" type="com.tbms.core.dto.ResourceDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--编号-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--名称-->
+		<result column="type" property="type" javaType="java.lang.String" /><!--资源类型-->
+		<result column="url" property="url" javaType="java.lang.String" /><!--链接地址-->
+		<result column="parent_id" property="parentId" javaType="java.lang.Integer" /><!--父编号-->
+		<result column="parent_ids" property="parentIds" javaType="java.lang.String" /><!--父编号列表-->
+		<result column="permission" property="permission" javaType="java.lang.String" /><!--权限字符串-->
+		<result column="available" property="available" javaType="java.lang.Integer" /><!--是否有效-->
+		<result column="icon" property="icon" javaType="java.lang.String" /><!--图标-->
+		<result column="priority" property="priority" javaType="java.lang.Integer" /><!--优先级-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`name`,
+		`type`,
+		`url`,
+		`parent_id`,
+		`parent_ids`,
+		`permission`,
+		`available`,
+		`icon`,
+		`priority`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id`=#{id}
+		</if>
+		<if test=" name != null ">
+			AND `name`=#{name}
+		</if>
+		<if test=" type != null ">
+			AND `type`=#{type}
+		</if>
+		<if test=" url != null ">
+			AND `url`=#{url}
+		</if>
+		<if test=" parentId != null ">
+			AND `parent_id`=#{parentId}
+		</if>
+		<if test=" parentIds != null ">
+			AND `parent_ids`=#{parentIds}
+		</if>
+		<if test=" permission != null ">
+			AND `permission`=#{permission}
+		</if>
+		<if test=" available != null ">
+			AND `available`=#{available}
+		</if>
+		<if test=" icon != null ">
+			AND `icon`=#{icon}
+		</if>
+		<if test=" priority != null ">
+			AND `priority`=#{priority}
+		</if>
+	</sql>
+
+	<!--根据条件获取Resource列表-->
+	<select id="getResourceList" resultMap="resourceDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM resource
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		ORDER BY priority ASC
+	</select>
+
+
+	<!--根据条件获取Resource总数-->
+	<select id="getResourceListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM resource
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+
+	<!--添加Resource-->
+	<insert id="addResource" parameterType="com.tbms.core.dto.ResourceDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO resource(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="name!=null">
+				`name`,
+			</if>
+			<if test="type!=null">
+				`type`,
+			</if>
+			<if test="url!=null">
+				`url`,
+			</if>
+			<if test="parentId!=null">
+				`parent_id`,
+			</if>
+			<if test="parentIds!=null">
+				`parent_ids`,
+			</if>
+			<if test="permission!=null">
+				`permission`,
+			</if>
+			<if test="available!=null">
+				`available`,
+			</if>
+			<if test="icon!=null">
+				`icon`,
+			</if>
+			<if test="priority!=null">
+				`priority`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+			<if test="type!=null">
+				#{type},
+			</if>
+			<if test="url!=null">
+				#{url},
+			</if>
+			<if test="parentId!=null">
+				#{parentId},
+			</if>
+			<if test="parentIds!=null">
+				#{parentIds},
+			</if>
+			<if test="permission!=null">
+				#{permission},
+			</if>
+			<if test="available!=null">
+				#{available},
+			</if>
+			<if test="icon!=null">
+				#{icon},
+			</if>
+			<if test="priority!=null">
+				#{priority},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除Resource-->
+	<delete id="deleteResourceById" parameterType="java.lang.Integer">
+		DELETE FROM resource
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Resource-->
+	<update id="updateResource" parameterType="com.tbms.core.dto.ResourceDTO">
+		UPDATE resource
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+			<if test=" type != null">
+				`type`=#{type},
+			</if>
+			<if test=" url != null">
+				`url`=#{url},
+			</if>
+			<if test=" parentId != null">
+				`parent_id`=#{parentId},
+			</if>
+			<if test=" parentIds != null">
+				`parent_ids`=#{parentIds},
+			</if>
+			<if test=" permission != null">
+				`permission`=#{permission},
+			</if>
+			<if test=" available != null">
+				`available`=#{available},
+			</if>
+			<if test=" icon != null">
+				`icon`=#{icon},
+			</if>
+			<if test=" priority != null">
+				`priority`=#{priority},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Resource-->
+	<select id="getResourceById" resultMap="resourceDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM resource
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

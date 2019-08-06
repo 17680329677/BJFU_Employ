@@ -1,0 +1,46 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        调查问卷
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li class="active"><a href="#">调查问卷</a></li>
+    </ol>
+</section>
+
+<section class="content" xmlns:th="http://www.thymeleaf.org">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div style="border: 1px solid #778899">
+                        <h3 style="text-align: center" id="paperTitle">调查问卷</h3>
+                        <div>
+                            <span id="content">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+<script xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+    $(function () {
+        let status = [[${status}]];
+        if (status === 0) {
+            $('#content').html('您已经完成问卷，请完善自己的就业信息！');
+        } else {
+            $('#content').html('还未发布问卷，稍后再来吧~');
+        }
+    })
+</script>

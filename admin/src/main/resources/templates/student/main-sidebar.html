@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<body>
+<!-- Left side column. contains the sidebar -->
+<aside class="main-sidebar" th:fragment="main-sidebar" >
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img th:src="@{/img/logo.png}" class="img-circle"
+                     alt="School Image">
+            </div>
+            <div class="pull-left info">
+                <p style="padding: 20px 0 5px 0;margin-left: 20px;">
+                    <span><shiro:principal property="name"/></span>
+                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+                </p>
+            </div>
+        </div>
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <div>
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class='treeview'>
+                    <a href='#'>
+                        <i class= 'fa fa-book'></i>
+                        <span>就业信息管理系统</span>
+                        <span class='pull-right-container'><i class='fa fa-angle-left pull-right'></i> </span></a>
+                    <ul class='sidebar-menu'>
+                        <li class="treeview">
+                            <a href='#self'>
+                                <i class= 'fa fa-chevron-right'></i>
+                                <span>个人信息</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href='#info'>
+                                <i class= 'fa fa-chevron-right'></i>
+                                <span>就业信息</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+</body>
+</html>

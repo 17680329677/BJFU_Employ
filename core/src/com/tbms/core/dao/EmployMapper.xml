@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.EmployMapper">
+
+	<!-- 就业信息字段与DTO映射 -->
+	<resultMap id="employDTO" type="com.tbms.core.dto.EmployDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="account" property="account" javaType="java.lang.String" /><!--学号-->
+		<result column="job" property="job" javaType="java.lang.String" /><!--工作职位类别-->
+		<result column="job_code" property="jobCode" javaType="java.lang.Integer" /><!--工作职位类别代码-->
+		<result column="company" property="company" javaType="java.lang.String" /><!--单位名称-->
+		<result column="company_code" property="companyCode" javaType="java.lang.String" /><!--单位组织机构代码-->
+		<result column="organization" property="organization" javaType="java.lang.String" /><!--单位隶属部门-->
+		<result column="organization_code" property="organizationCode" javaType="java.lang.String" /><!--单位隶属部门代码-->
+		<result column="industry" property="industry" javaType="java.lang.String" /><!--单位行业-->
+		<result column="industry_code" property="industryCode" javaType="java.lang.Integer" /><!--单位行业代码-->
+		<result column="property" property="property" javaType="java.lang.String" /><!--单位性质-->
+		<result column="property_code" property="propertyCode" javaType="java.lang.String" /><!--单位性质代码-->
+		<result column="company_addr" property="companyAddr" javaType="java.lang.String" /><!--单位所在地-->
+		<result column="company_addr_code" property="companyAddrCode" javaType="java.lang.String" /><!--单位所在地代码-->
+		<result column="com_contacts" property="comContacts" javaType="java.lang.String" /><!--单位联系人-->
+		<result column="com_phone" property="comPhone" javaType="java.lang.String" /><!--单位联系电话-->
+		<result column="com_email" property="comEmail" javaType="java.lang.String" /><!--单位电子信箱-->
+		<result column="com_address" property="comAddress" javaType="java.lang.String" /><!--单位地址-->
+		<result column="com_postcode" property="comPostcode" javaType="java.lang.String" /><!--单位邮政编码-->
+		<result column="com_fax" property="comFax" javaType="java.lang.String" /><!--单位传真-->
+		<result column="certificate" property="certificate" javaType="java.lang.String" /><!--基层证书发放范围-->
+		<result column="certificate_code" property="certificateCode" javaType="java.lang.Integer" /><!--基层证书发放范围代码-->
+		<result column="special_job" property="specialJob" javaType="java.lang.String" /><!--特殊职位-->
+		<result column="special_job_code" property="specialJobCode" javaType="java.lang.Integer" /><!--特殊职位代码-->
+		<result column="channels" property="channels" javaType="java.lang.String" /><!--落实工作渠道-->
+		<result column="channels_code" property="channelsCode" javaType="java.lang.Integer" /><!--落实工作渠道代码-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`account`,
+		`job`,
+		`job_code`,
+		`company`,
+		`company_code`,
+		`organization`,
+		`organization_code`,
+		`industry`,
+		`industry_code`,
+		`property`,
+		`property_code`,
+		`company_addr`,
+		`company_addr_code`,
+		`com_contacts`,
+		`com_phone`,
+		`com_email`,
+		`com_address`,
+		`com_postcode`,
+		`com_fax`,
+		`certificate`,
+		`certificate_code`,
+		`special_job`,
+		`special_job_code`,
+		`channels`,
+		`channels_code`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" account != null ">
+			AND `account` = #{account}
+		</if>
+		<if test=" job != null ">
+			AND `job` LIKE "%${job}%"
+		</if>
+		<if test=" jobCode != null ">
+			AND `job_code` = #{jobCode}
+		</if>
+		<if test=" company != null ">
+			AND `company` LIKE "%${company}%"
+		</if>
+		<if test=" companyCode != null ">
+			AND `company_code` = #{companyCode}
+		</if>
+		<if test=" organization != null ">
+			AND `organization` LIKE "%${organization}%"
+		</if>
+		<if test=" organizationCode != null ">
+			AND `organization_code` = #{organizationCode}
+		</if>
+		<if test=" industry != null ">
+			AND `industry` LIKE "%${industry}%"
+		</if>
+		<if test=" industryCode != null ">
+			AND `industry_code` = #{industryCode}
+		</if>
+		<if test=" property != null ">
+			AND `property` LIKE "%${property}%"
+		</if>
+		<if test=" propertyCode != null ">
+			AND `property_code` = #{propertyCode}
+		</if>
+		<if test=" companyAddr != null ">
+			AND `company_addr` LIKE "%${companyAddr}%"
+		</if>
+		<if test=" companyAddrCode != null ">
+			AND `company_addr_code` = #{companyAddrCode}
+		</if>
+		<if test=" comContacts != null ">
+			AND `com_contacts` LIKE "%${comContacts}%"
+		</if>
+		<if test=" comPhone != null ">
+			AND `com_phone` LIKE "%${comPhone}%"
+		</if>
+		<if test=" comEmail != null ">
+			AND `com_email` LIKE "%${comEmail}%"
+		</if>
+		<if test=" comAddress != null ">
+			AND `com_address` LIKE "%${comAddress}%"
+		</if>
+		<if test=" comPostcode != null ">
+			AND `com_postcode` LIKE "%${comPostcode}%"
+		</if>
+		<if test=" comFax != null ">
+			AND `com_fax` LIKE "%${comFax}%"
+		</if>
+		<if test=" certificate != null ">
+			AND `certificate` LIKE "%${certificate}%"
+		</if>
+		<if test=" certificateCode != null ">
+			AND `certificate_code` = #{certificateCode}
+		</if>
+		<if test=" specialJob != null ">
+			AND `special_job` LIKE "%${specialJob}%"
+		</if>
+		<if test=" specialJobCode != null ">
+			AND `special_job_code` = #{specialJobCode}
+		</if>
+		<if test=" channels != null ">
+			AND `channels` LIKE "%${channels}%"
+		</if>
+		<if test=" channelsCode != null ">
+			AND `channels_code` = #{channelsCode}
+		</if>
+	</sql>
+
+	<!--根据条件获取Employ列表-->
+	<select id="getEmployList" resultMap="employDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM employ
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Employ总数-->
+	<select id="getEmployListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM employ
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Employ-->
+	<insert id="addEmploy" parameterType="com.tbms.core.dto.EmployDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO employ(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="account!=null">
+				`account`,
+			</if>
+			<if test="job!=null">
+				`job`,
+			</if>
+			<if test="jobCode!=null">
+				`job_code`,
+			</if>
+			<if test="company!=null">
+				`company`,
+			</if>
+			<if test="companyCode!=null">
+				`company_code`,
+			</if>
+			<if test="organization!=null">
+				`organization`,
+			</if>
+			<if test="organizationCode!=null">
+				`organization_code`,
+			</if>
+			<if test="industry!=null">
+				`industry`,
+			</if>
+			<if test="industryCode!=null">
+				`industry_code`,
+			</if>
+			<if test="property!=null">
+				`property`,
+			</if>
+			<if test="propertyCode!=null">
+				`property_code`,
+			</if>
+			<if test="companyAddr!=null">
+				`company_addr`,
+			</if>
+			<if test="companyAddrCode!=null">
+				`company_addr_code`,
+			</if>
+			<if test="comContacts!=null">
+				`com_contacts`,
+			</if>
+			<if test="comPhone!=null">
+				`com_phone`,
+			</if>
+			<if test="comEmail!=null">
+				`com_email`,
+			</if>
+			<if test="comAddress!=null">
+				`com_address`,
+			</if>
+			<if test="comPostcode!=null">
+				`com_postcode`,
+			</if>
+			<if test="comFax!=null">
+				`com_fax`,
+			</if>
+			<if test="certificate!=null">
+				`certificate`,
+			</if>
+			<if test="certificateCode!=null">
+				`certificate_code`,
+			</if>
+			<if test="specialJob!=null">
+				`special_job`,
+			</if>
+			<if test="specialJobCode!=null">
+				`special_job_code`,
+			</if>
+			<if test="channels!=null">
+				`channels`,
+			</if>
+			<if test="channelsCode!=null">
+				`channels_code`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="account!=null">
+				#{account},
+			</if>
+			<if test="job!=null">
+				#{job},
+			</if>
+			<if test="jobCode!=null">
+				#{jobCode},
+			</if>
+			<if test="company!=null">
+				#{company},
+			</if>
+			<if test="companyCode!=null">
+				#{companyCode},
+			</if>
+			<if test="organization!=null">
+				#{organization},
+			</if>
+			<if test="organizationCode!=null">
+				#{organizationCode},
+			</if>
+			<if test="industry!=null">
+				#{industry},
+			</if>
+			<if test="industryCode!=null">
+				#{industryCode},
+			</if>
+			<if test="property!=null">
+				#{property},
+			</if>
+			<if test="propertyCode!=null">
+				#{propertyCode},
+			</if>
+			<if test="companyAddr!=null">
+				#{companyAddr},
+			</if>
+			<if test="companyAddrCode!=null">
+				#{companyAddrCode},
+			</if>
+			<if test="comContacts!=null">
+				#{comContacts},
+			</if>
+			<if test="comPhone!=null">
+				#{comPhone},
+			</if>
+			<if test="comEmail!=null">
+				#{comEmail},
+			</if>
+			<if test="comAddress!=null">
+				#{comAddress},
+			</if>
+			<if test="comPostcode!=null">
+				#{comPostcode},
+			</if>
+			<if test="comFax!=null">
+				#{comFax},
+			</if>
+			<if test="certificate!=null">
+				#{certificate},
+			</if>
+			<if test="certificateCode!=null">
+				#{certificateCode},
+			</if>
+			<if test="specialJob!=null">
+				#{specialJob},
+			</if>
+			<if test="specialJobCode!=null">
+				#{specialJobCode},
+			</if>
+			<if test="channels!=null">
+				#{channels},
+			</if>
+			<if test="channelsCode!=null">
+				#{channelsCode},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加-->
+	<insert id="addEmployBatch" parameterType="java.util.List">
+		INSERT INTO employ(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					null,
+					#{s.account},
+					#{s.job},
+					#{s.jobCode},
+					#{s.company},
+					#{s.companyCode},
+					#{s.organization},
+					#{s.organizationCode},
+					#{s.industry},
+					#{s.industryCode},
+					#{s.property},
+					#{s.propertyCode},
+					#{s.companyAddr},
+					#{s.companyAddrCode},
+					#{s.comContacts},
+					#{s.comPhone},
+					#{s.comEmail},
+					#{s.comAddress},
+					#{s.comPostcode},
+					#{s.comFax},
+					#{s.certificate},
+					#{s.certificateCode},
+					#{s.specialJob},
+					#{s.specialJobCode},
+					#{s.channels},
+					#{s.channelsCode},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Employ-->
+	<delete id="deleteEmployById" parameterType="java.lang.Integer">
+		DELETE FROM employ
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Employ-->
+	<update id="updateEmploy" parameterType="com.tbms.core.dto.EmployDTO">
+		UPDATE employ
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" account != null">
+				`account`=#{account},
+			</if>
+			<if test=" job != null">
+				`job`=#{job},
+			</if>
+			<if test=" jobCode != null">
+				`job_code`=#{jobCode},
+			</if>
+			<if test=" company != null">
+				`company`=#{company},
+			</if>
+			<if test=" companyCode != null">
+				`company_code`=#{companyCode},
+			</if>
+			<if test=" organization != null">
+				`organization`=#{organization},
+			</if>
+			<if test=" organizationCode != null">
+				`organization_code`=#{organizationCode},
+			</if>
+			<if test=" industry != null">
+				`industry`=#{industry},
+			</if>
+			<if test=" industryCode != 0">
+				`industry_code`=#{industryCode},
+			</if>
+			<if test=" property != null">
+				`property`=#{property},
+			</if>
+			<if test=" propertyCode != null">
+				`property_code`=#{propertyCode},
+			</if>
+			<if test=" companyAddr != null">
+				`company_addr`=#{companyAddr},
+			</if>
+			<if test=" companyAddrCode != null">
+				`company_addr_code`=#{companyAddrCode},
+			</if>
+			<if test=" comContacts != null">
+				`com_contacts`=#{comContacts},
+			</if>
+			<if test=" comPhone != null">
+				`com_phone`=#{comPhone},
+			</if>
+			<if test=" comEmail != null">
+				`com_email`=#{comEmail},
+			</if>
+			<if test=" comAddress != null">
+				`com_address`=#{comAddress},
+			</if>
+			<if test=" comPostcode != null">
+				`com_postcode`=#{comPostcode},
+			</if>
+			<if test=" comFax != null">
+				`com_fax`=#{comFax},
+			</if>
+			<if test=" certificate != null">
+				`certificate`=#{certificate},
+			</if>
+			<if test=" certificateCode != 0">
+				`certificate_code`=#{certificateCode},
+			</if>
+			<if test=" specialJob != null">
+				`special_job`=#{specialJob},
+			</if>
+			<if test=" specialJobCode != 0">
+				`special_job_code`=#{specialJobCode},
+			</if>
+			<if test=" channels != null">
+				`channels`=#{channels},
+			</if>
+			<if test=" channelsCode != 0">
+				`channels_code`=#{channelsCode},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Employ-->
+	<select id="getEmployById" resultMap="employDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM employ
+		WHERE ID=#{id}
+	</select>
+
+	<!-- 根据account查询学号 -->
+	<select id="getEmployByAccount" resultMap="employDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM employ
+		WHERE `account`=#{account}
+	</select>
+
+</mapper>

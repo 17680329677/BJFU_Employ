@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.AnwserMapper">
+
+	<!-- 答案信息字段与DTO映射 -->
+	<resultMap id="anwserDTO" type="com.tbms.core.dto.AnwserDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="paper_id" property="paperId" javaType="java.lang.Integer" /><!--问卷ID-->
+		<result column="question_id" property="questionId" javaType="java.lang.Integer" /><!--问题ID-->
+		<result column="question_type" property="questionType" javaType="java.lang.Integer" /><!--问题类型-->
+		<result column="submit_time" property="submitTime" javaType="java.lang.String" /><!--提交时间-->
+		<result column="submit_option" property="submitOption" javaType="java.lang.String" /><!--提交选项-->
+		<result column="student_id" property="studentId" javaType="java.lang.Integer" /><!--提交人-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`paper_id`,
+		`question_id`,
+		`question_type`,
+		`submit_time`,
+		`submit_option`,
+		`student_id`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" paperId != null ">
+			AND `paper_id` = #{paperId}
+		</if>
+		<if test=" questionId != null ">
+			AND `question_id` = #{questionId}
+		</if>
+		<if test=" questionType != null ">
+			AND `question_type` = #{questionType}
+		</if>
+		<if test=" submitTime_Start != null ">
+			AND `submit_time` &gt;= #{submitTime_Start}
+		</if>
+		<if test=" submitTime_End != null ">
+			AND `submit_time` &lt;= #{submitTime_End}
+		</if>
+		<if test=" submitTime != null ">
+			AND `submit_time` = #{submitTime}
+		</if>
+		<if test=" submitOption != null ">
+			AND `submit_option` LIKE "%${submitOption}%"
+		</if>
+		<if test=" studentId != null ">
+			AND `student_id` = #{studentId}
+		</if>
+	</sql>
+
+	<!--根据条件获取Anwser列表-->
+	<select id="getAnwserList" resultMap="anwserDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM anwser
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Anwser总数-->
+	<select id="getAnwserListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM anwser
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Anwser-->
+	<insert id="addAnwser" parameterType="com.tbms.core.dto.AnwserDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO anwser(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="paperId!=null">
+				`paper_id`,
+			</if>
+			<if test="questionId!=null">
+				`question_id`,
+			</if>
+			<if test="questionType!=null">
+				`question_type`,
+			</if>
+			<if test="submitTime!=null">
+				`submit_time`,
+			</if>
+			<if test="submitOption!=null">
+				`submit_option`,
+			</if>
+			<if test="studentId!=null">
+				`student_id`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="paperId!=null">
+				#{paperId},
+			</if>
+			<if test="questionId!=null">
+				#{questionId},
+			</if>
+			<if test="questionType!=null">
+				#{questionType},
+			</if>
+			<if test="submitTime!=null">
+				#{submitTime},
+			</if>
+			<if test="submitOption!=null">
+				#{submitOption},
+			</if>
+			<if test="studentId!=null">
+				#{studentId},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加-->
+	<insert id="addAnwserBatch" parameterType="java.util.List">
+		INSERT INTO anwser(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					#{s.id},
+					#{s.paperId},
+					#{s.questionId},
+					#{s.questionType},
+					#{s.submitTime},
+					#{s.submitOption},
+					#{s.studentId},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Anwser-->
+	<delete id="deleteAnwserById" parameterType="java.lang.Integer">
+		DELETE FROM anwser
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Anwser-->
+	<update id="updateAnwser" parameterType="com.tbms.core.dto.AnwserDTO">
+		UPDATE anwser
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" paperId != null">
+				`paper_id`=#{paperId},
+			</if>
+			<if test=" questionId != null">
+				`question_id`=#{questionId},
+			</if>
+			<if test=" questionType != null">
+				`question_type`=#{questionType},
+			</if>
+			<if test=" submitTime != null">
+				`submit_time`=#{submitTime},
+			</if>
+			<if test=" submitOption != null">
+				`submit_option`=#{submitOption},
+			</if>
+			<if test=" studentId != null">
+				`student_id`=#{studentId},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Anwser-->
+	<select id="getAnwserById" resultMap="anwserDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM anwser
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

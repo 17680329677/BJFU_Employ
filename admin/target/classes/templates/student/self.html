@@ -1,0 +1,118 @@
+<section xmlns:th="http://www.thymeleaf.org" class="content-header">
+    <h1>
+        个人信息
+    </h1>
+    <ol class="breadcrumb">
+        <li><a th:href="@{/}"><i class="fa fa-dashboard"></i> 主页</a></li>
+        <li><a href="#">学生个人信息</a></li>
+        <li class="active">学生个人信息页面</li>
+    </ol>
+</section>
+
+<section class="content" xmlns:th="http://www.thymeleaf.org">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="editUser">用户基础信息</h4>
+        </div>
+        <div class="modal-body">
+            <form id="currentUserForm" th:object="${currentStudent}">
+                <input type="hidden" name="id" th:value="*{id}"/>
+                <input type="hidden" name="status" th:value="*{status}"/>
+                <div class="form-group">
+                    <label class="control-label" for="username"><span class="asterisk">*</span>用户名:</label>
+                    <input id="username" type="text" class="form-control" name="username" placeholder="输入用户名"
+                           minlength="5" th:value="*{username}" readonly>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="name"><span class="asterisk">*</span>姓名:</label>
+                    <input id="name" type="text" class="form-control" name="name" placeholder="输入姓名"
+                           minlength="2" th:value="*{name}" disabled>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="depart"><span class="asterisk">*</span>学院:</label>
+                    <input id="depart" type="text" class="form-control" name="depart"
+                           minlength="2" th:value="*{depart}" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="major"><span class="asterisk">*</span>专业:</label>
+                    <input id="major" type="text" class="form-control" name="major"
+                           minlength="2" th:value="*{major}" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="phone">手机:</label>
+                    <input id="phone" type="text" class="form-control" name="phone" placeholder="输入手机"
+                           minlength="8" th:value="*{phone}">
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="email">邮箱:</label>
+                    <input id="email" type="text" class="form-control" name="email" placeholder="输入邮箱"
+                           minlength="8" th:value="*{email}">
+                    <div class="help-block with-errors"></div>
+                </div>
+            </form>
+            <!-- /.row -->
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-updatePassword">修改密码</button>
+            <button type="submit" form="currentUserForm" class="btn btn-primary"
+                    data-action="{type:'submit',form:'#currentUserForm',url:'/stu/update',after:'$.myAction.refreshTable'}">
+                确定
+            </button>
+        </div>
+    </div>
+</section>
+<!-- /.content -->
+
+<!--password Model-->
+<div xmlns:th="http://www.thymeleaf.org" class="modal fade" id="PasswordModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="editPassword">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form id="passwordForm">
+                    <input type="hidden" name="id" th:value="${currentStudent.id}"/>
+                    <input type="hidden" name="username" th:value="${currentStudent.username}"/>
+                    <input type="hidden" name="status" th:value="${currentStudent.status}"/>
+                    <div class="form-group">
+                        <label class="control-label" for="password"><span class="asterisk">*</span>密码:</label>
+                        <input type="password" class="form-control" id="password" minlength="6"
+                               name="password" placeholder="输入密码" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="inputPasswordConfirm"><span
+                                class="asterisk">*</span>确认密码:</label>
+                        <input type="password" class="form-control" id="inputPasswordConfirm" minlength="6"
+                               data-match="#password" data-match-error="密码输入不一致。" name="chkpassowrd" placeholder="确认密码"
+                               required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" form="passwordForm" class="btn btn-primary"
+                        data-action="{type:'submit',form:'#passwordForm',url:'/stu/update',after:'$.myAction.refreshTable'}">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $(".btn-updatePassword").click(function () {
+            $('#PasswordModal').modal('show');
+        })
+    });
+</script>

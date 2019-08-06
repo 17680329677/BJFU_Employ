@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.CityMapper">
+
+	<!-- 字段与DTO映射 -->
+	<resultMap id="cityDTO" type="com.tbms.core.dto.CityDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!---->
+		<result column="code" property="code" javaType="java.lang.String" /><!---->
+		<result column="name" property="name" javaType="java.lang.String" /><!---->
+		<result column="provincecode" property="provincecode" javaType="java.lang.String" /><!---->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`code`,
+		`name`,
+		`provincecode`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" code != null ">
+			AND `code` = #{code}
+		</if>
+		<if test=" name != null ">
+			AND `name` = #{name}
+		</if>
+		<if test=" provincecode != null ">
+			AND `provincecode` = #{provincecode}
+		</if>
+	</sql>
+
+	<!--根据条件获取City列表-->
+	<select id="getCityList" resultMap="cityDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM city
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取City总数-->
+	<select id="getCityListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM city
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加City-->
+	<insert id="addCity" parameterType="com.tbms.core.dto.CityDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO city(
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				`id`,
+			</if>
+			<if test="code != null">
+				`code`,
+			</if>
+			<if test="name != null">
+				`name`,
+			</if>
+			<if test="provincecode != null">
+				`provincecode`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="code != null">
+				#{code},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="provincecode != null">
+				#{provincecode},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加City-->
+	<insert id="addCityBatch" parameterType="java.util.List">
+		INSERT INTO city(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					#{s.id},
+					#{s.code},
+					#{s.name},
+					#{s.provincecode},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除City-->
+	<delete id="deleteCityById" parameterType="java.lang.Integer">
+		DELETE FROM city
+		WHERE ID=#{id}
+	</delete>
+
+	<!--根据id批量删除City-->
+	<delete id="deleteCityBatch" parameterType="Integer[]">
+		DELETE FROM city
+		WHERE ID IN
+		<foreach collection="array" item="arr" index="no" open="(" separator="," close=")">
+			#{arr}
+		</foreach>
+	</delete>
+
+
+	<!--根据ID更新City-->
+	<update id="updateCity" parameterType="com.tbms.core.dto.CityDTO">
+		UPDATE city
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" code != null">
+				`code`=#{code},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+			<if test=" provincecode != null">
+				`provincecode`=#{provincecode},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询City-->
+	<select id="getCityById" resultMap="cityDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM city
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<body>
+<!-- Left side column. contains the sidebar -->
+<aside class="main-sidebar" th:fragment="main-sidebar" >
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img th:src="@{/img/logo.png}" class="img-circle"
+                     alt="School Image">
+            </div>
+            <div class="pull-left info">
+                <!--/*@thymesVar id="username" type="string"*/-->
+                <p style="padding: 20px 0 5px 0;margin-left: 20px;">
+                   <span><shiro:principal property="name"/></span>
+                    <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+                </p>
+            </div>
+        </div>
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <!--/*@thymesVar id="menuTree" type="menuTree"*/-->
+        <div th:utext="${menuTree}"></div>
+
+    </section>
+    <!-- /.sidebar -->
+</aside>
+</body>
+</html>

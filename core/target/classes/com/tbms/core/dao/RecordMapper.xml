@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.RecordMapper">
+
+	<!-- 档案信息字段与DTO映射 -->
+	<resultMap id="recordDTO" type="com.tbms.core.dto.RecordDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="account" property="account" javaType="java.lang.String" /><!--学号-->
+		<result column="register_type" property="registerType" javaType="java.lang.String" /><!--报到证签发类别-->
+		<result column="register_code" property="registerCode" javaType="java.lang.Integer" /><!--报到证签发类别代码-->
+		<result column="employ_form" property="employForm" javaType="java.lang.String" /><!--就业形式-->
+		<result column="employ_form_code" property="employFormCode" javaType="java.lang.Integer" /><!--就业形式代码-->
+		<result column="destination" property="destination" javaType="java.lang.String" /><!--毕业去向-->
+		<result column="destination_code" property="destinationCode" javaType="java.lang.Integer" /><!--毕业去向代码-->
+		<result column="employ_range" property="employRange" javaType="java.lang.String" /><!--就业范围-->
+		<result column="employ_range_code" property="employRangeCode" javaType="java.lang.Integer" /><!--就业范围代码-->
+		<result column="dispatch_time" property="dispatchTime" javaType="java.lang.String" /><!--派遣时间-->
+		<result column="regist_deadline" property="registDeadline" javaType="java.lang.String" /><!--报到期限-->
+		<result column="record_company" property="recordCompany" javaType="java.lang.String" /><!--档案转寄单位-->
+		<result column="record_postcode" property="recordPostcode" javaType="java.lang.String" /><!--档案转寄邮政编码-->
+		<result column="record_addr" property="recordAddr" javaType="java.lang.String" /><!--档案转寄地址-->
+		<result column="permanent_addr" property="permanentAddr" javaType="java.lang.String" /><!--户口迁移地址-->
+		<result column="implement_comp_code" property="implementCompCode" javaType="java.lang.String" /><!--具体落实单位所在地代码-->
+		<result column="implement_comp_addr" property="implementCompAddr" javaType="java.lang.String" /><!--具体落实单位所在地-->
+		<result column="implement_comp" property="implementComp" javaType="java.lang.String" /><!--具体落实单位名称-->
+		<result column="dispatch_register_code" property="dispatchRegisterCode" javaType="java.lang.String" /><!--派遣报到证号-->
+		<result column="record_receiver_cellphone" property="recordReceiverCellphone" javaType="java.lang.String" /><!--档案收件人手机-->
+		<result column="record_receiver" property="recordReceiver" javaType="java.lang.String" /><!--档案收件人-->
+		<result column="record_receiver_phone" property="recordReceiverPhone" javaType="java.lang.String" /><!--档案收件人电话-->
+		<result column="special_employ" property="specialEmploy" javaType="java.lang.String" /><!--特殊就业类别-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`account`,
+		`register_type`,
+		`register_code`,
+		`employ_form`,
+		`employ_form_code`,
+		`destination`,
+		`destination_code`,
+		`employ_range`,
+		`employ_range_code`,
+		`dispatch_time`,
+		`regist_deadline`,
+		`record_company`,
+		`record_postcode`,
+		`record_addr`,
+		`permanent_addr`,
+		`implement_comp_code`,
+		`implement_comp_addr`,
+		`implement_comp`,
+		`dispatch_register_code`,
+		`record_receiver_cellphone`,
+		`record_receiver`,
+		`record_receiver_phone`,
+		`special_employ`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" account != null ">
+			AND `account` = #{account}
+		</if>
+		<if test=" registerType != null ">
+			AND `register_type` LIKE "%${registerType}%"
+		</if>
+		<if test=" registerCode != null ">
+			AND `register_code` = #{registerCode}
+		</if>
+		<if test=" employForm != null ">
+			AND `employ_form` LIKE "%${employForm}%"
+		</if>
+		<if test=" employFormCode != null ">
+			AND `employ_form_code` = #{employFormCode}
+		</if>
+		<if test=" destination != null ">
+			AND `destination` LIKE "%${destination}%"
+		</if>
+		<if test=" destinationCode != null ">
+			AND `destination_code` = #{destinationCode}
+		</if>
+		<if test=" employRange != null ">
+			AND `employ_range` LIKE "%${employRange}%"
+		</if>
+		<if test=" employRangeCode != null ">
+			AND `employ_range_code` = #{employRangeCode}
+		</if>
+		<if test=" dispatchTime != null ">
+			AND `dispatch_time` LIKE "%${dispatchTime}%"
+		</if>
+		<if test=" registDeadline != null ">
+			AND `regist_deadline` LIKE "%${registDeadline}%"
+		</if>
+		<if test=" recordCompany != null ">
+			AND `record_company` LIKE "%${recordCompany}%"
+		</if>
+		<if test=" recordPostcode != null ">
+			AND `record_postcode` LIKE "%${recordPostcode}%"
+		</if>
+		<if test=" recordAddr != null ">
+			AND `record_addr` LIKE "%${recordAddr}%"
+		</if>
+		<if test=" permanentAddr != null ">
+			AND `permanent_addr` LIKE "%${permanentAddr}%"
+		</if>
+		<if test=" implementCompCode != null ">
+			AND `implement_comp_code` = #{implementCompCode}
+		</if>
+		<if test=" implementCompAddr != null ">
+			AND `implement_comp_addr` LIKE "%${implementCompAddr}%"
+		</if>
+		<if test=" implementComp != null ">
+			AND `implement_comp` LIKE "%${implementComp}%"
+		</if>
+		<if test=" dispatchRegisterCode != null ">
+			AND `dispatch_register_code` LIKE "%${dispatchRegisterCode}%"
+		</if>
+		<if test=" recordReceiverCellphone != null ">
+			AND `record_receiver_cellphone` LIKE "%${recordReceiverCellphone}%"
+		</if>
+		<if test=" recordReceiver != null ">
+			AND `record_receiver` LIKE "%${recordReceiver}%"
+		</if>
+		<if test=" recordReceiverPhone != null ">
+			AND `record_receiver_phone` LIKE "%${recordReceiverPhone}%"
+		</if>
+		<if test=" specialEmploy != null ">
+			AND `special_employ` LIKE "%${specialEmploy}%"
+		</if>
+	</sql>
+
+	<!--根据条件获取Record列表-->
+	<select id="getRecordList" resultMap="recordDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM record
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Record总数-->
+	<select id="getRecordListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM record
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Record-->
+	<insert id="addRecord" parameterType="com.tbms.core.dto.RecordDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO record(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="account!=null">
+				`account`,
+			</if>
+			<if test="registerType!=null">
+				`register_type`,
+			</if>
+			<if test="registerCode!=null">
+				`register_code`,
+			</if>
+			<if test="employForm!=null">
+				`employ_form`,
+			</if>
+			<if test="employFormCode!=null">
+				`employ_form_code`,
+			</if>
+			<if test="destination!=null">
+				`destination`,
+			</if>
+			<if test="destinationCode!=null">
+				`destination_code`,
+			</if>
+			<if test="employRange!=null">
+				`employ_range`,
+			</if>
+			<if test="employRangeCode!=null">
+				`employ_range_code`,
+			</if>
+			<if test="dispatchTime!=null">
+				`dispatch_time`,
+			</if>
+			<if test="registDeadline!=null">
+				`regist_deadline`,
+			</if>
+			<if test="recordCompany!=null">
+				`record_company`,
+			</if>
+			<if test="recordPostcode!=null">
+				`record_postcode`,
+			</if>
+			<if test="recordAddr!=null">
+				`record_addr`,
+			</if>
+			<if test="permanentAddr!=null">
+				`permanent_addr`,
+			</if>
+			<if test="implementCompCode!=null">
+				`implement_comp_code`,
+			</if>
+			<if test="implementCompAddr!=null">
+				`implement_comp_addr`,
+			</if>
+			<if test="implementComp!=null">
+				`implement_comp`,
+			</if>
+			<if test="dispatchRegisterCode!=null">
+				`dispatch_register_code`,
+			</if>
+			<if test="recordReceiverCellphone!=null">
+				`record_receiver_cellphone`,
+			</if>
+			<if test="recordReceiver!=null">
+				`record_receiver`,
+			</if>
+			<if test="recordReceiverPhone!=null">
+				`record_receiver_phone`,
+			</if>
+			<if test="specialEmploy!=null">
+				`special_employ`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="account!=null">
+				#{account},
+			</if>
+			<if test="registerType!=null">
+				#{registerType},
+			</if>
+			<if test="registerCode!=null">
+				#{registerCode},
+			</if>
+			<if test="employForm!=null">
+				#{employForm},
+			</if>
+			<if test="employFormCode!=null">
+				#{employFormCode},
+			</if>
+			<if test="destination!=null">
+				#{destination},
+			</if>
+			<if test="destinationCode!=null">
+				#{destinationCode},
+			</if>
+			<if test="employRange!=null">
+				#{employRange},
+			</if>
+			<if test="employRangeCode!=null">
+				#{employRangeCode},
+			</if>
+			<if test="dispatchTime!=null">
+				#{dispatchTime},
+			</if>
+			<if test="registDeadline!=null">
+				#{registDeadline},
+			</if>
+			<if test="recordCompany!=null">
+				#{recordCompany},
+			</if>
+			<if test="recordPostcode!=null">
+				#{recordPostcode},
+			</if>
+			<if test="recordAddr!=null">
+				#{recordAddr},
+			</if>
+			<if test="permanentAddr!=null">
+				#{permanentAddr},
+			</if>
+			<if test="implementCompCode!=null">
+				#{implementCompCode},
+			</if>
+			<if test="implementCompAddr!=null">
+				#{implementCompAddr},
+			</if>
+			<if test="implementComp!=null">
+				#{implementComp},
+			</if>
+			<if test="dispatchRegisterCode!=null">
+				#{dispatchRegisterCode},
+			</if>
+			<if test="recordReceiverCellphone!=null">
+				#{recordReceiverCellphone},
+			</if>
+			<if test="recordReceiver!=null">
+				#{recordReceiver},
+			</if>
+			<if test="recordReceiverPhone!=null">
+				#{recordReceiverPhone},
+			</if>
+			<if test="specialEmploy!=null">
+				#{specialEmploy},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加-->
+	<insert id="addRecordBatch" parameterType="java.util.List">
+		INSERT INTO record(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					null,
+					#{s.account},
+					#{s.registerType},
+					#{s.registerCode},
+					#{s.employForm},
+					#{s.employFormCode},
+					#{s.destination},
+					#{s.destinationCode},
+					#{s.employRange},
+					#{s.employRangeCode},
+					#{s.dispatchTime},
+					#{s.registDeadline},
+					#{s.recordCompany},
+					#{s.recordPostcode},
+					#{s.recordAddr},
+					#{s.permanentAddr},
+					#{s.implementCompCode},
+					#{s.implementCompAddr},
+					#{s.implementComp},
+					#{s.dispatchRegisterCode},
+					#{s.recordReceiverCellphone},
+					#{s.recordReceiver},
+					#{s.recordReceiverPhone},
+					#{s.specialEmploy},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Record-->
+	<delete id="deleteRecordById" parameterType="java.lang.Integer">
+		DELETE FROM record
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Record-->
+	<update id="updateRecord" parameterType="com.tbms.core.dto.RecordDTO">
+		UPDATE record
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" account != null">
+				`account`=#{account},
+			</if>
+			<if test=" registerType != null">
+				`register_type`=#{registerType},
+			</if>
+			<if test=" registerCode != 0">
+				`register_code`=#{registerCode},
+			</if>
+			<if test=" employForm != null">
+				`employ_form`=#{employForm},
+			</if>
+			<if test=" employFormCode != 0">
+				`employ_form_code`=#{employFormCode},
+			</if>
+			<if test=" destination != null">
+				`destination`=#{destination},
+			</if>
+			<if test=" destinationCode != 0">
+				`destination_code`=#{destinationCode},
+			</if>
+			<if test=" employRange != null">
+				`employ_range`=#{employRange},
+			</if>
+			<if test=" employRangeCode != 0">
+				`employ_range_code`=#{employRangeCode},
+			</if>
+			<if test=" dispatchTime != null">
+				`dispatch_time`=#{dispatchTime},
+			</if>
+			<if test=" registDeadline != null">
+				`regist_deadline`=#{registDeadline},
+			</if>
+			<if test=" recordCompany != null">
+				`record_company`=#{recordCompany},
+			</if>
+			<if test=" recordPostcode != null">
+				`record_postcode`=#{recordPostcode},
+			</if>
+			<if test=" recordAddr != null">
+				`record_addr`=#{recordAddr},
+			</if>
+			<if test=" permanentAddr != null">
+				`permanent_addr`=#{permanentAddr},
+			</if>
+			<if test=" implementCompCode != null">
+				`implement_comp_code`=#{implementCompCode},
+			</if>
+			<if test=" implementCompAddr != null">
+				`implement_comp_addr`=#{implementCompAddr},
+			</if>
+			<if test=" implementComp != null">
+				`implement_comp`=#{implementComp},
+			</if>
+			<if test=" dispatchRegisterCode != null">
+				`dispatch_register_code`=#{dispatchRegisterCode},
+			</if>
+			<if test=" recordReceiverCellphone != null">
+				`record_receiver_cellphone`=#{recordReceiverCellphone},
+			</if>
+			<if test=" recordReceiver != null">
+				`record_receiver`=#{recordReceiver},
+			</if>
+			<if test=" recordReceiverPhone != null">
+				`record_receiver_phone`=#{recordReceiverPhone},
+			</if>
+			<if test=" specialEmploy != null">
+				`special_employ`=#{specialEmploy},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Record-->
+	<select id="getRecordById" resultMap="recordDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM record
+		WHERE ID=#{id}
+	</select>
+
+	<!--根据学号查询Record-->
+	<select id="getRecordByAccount" resultMap="recordDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM record
+		WHERE `account`=#{account}
+	</select>
+
+</mapper>

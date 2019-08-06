@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.QuestionMapper">
+
+	<!-- 问题信息字段与DTO映射 -->
+	<resultMap id="questionDTO" type="com.tbms.core.dto.QuestionDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="paper_id" property="paperId" javaType="java.lang.Integer" /><!--问卷ID-->
+		<result column="create_time" property="createTime" javaType="java.lang.String" /><!--创建时间-->
+		<result column="question_type" property="questionType" javaType="java.lang.Integer" /><!--问题类型-->
+		<result column="question_title" property="questionTitle" javaType="java.lang.String" /><!--问题标题-->
+		<result column="question_option" property="questionOption" javaType="java.lang.String" /><!--问题选项-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`paper_id`,
+		`create_time`,
+		`question_type`,
+		`question_title`,
+		`question_option`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" paperId != null ">
+			AND `paper_id` = #{paperId}
+		</if>
+		<if test=" createTime_Start != null ">
+			AND `create_time` &gt;= #{createTime_Start}
+		</if>
+		<if test=" createTime_End != null ">
+			AND `create_time` &lt;= #{createTime_End}
+		</if>
+		<if test=" createTime != null ">
+			AND `create_time` = #{createTime}
+		</if>
+		<if test=" questionType != null ">
+			AND `question_type` = #{questionType}
+		</if>
+		<if test=" questionTitle != null ">
+			AND `question_title` LIKE "%${questionTitle}%"
+		</if>
+		<if test=" questionOption != null ">
+			AND `question_option` LIKE "%${questionOption}%"
+		</if>
+	</sql>
+
+	<!--根据条件获取Question列表-->
+	<select id="getQuestionList" resultMap="questionDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM question
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Question总数-->
+	<select id="getQuestionListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM question
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Question-->
+	<insert id="addQuestion" parameterType="com.tbms.core.dto.QuestionDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO question(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				`id`,
+			</if>
+			<if test="paperId!=null">
+				`paper_id`,
+			</if>
+			<if test="createTime!=null">
+				`create_time`,
+			</if>
+			<if test="questionType!=null">
+				`question_type`,
+			</if>
+			<if test="questionTitle!=null">
+				`question_title`,
+			</if>
+			<if test="questionOption!=null">
+				`question_option`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="id!=null">
+				#{id},
+			</if>
+			<if test="paperId!=null">
+				#{paperId},
+			</if>
+			<if test="createTime!=null">
+				#{createTime},
+			</if>
+			<if test="questionType!=null">
+				#{questionType},
+			</if>
+			<if test="questionTitle!=null">
+				#{questionTitle},
+			</if>
+			<if test="questionOption!=null">
+				#{questionOption},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--批量添加-->
+	<insert id="addQuestionBatch" parameterType="java.util.List">
+		INSERT INTO question(
+		<include refid="Base_Column_List" />
+		)VALUES
+		<foreach collection="list" item="s" index= "index" separator=",">
+			(
+			<trim suffixOverrides=",">
+					#{s.id},
+					#{s.paperId},
+					#{s.createTime},
+					#{s.questionType},
+					#{s.questionTitle},
+					#{s.questionOption},
+			</trim>
+			)
+		</foreach>
+	</insert>
+
+	<!--根据ID删除Question-->
+	<delete id="deleteQuestionById" parameterType="java.lang.Integer">
+		DELETE FROM question
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Question-->
+	<update id="updateQuestion" parameterType="com.tbms.core.dto.QuestionDTO">
+		UPDATE question
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" id != null">
+				`id`=#{id},
+			</if>
+			<if test=" paperId != null">
+				`paper_id`=#{paperId},
+			</if>
+			<if test=" createTime != null">
+				`create_time`=#{createTime},
+			</if>
+			<if test=" questionType != null">
+				`question_type`=#{questionType},
+			</if>
+			<if test=" questionTitle != null">
+				`question_title`=#{questionTitle},
+			</if>
+			<if test=" questionOption != null">
+				`question_option`=#{questionOption},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Question-->
+	<select id="getQuestionById" resultMap="questionDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM question
+		WHERE ID=#{id}
+	</select>
+
+</mapper>

@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tbms.core.dao.BasicMapper">
+
+	<!-- 基础信息字段与DTO映射 -->
+	<resultMap id="basicDTO" type="com.tbms.core.dto.BasicDTO">
+		<result column="id" property="id" javaType="java.lang.Integer" /><!--ID-->
+		<result column="code" property="code" javaType="java.lang.String" /><!--代码-->
+		<result column="name" property="name" javaType="java.lang.String" /><!--名称-->
+		<result column="type" property="type" javaType="java.lang.String" /><!--类型-->
+		<result column="describe" property="describe" javaType="java.lang.String" /><!--基础信息描述-->
+		<result column="status" property="status" javaType="java.lang.Integer" /><!--ID-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`id`,
+		`code`,
+		`name`,
+		`type`,
+		`describe`,
+		`status`
+	</sql>
+
+	<!-- 通用查询条件 -->
+	<sql id="Search_Conditon_Common">
+		<if test=" id != null ">
+			AND `id` = #{id}
+		</if>
+		<if test=" code != null ">
+			AND `code` LIKE "%${code}%"
+		</if>
+		<if test=" name != null ">
+			AND `name` LIKE "%${name}%"
+		</if>
+		<if test=" type != null ">
+			AND `type` LIKE "%${type}%"
+		</if>
+		<if test=" describe != null ">
+			AND `describe` LIKE "%${describe}%"
+		</if>
+		<if test=" status != null ">
+			AND `status` = #{status}
+		</if>
+	</sql>
+
+	<!--根据条件获取Basic列表-->
+	<select id="getBasicList" resultMap="basicDTO" parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM basic
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+		<if test="order != null">
+			ORDER BY
+			<choose>
+				<when test="sort != null ">
+					${sort}
+				</when>
+				<otherwise>
+					id
+				</otherwise>
+			</choose>
+			${order}
+		</if>
+		<if test="offset != null and size != null">
+			limit #{offset},#{size}
+		</if>
+	</select>
+
+	<!--根据条件获取Basic列表-->
+	<select id="getBasicTypeList" resultMap="basicDTO">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM basic
+		GROUP BY type
+		ORDER BY id DESC
+	</select>
+
+	<!--根据条件获取Basic总数-->
+	<select id="getBasicListCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(1) FROM basic
+		<where>
+			<include refid="Search_Conditon_Common" />
+		</where>
+	</select>
+
+	<!--添加Basic-->
+	<insert id="addBasic" parameterType="com.tbms.core.dto.BasicDTO" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO basic(
+		<trim suffixOverrides=",">
+			<if test="code!=null">
+				`code`,
+			</if>
+			<if test="name!=null">
+				`name`,
+			</if>
+			<if test="type!=null">
+				`type`,
+			</if>
+			<if test="describe!=null">
+				`describe`,
+			</if>
+			<if test="status!=null">
+				`status`,
+			</if>
+		</trim>
+		)VALUES(
+		<trim suffixOverrides=",">
+			<if test="code!=null">
+				#{code},
+			</if>
+			<if test="name!=null">
+				#{name},
+			</if>
+			<if test="type!=null">
+				#{type},
+			</if>
+			<if test="describe!=null">
+				#{describe},
+			</if>
+			<if test="status!=null">
+				#{status},
+			</if>
+		</trim>
+		)
+	</insert>
+
+	<!--根据ID删除Basic-->
+	<delete id="deleteBasicById" parameterType="java.lang.Integer">
+		DELETE FROM basic
+		WHERE ID=#{id}
+	</delete>
+
+
+	<!--根据ID更新Basic-->
+	<update id="updateBasic" parameterType="com.tbms.core.dto.BasicDTO">
+		UPDATE basic
+		<trim prefix="set" suffixOverrides=",">
+			<if test=" code != null">
+				`code`=#{code},
+			</if>
+			<if test=" name != null">
+				`name`=#{name},
+			</if>
+			<if test=" type != null">
+				`type`=#{type},
+			</if>
+			<if test=" describe != null">
+				`describe`=#{describe},
+			</if>
+			<if test=" status != null">
+				`status`=#{status},
+			</if>
+		</trim>
+		WHERE ID=#{id}
+	</update>
+
+	<!--根据id查询Basic-->
+	<select id="getBasicById" resultMap="basicDTO" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM basic
+		WHERE ID=#{id}
+	</select>
+
+	<!--根据type查询Basic-->
+	<select id="getBasicByType" resultMap="basicDTO" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM basic
+		WHERE `type`=#{type}
+	</select>
+
+</mapper>
